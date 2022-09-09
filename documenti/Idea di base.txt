@@ -1,0 +1,60 @@
+PRENOTAZIONE VOLI
+-> Front-end [1]
+-> Iscrizione al sito [2]
+-> Autenticazione con PAP o CHAP [DA INTEGRARE NEI MICROSERVIZI]
+-> Handshake con accordo sulla chiave di cifratura da utilizzare nella comunicazione tra client e front-end [DA INTEGRARE NEI MICROSERVIZI]
+-> Secret sharing per accesso a informazioni riservate a un insieme ristretto di microservizi [FORSE DA INTEGRARE NEI MICROSERVIZI]
+-> Archivio dei voli disponibili con le relative informazioni + archivio dei posti disponibili per ogni volo + archivio dei prezzi dei servizi aggiuntivi (e.g. possibilità di portare un
+   secondo bagaglio o di scegliere il posto in cui sedersi) [3]
+-> Gestione delle informazioni sui voli (e.g. inserimento di un volo, modifica del prezzo di un volo) [4]
+-> Offerte giornaliere [MESSO DA PARTE]
+-> Pagamento [5]
+-> Notifica (e.g. email) di avvenuta prenotazione [MESSO DA PARTE]
+-> Archivio dello storico dei prezzi dei voli passati con algoritmo di Machine Learning che indica in quale momento potrebbe essere più conveniente prenotare il volo* [6]
+-> Aggiornamenti dovuti al passare del tempo (e.g. i voli di oggi non devono più risultare disponibili e devono essere posti nell'archivio dei voli passati) [FORSE DA INTEGRARE NEI MICROS.]
+-> Pubblicità pop-up [MESSO DA PARTE]
+-> Recupero statistiche e dati (e.g. resoconto giornaliero o mensile delle prenotazioni dei voli, del fatturato, delle metriche più gettonate, ecc.) [RISERVA]
+-> Per quanto riguarda un possibile microservizio associato alla teoria delle code non mi viene in mente nulla [MESSO DA PARTE]
+
+*Poiché non abbiamo ancora fatto il corso di Machine Learning, potremmo sfruttare un classificatore già esistente (e.g. Naive Bayes) che predìca quanti giorni prima del volo conviene
+effettuare la prenotazione in base al prezzo (NB: il prezzo non include i servizi aggiuntivi).
+Possibili attributi: (distanza, #gg prima del volo, isConvenient) dove isConvenient, nel training set, può ad esempio essere posto pari a TRUE se e solo se il prezzo in quel giorno è al di
+sotto della media. Il testing set invece prevederà solo istanze relative allo stesso volo (quello che si sta prenotando).
+Se vengono restituite più istanze TRUE del testing set, viene suggerita quella relativa al giorno più vicino a oggi (i.e. quella con "#gg prima del volo" maggiore). Se invece non viene
+restituita alcuna istanza TRUE del testing set, viene suggerita la data odierna.
+
+Possono esserci tre tipi di utenti: il turista, che effettua la prenotazione del volo, le compagnie aeree, che possono inserire / modificare / gestire / eliminare i voli (in particolare la
+modifica può appunto riguardare il prezzo) e l'amministratore, che può recuperare le statistiche e i dati.
+
+TRAINING SET TIPO
+9	hh	RM	yes	(-> 30€)
+8	gg	MI	yes	(-> 32€)
+7	ff	NA	yes	(-> 35€)
+6	gg	RM	yes	(-> 34€)
+5	ff	MI	yes	(-> 40€)		--> AVG: 40,22€
+4	gg	NA	no	(-> 44€)
+3	hh	RM	no	(-> 46€)
+2	gg	MI	no	(-> 50€)
+1	dd	NA	no	(-> 51€)
+
+TESTING SET TIPO
+5	dd	RM	no
+4	dd	RM	yes 	X
+3	dd	RM	no
+2	dd	RM	no
+1	dd	RM	no
+5	ff	RM	no
+4	ff	RM	no
+3	ff	RM	no
+2	ff	RM	yes
+1	ff	RM	yes
+5	gg	RM	no
+4	gg	RM	yes	X
+3	gg	RM	no
+2	gg	RM	yes
+1	gg	RM	yes
+5	hh	RM	no
+4	hh	RM	yes	X
+3	hh	RM	no
+2	hh	RM	no
+1	hh	RM	yes
