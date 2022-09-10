@@ -1,0 +1,11 @@
+0) INSTALL GRPCIO
+python3 -m pip install grpcio
+python3 -m pip install grpcio-tools
+
+1) COMPILE PROTO FILE (in gRPC/py-py directory)
+python3 -m grpc_tools.protoc -I. --python_out=./M1 --grpc_python_out=./M1 ./proto/m1_to_m2.proto
+python3 -m grpc_tools.protoc -I. --python_out=./M2 --grpc_python_out=./M2 ./proto/m1_to_m2.proto
+
+2) EXECUTE CLIENT AND SERVER (in gRPC/py-py directory)
+python3 ./M1/m1.py
+python3 ./M2/m2.py

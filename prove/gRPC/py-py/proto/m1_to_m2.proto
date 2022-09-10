@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package proto;
+
+service Greeter {
+    rpc getServiceName(request) returns (response);
+}
+
+message request {
+    string id = 1;
+    string name = 2;
+}
+
+message response {
+    string serviceName = 1;
+}
