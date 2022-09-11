@@ -23,6 +23,6 @@ server.start()
 
 try:
     while True:
-        time.sleep(86400)   #exactly 24 hours
+        time.sleep(86400)   #86400 seconds == 24 hours
 except KeyboardInterrupt:
     server.stop(0)
