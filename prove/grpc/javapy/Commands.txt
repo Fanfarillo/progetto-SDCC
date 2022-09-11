@@ -1,0 +1,15 @@
+1) INSTALL PROTOBUF-COMPILER AND MAVEN
+sudo apt install -y protobuf-compiler
+sudo apt install maven
+
+2) COMPILE PROTO FILE - CLIENT (in grpc/javapy/java directory)
+mvn clean verify
+
+3) COMPILE PROTO FILE - SERVER (in grpc/javapy)
+python3 -m grpc_tools.protoc -I. --python_out=./python/server --grpc_python_out=./python/server ./proto/ClientToServer.proto
+
+4) EXECUTE SERVER (in grpc/javapy directory)
+python3 ./python/server/MicroServer.py
+
+5) EXECUTE CLIENT (in grpc/javapy/java directory)
+mvn exec:java -Dexec.mainClass="client.MicroClient"

@@ -1,4 +1,8 @@
 # Directory generate automaticamente con la compilazione dei file .proto
-prove/gRPC/py-py/M1/proto/
-prove/gRPC/py-py/M2/proto/
+prove/grpc/pypy/client/proto/
+prove/grpc/pypy/server/proto/
+prove/grpc/javapy/java/src/main/java/client/proto/
+prove/grpc/javapy/python/server/proto/
 
+# Directory target
+prove/grpc/javapy/java/target
