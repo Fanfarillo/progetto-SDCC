@@ -26,5 +26,3 @@ try:
         time.sleep(86400)   #exactly 24 hours
 except KeyboardInterrupt:
     server.stop(0)
-
-    
