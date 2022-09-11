@@ -1,0 +1,14 @@
+1) INSTALL GO AND PROTOBUF-COMPILER
+sudo snap install go --classic
+sudo apt install -y protobuf-compiler
+
+2) MAKE SURE THAT PATH VARIABLE CONTAINS:
+/go/bin:/.local/bin:${HOME}/go:${HOME}/go/bin:${HOME}/.bashrc
+
+3) COMPILE PROTO FILE (in grpc/gogo directory)
+protoc --proto_path=proto proto/*.proto --go_out=gen/
+protoc --proto_path=proto proto/*.proto --go-grpc_out=gen/
+
+4) EXECUTE SERVER AND CLIENT (in grpc/gogo directory)
+go run ./server/MicroServer.go
+go run ./client/MicroClient.go

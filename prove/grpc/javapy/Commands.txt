@@ -1,4 +1,6 @@
-1) INSTALL PROTOBUF-COMPILER AND MAVEN
+1) INSTALL GRPCIO, PROTOBUF-COMPILER AND MAVEN
+python3 -m pip install grpcio
+python3 -m pip install grpcio-tools
 sudo apt install -y protobuf-compiler
 sudo apt install maven
 

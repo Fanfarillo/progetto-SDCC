@@ -3,6 +3,7 @@ prove/grpc/pypy/client/proto/
 prove/grpc/pypy/server/proto/
 prove/grpc/javapy/java/src/main/java/client/proto/
 prove/grpc/javapy/python/server/proto/
+prove/grpc/gogo/gen/
 
 # Directory target
 prove/grpc/javapy/java/target
