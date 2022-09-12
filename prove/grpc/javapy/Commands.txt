@@ -4,14 +4,16 @@ python3 -m pip install grpcio-tools
 sudo apt install -y protobuf-compiler
 sudo apt install maven
 
-2) COMPILE PROTO FILE - CLIENT (in grpc/javapy/java directory)
+2) MAKE SURE THAT JAVA_HOME VARIABILE IS SETTLED CORRECTLY
+
+3) COMPILE PROTO FILE - CLIENT (in grpc/javapy/java directory)
 mvn clean verify
 
-3) COMPILE PROTO FILE - SERVER (in grpc/javapy)
+4) COMPILE PROTO FILE - SERVER (in grpc/javapy)
 python3 -m grpc_tools.protoc -I. --python_out=./python/server --grpc_python_out=./python/server ./proto/ClientToServer.proto
 
-4) EXECUTE SERVER (in grpc/javapy directory)
+5) EXECUTE SERVER (in grpc/javapy directory)
 python3 ./python/server/MicroServer.py
 
-5) EXECUTE CLIENT (in grpc/javapy/java directory)
+6) EXECUTE CLIENT (in grpc/javapy/java directory)
 mvn exec:java -Dexec.mainClass="client.MicroClient"

@@ -1,4 +1,4 @@
-module gogo
+module grpc
 
 go 1.23
 

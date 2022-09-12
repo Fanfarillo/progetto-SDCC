@@ -1,0 +1,25 @@
+1) INSTALL GO AND PROTOBUF-COMPILER AND MAVEN
+sudo snap install go --classic
+sudo apt install -y protobuf-compiler
+sudo apt install maven
+
+2) MAKE SURE THAT PATH VARIABLE CONTAINS:
+/go/bin:/.local/bin:${HOME}/go:${HOME}/go/bin:${HOME}/.bashrc
+
+3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
+${HOME}/go
+
+4) MAKE SURE THAT JAVA_HOME VARIABILE IS SETTLED CORRECTLY
+
+5) COMPILE PROTO FILE - CLIENT (in grpc/gojava directory)
+protoc --proto_path=proto proto/*.proto --go_out=go/gen/
+protoc --proto_path=proto proto/*.proto --go-grpc_out=go/gen/
+
+6) COMPILE PROTO FILE - SERVER (in grpc/gojava/java directory)
+mvn clean verify
+
+7) EXECUTE SERVER (in grpc/gojava/java directory)
+mvn exec:java -Dexec.mainClass="server.MicroServer"
+
+8) EXECUTE CLIENT (in grpc/gojava directory)
+go run ./go/client/MicroClient.go

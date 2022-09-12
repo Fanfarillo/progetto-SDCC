@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package resources;
+package resources;  //the package must be the same in the two .proto files
 
 option java_multiple_files = true;
 option java_package = "proto";

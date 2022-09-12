@@ -2,7 +2,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>TorVergata</groupId>
-  <artifactId>sdcc_javapy</artifactId>
+  <artifactId>sdcc_gojava</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>sdcc_javapy</name>
   

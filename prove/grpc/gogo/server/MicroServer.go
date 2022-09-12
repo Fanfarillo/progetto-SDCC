@@ -4,9 +4,10 @@ import (
 	"context"
 	"log"
 	"net"
+	"fmt"
 
 	"google.golang.org/grpc"
-	pb "gogo/gen/proto"
+	pb "grpc/gogo/gen/proto"
 )
 
 type GreeterServer struct {
@@ -23,7 +24,9 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Println("Starting server. Listening on port 50051.")
 
+	//create gRPC server
 	grpcServer := grpc.NewServer()
 
 	pb.RegisterGreeterServer(grpcServer, &GreeterServer{})
