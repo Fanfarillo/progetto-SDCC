@@ -5,8 +5,7 @@ from proto import ClientToServer_pb2_grpc
 
 def run():
     #open gRPC channel
-    channel = grpc.insecure_channel('localhost:50051')  #server_IP_addr:port_num
-    #channel = grpc.insecure_channel('172.30.160.1:50051', options=(('grpc.enable_http_proxy', 0),))
+    channel = grpc.insecure_channel('52.90.109.146:50051')  #server_IP_addr:port_num
 
     #create client stub
     stub = ClientToServer_pb2_grpc.GreeterStub(channel)

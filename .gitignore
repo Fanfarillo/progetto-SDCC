@@ -7,6 +7,12 @@ prove/grpc/gogo/gen/
 prove/grpc/gojava/go/gen/
 prove/grpc/gojava/java/src/main/java/server/proto/
 
+prove/ec2/pypy/client/proto/
+prove/ec2/pypy/server/proto/
+
 # Directory target
 prove/grpc/javapy/java/target/
 prove/grpc/gojava/java/target/
+
+#.retry file
+*.retry

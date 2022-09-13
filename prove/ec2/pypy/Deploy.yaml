@@ -1,9 +1,9 @@
 ---
 - hosts: all
   vars:
-    local_app_dir: "/home/fanfa/Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/pypy"
+    local_app_dir: "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/prove/ec2/pypy"
     remote_home: "/home/ec2-user"
-    remote_app_dir: "{{remote_home}}/Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/pypy"
+    remote_app_dir: "{{remote_home}}/Scrivania/Work in progress/progetto-SDCC/prove/ec2/pypy"
 
   tasks:
     - name: copy application directory
@@ -18,19 +18,14 @@
         name: python3
         state: present
         
-    - name: install gnome-terminal
-      become: yes # we need root privileges 
-      yum:
-        name: gnome-terminal
-        
     - name: install grpcio
-      become: yes
+      become: yes # we need root privileges
       pip:
         name: grpcio
         executable: pip3
 
     - name: install grpcio-tools
-      become: yes
+      become: yes # we need root privileges
       pip:
         name: grpcio-tools
         executable: pip3
@@ -38,7 +33,7 @@
     - name: copy systemd unit file
       become: yes 
       copy:
-        src: "progetto.service"
+        src: "Pypy.service"
         dest: "/etc/systemd/system/"
 
     - name: enable and start systemd service
@@ -46,7 +41,7 @@
       systemd:
         daemon_reload: yes
         state: restarted
-        name: "progetto.service"
+        name: "Pypy.service"
         enabled: yes
       when: app.changed # only restart if new version was uploaded
 
