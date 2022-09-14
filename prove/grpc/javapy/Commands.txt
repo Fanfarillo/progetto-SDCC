@@ -5,6 +5,8 @@ sudo apt install -y protobuf-compiler
 sudo apt install maven
 
 2) MAKE SURE THAT JAVA_HOME VARIABILE IS SETTLED CORRECTLY
+sudo nano /etc/environment
+source /etc/environment
 
 3) COMPILE PROTO FILE - CLIENT (in grpc/javapy/java directory)
 mvn clean verify

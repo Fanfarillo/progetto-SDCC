@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc"
-	pb "grpc/gojava/go/gen/proto"
+	pb "gojava/go/gen/proto"
 )
 
 func main() {

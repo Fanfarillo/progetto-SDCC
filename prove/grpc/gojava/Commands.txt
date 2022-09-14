@@ -5,21 +5,31 @@ sudo apt install maven
 
 2) MAKE SURE THAT PATH VARIABLE CONTAINS:
 /go/bin:/.local/bin:${HOME}/go:${HOME}/go/bin:${HOME}/.bashrc
+sudo nano /etc/environment
+source /etc/environment
 
 3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
-${HOME}/go
+$/{HOME}/go
+sudo nano /etc/environment
+source /etc/environment
 
 4) MAKE SURE THAT JAVA_HOME VARIABILE IS SETTLED CORRECTLY
+sudo nano /etc/environment
+source /etc/environment
 
-5) COMPILE PROTO FILE - CLIENT (in grpc/gojava directory)
+5) GENERATE go.mod AND go.sum FILES (in grpc/gojava directory)
+go mod init gojava
+go mod tidy
+
+6) COMPILE PROTO FILE - CLIENT (in grpc/gojava directory)
 protoc --proto_path=proto proto/*.proto --go_out=go/gen/
 protoc --proto_path=proto proto/*.proto --go-grpc_out=go/gen/
 
-6) COMPILE PROTO FILE - SERVER (in grpc/gojava/java directory)
+7) COMPILE PROTO FILE - SERVER (in grpc/gojava/java directory)
 mvn clean verify
 
-7) EXECUTE SERVER (in grpc/gojava/java directory)
+8) EXECUTE SERVER (in grpc/gojava/java directory)
 mvn exec:java -Dexec.mainClass="server.MicroServer"
 
-8) EXECUTE CLIENT (in grpc/gojava directory)
+9) EXECUTE CLIENT (in grpc/gojava directory)
 go run ./go/client/MicroClient.go

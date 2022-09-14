@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc"
-	pb "grpc/gogo/gen/proto"
+	pb "gogo/gen/proto"
 )
 
 type GreeterServer struct {

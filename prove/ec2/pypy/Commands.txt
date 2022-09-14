@@ -6,22 +6,20 @@ python3 -m pip install grpcio-tools
 python3 -m grpc_tools.protoc -I. --python_out=./client --grpc_python_out=./client ./proto/ClientToServer.proto
 python3 -m grpc_tools.protoc -I. --python_out=./server --grpc_python_out=./server ./proto/ClientToServer.proto
 
-3) EXECUTE SERVER AND CLIENT (in grpc/pypy directory)
-python3 ./server/MicroServer.py
-python3 ./client/MicroClient.py
-
-4) ON EC2 VM:
+3) ON EC2 VM:
 scp -i ${key.pem} -r ./Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/pypy/ ec2-user@${IP-address}:/home/ec2-user/
 ssh -i ${key.pem} ec2-user@${IP-address}
 sudo yum install python3
 sudo pip3 install grpcio
 sudo pip3 install grpcio-tools
 
-4bis) ON YOUR VM:
+3bis) ON YOUR VM:
 ansible-playbook -i /etc/ansible/hosts --private-key=/home/fanfa/${key.pem} -u ec2-user ./Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/pypy/Deploy.yaml
 ansible-playbook -v -i Hosts.ini Deploy.yaml
 
-4tris) ON YOUR VM (AVSCLIV INSTALLATION + DEPLOYMENT OF APPLICATION ON EC2 VM):
+3tris) ON YOUR VM (ANSIBLE INSTALLATION + AVSCLIV INSTALLATION + DEPLOYMENT OF APPLICATION ON EC2 VM):
+sudo apt install ansible
+sudo nano /etc/ansible/hosts per impostare gli indirizzi IP delle macchine remote e l'interprete Python*
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -30,4 +28,17 @@ bash CreateEC2.sh (in ec2/pypy directory)
 Modifica il file Hosts.ini inserendo ${IP-address} corretto.
 ansible-playbook -v -i Hosts.ini Deploy.yaml
 ssh -i ${key.pem} ec2-user@${IP-address}
-Se serve, configura l'indirizzo IP del server nel codice e imposta tutti i numeri di porta nelle regole in entrata (istanze -> dettagli istanza -> sicurezza -> seleziona il gruppo di sicurezza -> imposta tutte le connessioni TCP in modo tale da accettare tutti i numeri di porta).
+Se serve, configura l'indirizzo IP del server nel codice e imposta tutti i numeri di porta nelle regole in entrata /
+    (istanze -> dettagli istanza -> sicurezza -> seleziona il gruppo di sicurezza -> imposta tutte le connessioni TCP in modo tale da accettare tutti i numeri di porta).
+
+4) EXECUTE SERVER AND CLIENT (in grpc/pypy directory)
+python3 ./server/MicroServer.py
+python3 ./client/MicroClient.py
+
+
+
+*
+[servers]
+server1 ansible_host=${IP-address}
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

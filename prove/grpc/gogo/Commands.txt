@@ -4,14 +4,22 @@ sudo apt install -y protobuf-compiler
 
 2) MAKE SURE THAT PATH VARIABLE CONTAINS:
 /go/bin:/.local/bin:${HOME}/go:${HOME}/go/bin:${HOME}/.bashrc
+sudo nano /etc/environment
+source /etc/environment
 
 3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
-${HOME}/go
+$/{HOME}/go
+sudo nano /etc/environment
+source /etc/environment
 
-4) COMPILE PROTO FILE (in grpc/gogo directory)
+4) GENERATE go.mod AND go.sum FILES (in grpc/gogo directory)
+go mod init gogo
+go mod tidy
+
+5) COMPILE PROTO FILE (in grpc/gogo directory)
 protoc --proto_path=proto proto/*.proto --go_out=gen/
 protoc --proto_path=proto proto/*.proto --go-grpc_out=gen/
 
-5) EXECUTE SERVER AND CLIENT (in grpc/gogo directory)
+6) EXECUTE SERVER AND CLIENT (in grpc/gogo directory)
 go run ./server/MicroServer.go
 go run ./client/MicroClient.go

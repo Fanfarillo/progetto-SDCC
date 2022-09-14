@@ -1,0 +1,20 @@
+1) INSTALL SERVER ON https://www.rabbitmq.com/download.html (in rabbitmq directory)
+bash InstallServer.sh
+
+2) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
+$/{HOME}/go
+sudo nano /etc/environment
+source /etc/environment
+
+3) GENERATE go.mod AND go.sum FILES (in rabbitmq/gojava directory)
+go mod init gojava
+go mod tidy
+
+4) COMPILE JAVA FILE (in rabbitmq/gojava/java directory)
+mvn clean verify
+
+5) EXECUTE CONSUMER (in rabbitmq/gojava directory)
+go run ./go/Consumer.go
+
+6) EXECUTE PRODUCER (in rabbitmq/gojava/java directory)
+mvn exec:java -Dexec.mainClass="Producer"

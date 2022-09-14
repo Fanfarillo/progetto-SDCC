@@ -1,18 +1,5 @@
-# Directory generate automaticamente con la compilazione dei file .proto
-prove/grpc/pypy/client/proto/
-prove/grpc/pypy/server/proto/
-prove/grpc/javapy/java/src/main/java/client/proto/
-prove/grpc/javapy/python/server/proto/
-prove/grpc/gogo/gen/
-prove/grpc/gojava/go/gen/
-prove/grpc/gojava/java/src/main/java/server/proto/
-
-prove/ec2/pypy/client/proto/
-prove/ec2/pypy/server/proto/
-
 # Directory target
-prove/grpc/javapy/java/target/
-prove/grpc/gojava/java/target/
+**/target
 
-#.retry file
+# .retry file
 *.retry
