@@ -1,0 +1,2 @@
+NOTA: questo modulo presenta un malfunzionamento.
+Il server (che gira su un'istanza EC2) funziona correttamente ma il client non è in grado di connettersi al server.

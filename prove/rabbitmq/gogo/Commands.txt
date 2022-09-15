@@ -2,7 +2,7 @@
 bash InstallServer.sh
 
 2) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
-$/{HOME}/go
+/${HOME}/go
 sudo nano /etc/environment
 source /etc/environment
 

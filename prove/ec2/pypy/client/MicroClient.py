@@ -3,7 +3,7 @@ import grpc
 from proto import ClientToServer_pb2
 from proto import ClientToServer_pb2_grpc
 
-ADDR_PORT = '18.215.175.86:50051'   #server_IP_addr:port_num
+ADDR_PORT = '3.89.121.26:50051'   #server_IP_addr:port_num
 
 def run():
     #open gRPC channel

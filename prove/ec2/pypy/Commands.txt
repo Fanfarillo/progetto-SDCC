@@ -17,7 +17,7 @@ sudo ./aws/install
 aws configure AND gedit ~/.aws/credentials
 bash CreateEC2.sh [parameter] (in ec2 directory)
 Modifica il file Hosts.ini inserendo ${IP-address} corretto.
-ansible-playbook -v -i Hosts.ini Deploy.yaml
+ansible-playbook -v -i Hosts.ini Deploy.yaml (in ec2/pypy directory)
 ssh -i ${key.pem} ec2-user@${IP-address}
 Se serve, configura l'indirizzo IP del server nel codice e imposta tutti i numeri di porta nelle regole in entrata /
     (istanze -> dettagli istanza -> sicurezza -> seleziona il gruppo di sicurezza -> imposta tutte le connessioni TCP in modo tale da accettare tutti i numeri di porta).

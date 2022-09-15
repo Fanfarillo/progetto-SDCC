@@ -8,7 +8,7 @@ sudo nano /etc/environment
 source /etc/environment
 
 3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
-$/{HOME}/go
+/${HOME}/go
 sudo nano /etc/environment
 source /etc/environment
 

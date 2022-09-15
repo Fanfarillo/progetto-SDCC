@@ -4,6 +4,7 @@
     local_app_dir: "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/prove/ec2/gogo"
     remote_home: "/home/ec2-user"
     remote_app_dir: "{{remote_home}}/Scrivania/Work in progress/progetto-SDCC/prove/ec2/gogo"
+    file_owner: ec2-user
 
   tasks:
     - name: copy application directory
@@ -12,11 +13,22 @@
         dest: "{{ remote_app_dir }}"
       register: app  # save task output 
 
-    - name: install go
+    - name: install golang
       become: yes # we need root privileges 
-      snap:
+      yum:
         name: go
         state: present
+     
+    - name: modify .bashrc
+      blockinfile:
+        dest: "{{ remote_home }}/.bashrc"
+        block: |
+          export GOPATH=$HOME/go
+          export GOBIN=$GOPATH/bin
+          export PATH=$GOBIN:$PATH:/usr/local/go/bin
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - changes for golang'
+        insertafter: EOF
+        create: yes 
         
     - name: install protobuf compiler
       become: yes # we need root privileges

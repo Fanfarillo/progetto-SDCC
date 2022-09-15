@@ -11,7 +11,7 @@ import (
 
 func main() {
 	//open gRPC channel
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial("34.230.82.150:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}

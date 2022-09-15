@@ -9,11 +9,12 @@ sudo nano /etc/environment
 source /etc/environment
 
 3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
-$/{HOME}/go
+/${HOME}/go
 sudo nano /etc/environment
 source /etc/environment
 
-4) MAKE SURE THAT JAVA_HOME VARIABILE IS SETTLED CORRECTLY
+4) MAKE SURE THAT JAVA_HOME VARIABILE CONTAINS:
+/usr/lib/jvm/{JAVA-JDK}
 sudo nano /etc/environment
 source /etc/environment
 
