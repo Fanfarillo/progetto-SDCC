@@ -1,9 +1,9 @@
 ---
 - hosts: all
   vars:
-    local_app_dir: "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/prove/ec2/pypy"
+    local_app_dir: "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/prove/ec2/gogo"
     remote_home: "/home/ec2-user"
-    remote_app_dir: "{{remote_home}}/Scrivania/Work in progress/progetto-SDCC/prove/ec2/pypy"
+    remote_app_dir: "{{remote_home}}/Scrivania/Work in progress/progetto-SDCC/prove/ec2/gogo"
 
   tasks:
     - name: copy application directory
@@ -12,28 +12,22 @@
         dest: "{{ remote_app_dir }}"
       register: app  # save task output 
 
-    - name: install python 3
+    - name: install go
       become: yes # we need root privileges 
-      yum:
-        name: python3
+      snap:
+        name: go
         state: present
         
-    - name: install grpcio
+    - name: install protobuf compiler
       become: yes # we need root privileges
-      pip:
-        name: grpcio
-        executable: pip3
-
-    - name: install grpcio-tools
-      become: yes # we need root privileges
-      pip:
-        name: grpcio-tools
-        executable: pip3
+      yum:
+        name: protobuf-compiler
+        state: present
 
     - name: copy systemd unit file
       become: yes 
       copy:
-        src: "Pypy.service"
+        src: "Gogo.service"
         dest: "/etc/systemd/system/"
 
     - name: enable and start systemd service
@@ -41,6 +35,6 @@
       systemd:
         daemon_reload: yes
         state: restarted
-        name: "Pypy.service"
+        name: "Gogo.service"
         enabled: yes
       when: app.changed # only restart if new version was uploaded

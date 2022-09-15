@@ -1,19 +1,33 @@
-1) INSTALL GRPCIO
-python3 -m pip install grpcio
-python3 -m pip install grpcio-tools
+1) INSTALL GO AND PROTOBUF-COMPILER
+sudo snap install go --classic
+sudo apt install -y protobuf-compiler
 
-2) COMPILE PROTO FILE (in grpc/pypy directory)
-python3 -m grpc_tools.protoc -I. --python_out=./client --grpc_python_out=./client ./proto/ClientToServer.proto
-python3 -m grpc_tools.protoc -I. --python_out=./server --grpc_python_out=./server ./proto/ClientToServer.proto
+2) MAKE SURE THAT PATH VARIABLE CONTAINS:
+/go/bin:/.local/bin:${HOME}/go:${HOME}/go/bin:${HOME}/.bashrc
+sudo nano /etc/environment
+source /etc/environment
 
-3) INSTALL ANSIBLE AND AVSCLIV
+3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
+$/{HOME}/go
+sudo nano /etc/environment
+source /etc/environment
+
+4) GENERATE go.mod AND go.sum FILES (in ec2/gogo directory)
+go mod init gogo
+go mod tidy
+
+5) COMPILE PROTO FILE (in ec2/gogo directory)
+protoc --proto_path=proto proto/*.proto --go_out=gen/
+protoc --proto_path=proto proto/*.proto --go-grpc_out=gen/
+
+6) INSTALL ANSIBLE AND AVSCLIV
 sudo apt install ansible
 sudo nano /etc/ansible/hosts per impostare gli indirizzi IP delle macchine remote e l'interprete Python*
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
 
-4) CREATE AN EC2 VM AND DEPLOY THE APPLICATION ON IT
+7) CREATE AN EC2 VM AND DEPLOY THE APPLICATION ON IT
 aws configure AND gedit ~/.aws/credentials
 bash CreateEC2.sh [parameter] (in ec2 directory)
 Modifica il file Hosts.ini inserendo ${IP-address} corretto.
@@ -22,9 +36,9 @@ ssh -i ${key.pem} ec2-user@${IP-address}
 Se serve, configura l'indirizzo IP del server nel codice e imposta tutti i numeri di porta nelle regole in entrata /
     (istanze -> dettagli istanza -> sicurezza -> seleziona il gruppo di sicurezza -> imposta tutte le connessioni TCP in modo tale da accettare tutti i numeri di porta).
 
-5) EXECUTE SERVER AND CLIENT (in ec2/pypy directory)
-python3 ./server/MicroServer.py
-python3 ./client/MicroClient.py
+8) EXECUTE SERVER AND CLIENT (in ec2/pypy directory)
+go run ./server/MicroServer.go
+go run ./client/MicroClient.go
 
 
 

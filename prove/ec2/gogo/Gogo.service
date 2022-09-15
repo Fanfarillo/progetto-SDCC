@@ -1,0 +1,8 @@
+[Unit]
+Description=Simple systemd service for gogo project.
+[Service]
+Type=simple
+WorkingDirectory=/home/ec2-user/Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/gogo
+ExecStart=/bin/bash /home/ec2-user/Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/gogo/Run.sh
+[Install]
+WantedBy=multi-user.target
