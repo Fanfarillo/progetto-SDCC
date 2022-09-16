@@ -1,0 +1,73 @@
+---
+- hosts: all
+  vars:
+    local_app_dir: "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/prove/ec2/javapy"
+    remote_home: "/home/ec2-user"
+    remote_app_dir: "{{remote_home}}/Scrivania/Work in progress/progetto-SDCC/prove/ec2/javapy"
+
+  tasks:
+    - name: copy application directory
+      copy:
+        src: "{{ local_app_dir }}/"
+        dest: "{{ remote_app_dir }}"
+      register: app  # save task output 
+
+    - name: install python 3
+      become: yes # we need root privileges 
+      yum:
+        name: python3
+        state: present
+        
+    - name: install grpcio
+      become: yes # we need root privileges
+      pip:
+        name: grpcio
+        executable: pip3
+
+    - name: install grpcio-tools
+      become: yes # we need root privileges
+      pip:
+        name: grpcio-tools
+        executable: pip3
+
+    - name: install java 8
+      become: yes # we need root privileges 
+      yum:
+        name: java-1.8.0-openjdk.x86_64
+        state: present
+
+    - name: install maven
+      become: yes # we need root privileges 
+      yum:
+        name: maven
+        state: present
+
+    - name: install protobuf compiler
+      become: yes # we need root privileges
+      yum:
+        name: protobuf-compiler
+        state: present
+
+    - name: modify .bashrc
+      blockinfile:
+        dest: "{{ remote_home }}/.bashrc"
+        block: |
+          export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - changes for java'
+        insertafter: EOF
+        create: yes 
+
+    - name: copy systemd unit file
+      become: yes 
+      copy:
+        src: "Javapy.service"
+        dest: "/etc/systemd/system/"
+
+    - name: enable and start systemd service
+      become: yes 
+      systemd:
+        daemon_reload: yes
+        state: restarted
+        name: "Javapy.service"
+        enabled: yes
+      when: app.changed # only restart if new version was uploaded

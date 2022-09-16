@@ -36,7 +36,7 @@ ssh -i ${key.pem} ec2-user@${IP-address}
 Se serve, configura l'indirizzo IP del server nel codice e imposta tutti i numeri di porta nelle regole in entrata /
     (istanze -> dettagli istanza -> sicurezza -> seleziona il gruppo di sicurezza -> imposta tutte le connessioni TCP in modo tale da accettare tutti i numeri di porta).
 
-8) EXECUTE SERVER AND CLIENT (in ec2/pypy directory)
+8) EXECUTE SERVER AND CLIENT (in ec2/gogo directory)
 go run ./server/MicroServer.go
 go run ./client/MicroClient.go
 

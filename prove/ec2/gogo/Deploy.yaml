@@ -4,7 +4,6 @@
     local_app_dir: "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/prove/ec2/gogo"
     remote_home: "/home/ec2-user"
     remote_app_dir: "{{remote_home}}/Scrivania/Work in progress/progetto-SDCC/prove/ec2/gogo"
-    file_owner: ec2-user
 
   tasks:
     - name: copy application directory

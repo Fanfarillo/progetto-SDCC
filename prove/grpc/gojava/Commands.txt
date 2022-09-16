@@ -1,5 +1,7 @@
-1) INSTALL GO AND PROTOBUF-COMPILER AND MAVEN
+1) INSTALL GO, JAVA, PROTOBUF-COMPILER AND MAVEN
 sudo snap install go --classic
+sudo apt install default-jdk
+sudo apt install default-jre
 sudo apt install -y protobuf-compiler
 sudo apt install maven
 

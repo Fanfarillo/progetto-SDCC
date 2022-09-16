@@ -1,0 +1,48 @@
+1) INSTALL GRPCIO, JAVA, PROTOBUF-COMPILER AND MAVEN
+python3 -m pip install grpcio
+python3 -m pip install grpcio-tools
+sudo apt install default-jdk
+sudo apt install default-jre
+sudo apt install -y protobuf-compiler
+sudo apt install maven
+
+2) MAKE SURE THAT JAVA_HOME VARIABILE CONTAINS:
+/usr/lib/jvm/{JAVA-JDK}
+sudo nano /etc/environment
+source /etc/environment
+
+3) COMPILE PROTO FILE - CLIENT (in ec2/javapy/java directory)
+mvn clean verify
+
+4) COMPILE PROTO FILE - SERVER (in ec2/javapy)
+python3 -m grpc_tools.protoc -I. --python_out=./python/server --grpc_python_out=./python/server ./proto/ClientToServer.proto
+
+5) INSTALL ANSIBLE AND AVSCLIV
+sudo apt install ansible
+sudo nano /etc/ansible/hosts per impostare gli indirizzi IP delle macchine remote e l'interprete Python*
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+6) CREATE AN EC2 VM AND DEPLOY THE APPLICATION ON IT
+aws configure AND gedit ~/.aws/credentials
+bash CreateEC2.sh [parameter] (in ec2 directory)
+Modifica il file Hosts.ini inserendo ${IP-address} corretto.
+ansible-playbook -v -i Hosts.ini Deploy.yaml (in ec2/javapy directory)
+ssh -i ${key.pem} ec2-user@${IP-address}
+Se serve, configura l'indirizzo IP del server nel codice e imposta tutti i numeri di porta nelle regole in entrata /
+    (istanze -> dettagli istanza -> sicurezza -> seleziona il gruppo di sicurezza -> imposta tutte le connessioni TCP in modo tale da accettare tutti i numeri di porta).
+
+7) EXECUTE SERVER (in ec2/javapy directory)
+python3 ./python/server/MicroServer.py
+
+8) EXECUTE CLIENT (in ec2/javapy/java directory)
+mvn exec:java -Dexec.mainClass="client.MicroClient"
+
+
+
+*
+[servers]
+server1 ansible_host=${IP-address}
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
