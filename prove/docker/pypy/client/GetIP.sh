@@ -1,0 +1,1 @@
+docker inspect pypy-server-1 | grep IPAddress

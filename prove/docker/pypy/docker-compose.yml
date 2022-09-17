@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  server:
+    build: ./server
+    user: root
+    ports:
+      - 50051:50051
+
+  client:
+    build: ./client
+    user: root
+    ports:
+      - 50052:50052
