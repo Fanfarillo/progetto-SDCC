@@ -1,0 +1,2 @@
+NOTA: questo modulo presenta un malfunzionamento.
+I container vengono creati correttamente ma non riescono a inviare o ricevere messaggi.

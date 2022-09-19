@@ -1,0 +1,24 @@
+1) INSTALL GO AND PROTOBUF-COMPILER
+sudo snap install go --classic
+sudo apt install -y protobuf-compiler
+
+2) MAKE SURE THAT PATH VARIABLE CONTAINS:
+/go/bin:/.local/bin:${HOME}/go:${HOME}/go/bin:${HOME}/.bashrc
+sudo nano /etc/environment
+source /etc/environment
+
+3) MAKE SURE THAT GOPATH VARIABLE CONTAINS:
+/${HOME}/go
+sudo nano /etc/environment
+source /etc/environment
+
+4) GENERATE go.mod AND go.sum FILES (in docker/gogo/client && docker/gogo/server directories)
+go mod init gogo
+go mod tidy
+
+5) COMPILE PROTO FILE (in docker/gogo/client && docker/gogo/server directories)
+protoc --proto_path=proto proto/*.proto --go_out=.
+protoc --proto_path=proto proto/*.proto --go-grpc_out=.
+
+6) BUILD IMAGES AND EXECUTE CONTAINERS (in docker/gogo directory)
+docker compose up --build
