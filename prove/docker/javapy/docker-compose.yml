@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  server:
+    build: ./python
+    user: root
+    ports:
+      - 50051:50051
+    networks:
+      - my-network-name
+
+  client:
+    build: ./java
+    user: root
+    ports:
+      - 50052:50052
+    networks:
+      - my-network-name
+
+networks:
+  my-network-name:
+    name: pypy_default
