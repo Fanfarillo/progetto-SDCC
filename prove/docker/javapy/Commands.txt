@@ -17,11 +17,5 @@ mvn clean verify
 4) COMPILE PROTO FILE - SERVER (in docker/javapy)
 python3 -m grpc_tools.protoc -I. --python_out=./python/server --grpc_python_out=./python/server ./proto/ClientToServer.proto
 
-5) EXECUTE SERVER (in docker/javapy directory)
-python3 ./python/server/MicroServer.py
-
-6) EXECUTE CLIENT (in docker/javapy/java directory)
-mvn exec:java -Dexec.mainClass="client.MicroClient"
-
-7) BUILD IMAGES AND EXECUTE CONTAINERS (in docker/javapy directory)
+5) BUILD IMAGES AND EXECUTE CONTAINERS (in docker/javapy directory)
 docker compose up --build

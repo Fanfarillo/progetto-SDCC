@@ -1,5 +1,8 @@
 # Directory target
 **/target
 
+# Directory venv
+**/venv
+
 # .retry file
 *.retry
