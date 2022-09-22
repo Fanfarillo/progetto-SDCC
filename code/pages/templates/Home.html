@@ -30,8 +30,93 @@
     </nav>
 
     <div class="container my-4 text-center" style="max-width: 1160px;">
-        <h3 class="display-5" style="color: #646464;"><em>Ciao {{email}}!</em>
-        <br>Prenota subito un volo con Fly on the Cloud.</h3>
+
+      <!--Messaggio di saluto-->
+      <h3 class="display-5" style="color: #646464;"><em>Ciao {{email}}!</em>
+      <br>Prenota subito un volo con Fly on the Cloud.</h3>
+
+      <!--Dropdown per la scelta di data, aeroporto di partenza, aeroporto di destinazione e numero di biglietti da acquistare-->
+      <table align="center">
+        <tr>
+
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Giorno</button>
+              <ul class="dropdown-menu">
+                {% for i in range(1,32) %}
+                <li><a class="dropdown-item" href="#">{{ i }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </td>
+
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Mese</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Gennaio</a></li>
+                <li><a class="dropdown-item" href="#">Febbraio</a></li>
+                <li><a class="dropdown-item" href="#">Marzo</a></li>
+                <li><a class="dropdown-item" href="#">Aprile</a></li>
+                <li><a class="dropdown-item" href="#">Maggio</a></li>
+                <li><a class="dropdown-item" href="#">Giugno</a></li>
+                <li><a class="dropdown-item" href="#">Luglio</a></li>
+                <li><a class="dropdown-item" href="#">Agosto</a></li>
+                <li><a class="dropdown-item" href="#">Settembre</a></li>
+                <li><a class="dropdown-item" href="#">Ottobre</a></li>
+                <li><a class="dropdown-item" href="#">Novembre</a></li>
+                <li><a class="dropdown-item" href="#">Dicembre</a></li>
+              </ul>
+            </div>
+          </td>
+
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Anno</button>
+              <ul class="dropdown-menu">
+                {% for i in range(2022,2024) %}
+                <li><a class="dropdown-item" href="#">{{ i }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </td>
+          
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Aeroporto di partenza</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Fiumicino (Roma)</a></li>
+                <li><a class="dropdown-item" href="#">Heathrow (Londra)</a></li>
+                <li><a class="dropdown-item" href="#">Schiphol (Amsterdam)</a></li>
+              </ul>
+            </div>
+          </td>
+
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Aeroporto di arrivo</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Fiumicino (Roma)</a></li>
+                <li><a class="dropdown-item" href="#">Heathrow (Londra)</a></li>
+                <li><a class="dropdown-item" href="#">Schiphol (Amsterdam)</a></li>
+              </ul>
+            </div>
+          </td>
+
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Numero di persone</button>
+              <ul class="dropdown-menu">
+                {% for i in range(1,11) %}
+                <li><a class="dropdown-item" href="#">{{ i }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </td>
+
+        </tr>
+      </table> 
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
