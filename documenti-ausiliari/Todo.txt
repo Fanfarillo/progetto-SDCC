@@ -1,0 +1,5 @@
+1) Nella pagina html relativa alla registrazione, aggiungere il dropdown relativo alla selezione della compagnia aerea con cui si vuole loggare. E' preferibile far comparire
+tale dropdown solo in caso di selezione del radio button "Sono una compagnia aerea".
+2) Nei dropdown relativi alla selezione di aeroporto di partenza e aeroporto di destinazione, fare in modo che compaiano gli aeroporti presenti nell'apposito database.
+3) Relativamente ai dropdown di Home.html, aggiungere dei controlli di consistenza (e.g. aeroporto di partenza != aeroporto di destinazione, la data deve esistere).
+4) Relativamente ai dropdown di Home.html, renderli funzionanti nel momento in cui si seleziona un valore.
