@@ -1,0 +1,10 @@
+1) INSTALL BOTO3
+sudo apt-get install python3-boto3
+
+2) CONFIGURE TOKEN ON AMAZON EC2
+aws configure AND gedit ~/.aws/credentials
+
+3) IF IT DOES NOT EXIST, CREATE A TABLE ON DYNAMODB (IN AMAZON)
+
+4) EXECUTE CLIENT (in dynamodb directory)
+python3 dinamodbpy.py
