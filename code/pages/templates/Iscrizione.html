@@ -30,7 +30,7 @@
     </nav>
 
     <div class="accordion m-5" id="accordion-example">
-      <form action="/iscriviti/home" method="POST">
+      <form action="/iscriviti" method="POST">
         <!--Input first name-->
         <div class="mb-3">
           <label for="inputName" class="form-label">Nome</label>
@@ -75,6 +75,17 @@
               Sono una compagnia aerea
             </label>
         </div>
+
+        <!--Airline selection: NON NECESSARIAMENTE VOGLIO SPECIFICARLA-->
+        <!--  <div class="dropdown my-3">
+          <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <option disabled selected>Compagnia aerea</option>
+            <option value="EasyJet">EasyJet</option>
+            <option value="ITA">ITA</option>
+            <option value="Ryanair">Ryanair</option>
+          </select>
+          <div id="dropdownHelp" class="form-text">Solo per i dipendenti di una compagnia aerea.</div>
+        </div>  -->  
 
         <button type="submit" class="btn btn-primary my-3">Conferma iscrizione</button>
       </form>

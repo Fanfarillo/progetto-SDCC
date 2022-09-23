@@ -40,82 +40,84 @@
         <tr>
 
           <td>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Giorno</button>
-              <ul class="dropdown-menu">
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                <option disabled selected>Giorno</option>
                 {% for i in range(1,32) %}
-                <li><a class="dropdown-item" href="#">{{ i }}</a></li>
+                <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
-              </ul>
+              </select>
             </div>
           </td>
 
           <td>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Mese</button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Gennaio</a></li>
-                <li><a class="dropdown-item" href="#">Febbraio</a></li>
-                <li><a class="dropdown-item" href="#">Marzo</a></li>
-                <li><a class="dropdown-item" href="#">Aprile</a></li>
-                <li><a class="dropdown-item" href="#">Maggio</a></li>
-                <li><a class="dropdown-item" href="#">Giugno</a></li>
-                <li><a class="dropdown-item" href="#">Luglio</a></li>
-                <li><a class="dropdown-item" href="#">Agosto</a></li>
-                <li><a class="dropdown-item" href="#">Settembre</a></li>
-                <li><a class="dropdown-item" href="#">Ottobre</a></li>
-                <li><a class="dropdown-item" href="#">Novembre</a></li>
-                <li><a class="dropdown-item" href="#">Dicembre</a></li>
-              </ul>
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                <option disabled selected>Mese</option>
+                <option value="Gennaio">Gennaio</option>
+                <option value="Febbraio">Febbraio</option>
+                <option value="Marzo">Marzo</option>
+                <option value="Aprile">Aprile</option>
+                <option value="Maggio">Maggio</option>
+                <option value="Giugno">Giugno</option>
+                <option value="Luglio">Luglio</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Settembre">Settembre</option>
+                <option value="Ottobre">Ottobre</option>
+                <option value="Novembre">Novembre</option>
+                <option value="Dicembre">Dicembre</option>
+              </select>
             </div>
           </td>
 
           <td>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Anno</button>
-              <ul class="dropdown-menu">
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                <option disabled selected>Anno</option>
                 {% for i in range(2022,2024) %}
-                <li><a class="dropdown-item" href="#">{{ i }}</a></li>
+                <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
-              </ul>
+              </select>
             </div>
           </td>
           
           <td>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Aeroporto di partenza</button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Fiumicino (Roma)</a></li>
-                <li><a class="dropdown-item" href="#">Heathrow (Londra)</a></li>
-                <li><a class="dropdown-item" href="#">Schiphol (Amsterdam)</a></li>
-              </ul>
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                <option disabled selected>Aeroporto di partenza</option>
+                <option value="Fiumicino">Fiumicino (Roma)</option>
+                <option value="Heathrow">Heathrow (Londra)</option>
+                <option value="Schiphol">Schiphol (Amsterdam)</option>
+              </select>
             </div>
           </td>
 
           <td>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Aeroporto di arrivo</button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Fiumicino (Roma)</a></li>
-                <li><a class="dropdown-item" href="#">Heathrow (Londra)</a></li>
-                <li><a class="dropdown-item" href="#">Schiphol (Amsterdam)</a></li>
-              </ul>
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                <option disabled selected>Aeroporto di arrivo</option>
+                <option value="Fiumicino">Fiumicino (Roma)</option>
+                <option value="Heathrow">Heathrow (Londra)</option>
+                <option value="Schiphol">Schiphol (Amsterdam)</option>
+              </select>
             </div>
           </td>
 
           <td>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Numero di persone</button>
-              <ul class="dropdown-menu">
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                <option disabled selected>Numero di persone</option>
                 {% for i in range(1,11) %}
-                <li><a class="dropdown-item" href="#">{{ i }}</a></li>
+                <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
-              </ul>
+              </select>
             </div>
           </td>
 
         </tr>
       </table> 
+
+      <button type="submit" class="btn btn-primary my-5">Avanti</button>
 
     </div>
 
