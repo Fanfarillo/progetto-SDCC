@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto;
+
+service UsersInfo {
+    rpc SignUp(SignUpInfo) returns (SignUpResponse);
+}
+
+message SignUpInfo {
+    string email = 1;
+    string name = 2;
+    string surname = 3;
+    string password = 4;
+    string passwordConfirm = 5;
+    string userType = 6;
+    string airline = 7;
+}
+
+message SignUpResponse {
+    bool isCorrespondent = 1;
+}

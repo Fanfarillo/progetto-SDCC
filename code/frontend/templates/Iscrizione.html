@@ -60,6 +60,7 @@
         <div class="mb-3">
           <label for="inputPasswordConfirm" class="form-label">Conferma password</label>
           <input type="password" class="form-control" name="inputPasswordConfirm" value="{{ request.form['inputPasswordConfirm'] }}" required>
+          <div id="passwordHelp" class="form-text">Ricorda che il campo "Conferma password" deve corrispondere al campo "Password".</div>
         </div>
 
         <!--Radio button per indicare la tipologia di utente-->

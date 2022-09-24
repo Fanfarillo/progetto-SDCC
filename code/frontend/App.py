@@ -1,11 +1,14 @@
 from flask import Flask, render_template, redirect, request
+from FroRpcReg import *
 
 app = Flask(__name__)
 
+#very first page
 @app.route("/", methods=('GET','POST'))
 def menu():
     return render_template("Menu.html")
 
+#sign in page
 @app.route("/accedi", methods=('GET','POST'))
 def accesso():
     if request.method == 'POST':
@@ -14,6 +17,7 @@ def accesso():
 
     return render_template("Accesso.html")
 
+#sign up page
 @app.route("/iscriviti", methods=('GET','POST'))
 def iscrizione():
     if request.method == 'POST':
@@ -26,13 +30,20 @@ def iscrizione():
         userType = request.form['flexRadioDefault']
         airline = request.form['airlineDropdown']
 
-        return redirect("/"+name+" "+surname+"/home")
+        isOk = sendSignUpInfo(email, name, surname, password, passwordConfirm, userType, airline)
+
+        #if password==passwordConfirm then go ahead; else passwordConfirm has to be changed before going to the next page
+        if isOk:
+            return redirect("/"+name+" "+surname+"/home")
+        else:
+            return render_template("Iscrizione.html")
 
     return render_template("Iscrizione.html")
 
-@app.route("/<string:email>/home", methods=('GET','POST'))
-def home(email):
-    return render_template("Home.html", email=email)
+#here the user specifies some information about the flight he wants to book
+@app.route("/<string:fullName>/home", methods=('GET','POST'))
+def home(fullName):
+    return render_template("Home.html", fullName=fullName)
 
 if __name__ == "__main__":
     app.run()
