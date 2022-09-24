@@ -59,33 +59,29 @@
         <!--Input password confirm-->
         <div class="mb-3">
           <label for="inputPasswordConfirm" class="form-label">Conferma password</label>
-          <input type="password" class="form-control" name="inputPasswordConfirm" required>
+          <input type="password" class="form-control" name="inputPasswordConfirm" value="{{ request.form['inputPasswordConfirm'] }}" required>
         </div>
 
         <!--Radio button per indicare la tipologia di utente-->
         <div class="form-check my-3">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-            <label class="form-check-label" for="flexRadioDefault1">
-              Sono un turista
-            </label>
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="Turista" checked>
+            <label class="form-check-label" for="flexRadioDefault1">Sono un turista</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-            <label class="form-check-label" for="flexRadioDefault2">
-              Sono una compagnia aerea
-            </label>
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="Compagnia aerea">
+            <label class="form-check-label" for="flexRadioDefault2">Sono una compagnia aerea</label>
         </div>
 
-        <!--Airline selection: NON NECESSARIAMENTE VOGLIO SPECIFICARLA-->
-        <!--  <div class="dropdown my-3">
-          <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <option disabled selected>Compagnia aerea</option>
-            <option value="EasyJet">EasyJet</option>
+        <!--Airline selection-->
+        <div class="dropdown my-4">
+          <label for="airlineDropdown" class="form-label">Selezionare la compagnia aerea</label><br>
+          <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="airlineDropdown">
+            <option selected value="EasyJet">EasyJet</option>
             <option value="ITA">ITA</option>
             <option value="Ryanair">Ryanair</option>
           </select>
           <div id="dropdownHelp" class="form-text">Solo per i dipendenti di una compagnia aerea.</div>
-        </div>  -->  
+        </div>
 
         <button type="submit" class="btn btn-primary my-3">Conferma iscrizione</button>
       </form>

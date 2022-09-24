@@ -17,8 +17,16 @@ def accesso():
 @app.route("/iscriviti", methods=('GET','POST'))
 def iscrizione():
     if request.method == 'POST':
+
         email = request.form['inputEmail']
-        return redirect("/"+email+"/home")
+        name = request.form['inputName']
+        surname = request.form['inputSurname']
+        password = request.form['inputPassword']
+        passwordConfirm = request.form['inputPasswordConfirm']
+        userType = request.form['flexRadioDefault']
+        airline = request.form['airlineDropdown']
+
+        return redirect("/"+name+" "+surname+"/home")
 
     return render_template("Iscrizione.html")
 
