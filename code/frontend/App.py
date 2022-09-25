@@ -4,7 +4,7 @@ from FroRpcReg import *
 app = Flask(__name__)
 
 #very first page
-@app.route("/", methods=('GET','POST'))
+@app.route("/")
 def menu():
     return render_template("Menu.html")
 
@@ -19,10 +19,11 @@ def accesso():
         response = sendCredentials(email, password)
 
         #if credentials are correct then go ahead; else they have to be changed before going to the next page
-        if response.isCorrect == True:
-            #TODO: somewhere we have to use the user type (e.g. to decide the html page to go to)
+        if response.isCorrect == True and response.storedType == "Turista":         #tourist case
             return redirect("/"+response.name+" "+response.surname+"/home")
-        else :
+        else if response.isCorrect == True and response.storedType != "Turista":    #airline case
+            return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
+        else:
             return render_template("Accesso.html")
 
     return render_template("Accesso.html")
@@ -54,6 +55,11 @@ def iscrizione():
 @app.route("/<string:fullName>/home", methods=('GET','POST'))
 def home(fullName):
     return render_template("Home.html", fullName=fullName)
+
+#here the airline specifies which information has to be managed
+@app.route("/<string:airline>/<string:fullName>/airlineHome", methods=('GET', 'POST'))
+def airlineHome(airline, fullname):
+    return render_template("AirlineHome.html", airline=airline, fullName=fullName)
 
 if __name__ == "__main__":
     app.run()

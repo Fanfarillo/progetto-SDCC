@@ -9,7 +9,7 @@ from RegDB import *
 class UsersInfoServicer(FroReg_pb2_grpc.UsersInfoServicer):
 
     def SignUp(self, SignUpInfo, context):
-        #check if 'password' and 'conferma password' fields were filled with the same password
+        #check if 'password' and 'conferma password' fields were filled with the same password; check also if the email was not used by someone else
         isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.email)
         #if the two fields correspond, then save user info into remote database (DynamoDB)
         if isOk:
@@ -19,7 +19,11 @@ class UsersInfoServicer(FroReg_pb2_grpc.UsersInfoServicer):
         return output
 
     def SignIn(self, Credentials, context):
-        #TODO
+        #read the database (DynamoDB) and check if the log in is successful
+        user = retrieveUser(Credentials.email, Credentials.password)
+
+        output = FroReg_pb2.SignInResponse(name=user.name, surname=user.surname, storedType=user.storedType, isCorrect=user.isCorrect)
+        return output
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
