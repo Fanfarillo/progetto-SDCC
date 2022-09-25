@@ -15,8 +15,11 @@ class UsersInfoServicer(FroReg_pb2_grpc.UsersInfoServicer):
         if isOk:
             storeUser(SignUpInfo.email, SignUpInfo.name, SignUpInfo.surname, SignUpInfo.password, SignUpInfo.userType, SignUpInfo.airline)
 
-        output = FroReg_pb2.SignUpResponse(isCorrespondent=isOk)
+        output = FroReg_pb2.SignUpResponse(isOk=isOk)
         return output
+
+    def SignIn(self, Credentials, context):
+        #TODO
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

@@ -4,6 +4,7 @@ package proto;
 
 service UsersInfo {
     rpc SignUp(SignUpInfo) returns (SignUpResponse);
+    rpc SignIn(Credentials) returns (SignInResponse);
 }
 
 message SignUpInfo {
@@ -17,5 +18,17 @@ message SignUpInfo {
 }
 
 message SignUpResponse {
-    bool isCorrespondent = 1;
+    bool isOk = 1;
+}
+
+message Credentials {
+    string email = 1;
+    string password = 2;
+}
+
+message SignInResponse {
+    string name = 1;
+    string surname = 2;
+    string storedType = 3;
+    bool isCorrect = 4;
 }

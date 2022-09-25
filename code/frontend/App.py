@@ -16,12 +16,12 @@ def accesso():
         email = request.form['inputEmail']
         password = request.form['inputPassword']
 
-        userInstance = sendCredentials(email, password)
+        response = sendCredentials(email, password)
 
         #if credentials are correct then go ahead; else they have to be changed before going to the next page
-        if userInstance != None:
-            #TODO: extract user's name and surname
-            return redirect("/"+email+"/home")
+        if response.isCorrect == True:
+            #TODO: somewhere we have to use the user type (e.g. to decide the html page to go to)
+            return redirect("/"+response.name+" "+response.surname+"/home")
         else :
             return render_template("Accesso.html")
 
