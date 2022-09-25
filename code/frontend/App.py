@@ -12,8 +12,18 @@ def menu():
 @app.route("/accedi", methods=('GET','POST'))
 def accesso():
     if request.method == 'POST':
+
         email = request.form['inputEmail']
-        return redirect("/"+email+"/home")
+        password = request.form['inputPassword']
+
+        userInstance = sendCredentials(email, password)
+
+        #if credentials are correct then go ahead; else they have to be changed before going to the next page
+        if userInstance != None:
+            #TODO: extract user's name and surname
+            return redirect("/"+email+"/home")
+        else :
+            return render_template("Accesso.html")
 
     return render_template("Accesso.html")
 
