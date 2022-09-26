@@ -44,8 +44,10 @@ def iscrizione():
         isOk = sendSignUpInfo(email, name, surname, password, passwordConfirm, userType, airline)
 
         #if password==passwordConfirm then go ahead; else passwordConfirm has to be changed before going to the next page
-        if isOk:
+        if isOk and userType == "Turista":
             return redirect("/"+name+" "+surname+"/home")
+        elif isOk and userType != "Turista":
+            return redirect("/"+airline+"/"+name+" "+surname+"/airlineHome")
         else:
             return render_template("Iscrizione.html")
 
@@ -58,7 +60,7 @@ def home(fullName):
 
 #here the airline specifies which information has to be managed
 @app.route("/<string:airline>/<string:fullName>/airlineHome", methods=('GET', 'POST'))
-def airlineHome(airline, fullname):
+def airlineHome(airline, fullName):
     return render_template("AirlineHome.html", airline=airline, fullName=fullName)
 
 if __name__ == "__main__":
