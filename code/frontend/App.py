@@ -19,7 +19,7 @@ def accesso():
         response = sendCredentials(email, password)
 
         #if credentials are correct then go ahead; else they have to be changed before going to the next page
-        if response.isCorrect == True and response.storedType == "Turista":         #tourist case
+        if response.isCorrect == True and response.storedType == "Turista":      #tourist case
             return redirect("/"+response.name+" "+response.surname+"/home")
         elif response.isCorrect == True and response.storedType != "Turista":    #airline case
             return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")

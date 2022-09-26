@@ -1,3 +1,2 @@
 1) Nei dropdown relativi alla selezione di aeroporto di partenza e aeroporto di destinazione, fare in modo che compaiano gli aeroporti presenti nell'apposito database (va anche bene direttamente quello relativo ai voli disponibili).
 2) Relativamente ai dropdown di Home.html, aggiungere dei controlli di consistenza (e.g. aeroporto di partenza != aeroporto di destinazione, la data deve esistere).
-3) Se ci si registra come compagnia aerea, si deve andare a una pagina diversa da Home.html.
