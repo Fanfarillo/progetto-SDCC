@@ -11,6 +11,7 @@ class UsersInfoServicer(FroReg_pb2_grpc.UsersInfoServicer):
     def SignUp(self, SignUpInfo, context):
         #check if 'password' and 'conferma password' fields were filled with the same password; check also if the email was not used by someone else
         isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.email)
+
         #if the two fields correspond, then save user info into remote database (DynamoDB)
         if isOk:
             storeUser(SignUpInfo.email, SignUpInfo.name, SignUpInfo.surname, SignUpInfo.password, SignUpInfo.userType, SignUpInfo.airline)

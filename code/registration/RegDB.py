@@ -39,10 +39,10 @@ def isNewUser(email):
         }
     )
 
-    if response['Item'] == None:
-        return True
-    else:
+    if 'Item' in response:
         return False
+    else:
+        return True
 
 def retrieveUser(email, password):
     dynamodb = boto3.resource('dynamodb')
@@ -54,27 +54,23 @@ def retrieveUser(email, password):
             'Email': email,
         }
     )
-    item = response['Item']
 
     #if the specified email does not exist, the log in must fail
-    if item == None:
+    if not ('Item' in response):
         user = LoggedUser(None, None, None, False)
         return user
     
     #if the specified password is incorrect, the log in must fail
-    pwdEntry = item['Password']
-    actualPassword = pwdEntry['S']
+    item = response['Item']
+    actualPassword = item['Password']
     if actualPassword != password:
         user = LoggedUser(None, None, None, False)
         return user
 
     #else the log in is successful
-    nameEntry = item['Nome']
-    name = nameEntry['S']
-    surnameEntry = item['Cognome']
-    surname = surnameEntry['S']
-    userTypeEntry = item['Tipo']
-    userType = userTypeEntry['S']
+    name = item['Nome']
+    surname = item['Cognome']
+    userType = item['Tipo']
 
     user = LoggedUser(name, surname, userType, True)
     return user

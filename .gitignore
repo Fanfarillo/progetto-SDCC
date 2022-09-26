@@ -1,6 +1,9 @@
 # Directory target
 **/target
 
+# Directory __pycache__
+**/__pycache__
+
 # Directory venv
 **/venv
 

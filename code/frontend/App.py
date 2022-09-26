@@ -18,13 +18,10 @@ def accesso():
 
         response = sendCredentials(email, password)
 
-        #print useful for debugging
-        print(response.name+"\n"+response.surname+"\n"+response.storedType+"\n"+response.isCorrect)
-
         #if credentials are correct then go ahead; else they have to be changed before going to the next page
         if response.isCorrect == True and response.storedType == "Turista":         #tourist case
             return redirect("/"+response.name+" "+response.surname+"/home")
-        else if response.isCorrect == True and response.storedType != "Turista":    #airline case
+        elif response.isCorrect == True and response.storedType != "Turista":    #airline case
             return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
         else:
             return render_template("Accesso.html")
