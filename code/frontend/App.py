@@ -63,5 +63,25 @@ def home(fullName):
 def airlineHome(airline, fullName):
     return render_template("AirlineHome.html", airline=airline, fullName=fullName)
 
+#here the airline adds a new flight
+@app.route("/<string:airline>/<string:fullName>/airlineHome/addFlight", methods=('GET', 'POST'))
+def addFlight(airline, fullName):
+    return render_template("AddFlight.html", airline=airline, fullName=fullName)
+
+#here the airline modifies the price of an existing flight
+@app.route("/<string:airline>/<string:fullName>/airlineHome/modifyFlight", methods=('GET', 'POST'))
+def modifyFlight(airline, fullName):
+    return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
+
+#here the airline modifies the price for seat selection
+@app.route("/<string:airline>/<string:fullName>/airlineHome/modifySeatsPrices", methods=('GET', 'POST'))
+def modifySeatsPrices(airline, fullName):
+    return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
+
+#here the airline modifies the price of extra-services
+@app.route("/<string:airline>/<string:fullName>/airlineHome/modifyServicesPrices", methods=('GET', 'POST'))
+def modifyServicesPrices(airline, fullName):
+    return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
+
 if __name__ == "__main__":
     app.run()
