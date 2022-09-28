@@ -66,6 +66,18 @@ def airlineHome(airline, fullName):
 #here the airline adds a new flight
 @app.route("/<string:airline>/<string:fullName>/airlineHome/addFlight", methods=('GET', 'POST'))
 def addFlight(airline, fullName):
+    if request.method == 'POST':
+
+        flightId = request.form['inputId']
+        date = request.form['dayDropdown'] + "-" + request.form['monthDropdown'] + "-" + request.form['yearDropdown']
+        departureAirport = request.form['inputDepartureAirport']
+        arrivalAirport = request.form['inputArrivalAirport']
+        #TODO: sistemare orario di partenza e orario di arrivo
+        price = request.form['inputPrice']
+
+        #TODO: chiamata gRPC e tutte cose
+        #TODO: return
+
     return render_template("AddFlight.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price of an existing flight

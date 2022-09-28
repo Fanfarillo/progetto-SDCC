@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fly on the Cloud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  </head>
+
+  <body style="background-color: #d9eeff;">
+
+    <!--Barra di navigazione-->
+    <nav class="navbar navbar-expand-lg bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" style="color: #ffffff;">Fly on the Cloud</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
+              <a class="nav-link disabled">    </a>
+              <a class="nav-link active" aria-current="page" href="/" style="color: #ffffff;">Home</a>
+              <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
+              <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
+            </div>
+          </div>
+        </div>
+    </nav>
+
+    <div class="container my-4 text-center" style="max-width: 1160px;">
+
+      <h3 class="display-5" style="color: #646464;">Aggiungi un nuovo volo.</h3>
+
+      <form action="/{{airline}}/{{fullName}}/airlineHome/addFlight" method="POST">
+        <!--Input flight id-->
+        <div class="mb-3">
+            <label for="inputId" class="form-label">Id volo</label>
+            <textarea class="form-control" type="text" name="inputId" rows="1" required>{{ request.form['inputId'] }}</textarea>
+        </div>
+
+        <!--Dropdown per la selezione della data del volo-->
+        <table align="center">
+         <tr>
+
+          <td>
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="dayDropdown" required>
+                <option disabled selected>Giorno</option>
+                {% for i in range(1,32) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+
+          <td>
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="monthDropdown" required>
+                <option disabled selected>Mese</option>
+                <option value="Gennaio">Gennaio</option>
+                <option value="Febbraio">Febbraio</option>
+                <option value="Marzo">Marzo</option>
+                <option value="Aprile">Aprile</option>
+                <option value="Maggio">Maggio</option>
+                <option value="Giugno">Giugno</option>
+                <option value="Luglio">Luglio</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Settembre">Settembre</option>
+                <option value="Ottobre">Ottobre</option>
+                <option value="Novembre">Novembre</option>
+                <option value="Dicembre">Dicembre</option>
+              </select>
+            </div>
+          </td>
+
+          <td>
+            <div class="dropdown my-5">
+              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="yearDropdown" required>
+                <option disabled selected>Anno</option>
+                {% for i in range(2022,2024) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+        
+         </tr>
+        </table>
+
+        <!--Input departure airport-->
+        <div class="mb-3">
+            <label for="inputDepartureAirport" class="form-label">Aeroporto di partenza</label>
+            <textarea class="form-control" type="text" name="inputDepartureAirport" rows="1" required>{{ request.form['inputDepartureAirport'] }}</textarea>
+        </div>
+
+
+        <!--Input arrival airport-->
+        <div class="mb-3">
+            <label for="inputArrivalAirport" class="form-label">Aeroporto di arrivo</label>
+            <textarea class="form-control" type="text" name="inputArrivalAirport" rows="1" required>{{ request.form['inputArrivalAirport'] }}</textarea>
+        </div>
+
+        <!--Dropdown per la selezione dell'orario di partenza del volo-->
+        <table align="center">
+            <tr>
+   
+             <td>
+               <div class="dropdown my-5">
+                 <label for="departureHour" class="form-label">Orario di partenza</label>
+                 <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureHour" required>
+                   <option disabled selected>Ore</option>
+                   {% for i in range(1,25) %}
+                   <option value="{{ i }}">{{ i }}</option>
+                   {% endfor %}
+                 </select>
+               </div>
+             </td>
+   
+             <td>
+               <div class="dropdown my-5">
+                 <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureMinute" required>
+                   <option disabled selected>Minuti</option>
+                   {% for i in range(1,60) %}
+                   <option value="{{ i }}">{{ i }}</option>
+                   {% endfor %}
+                 </select>
+               </div>
+             </td>
+           
+            </tr>
+        </table>
+
+        <!--Dropdown per la selezione dell'orario di arrivo del volo-->
+        <table align="center">
+            <tr>
+   
+             <td>
+               <div class="dropdown my-5">
+                 <label for="arrivalHour" class="form-label">Orario di arrivo</label>
+                 <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalHour" required>
+                   <option disabled selected>Ore</option>
+                   {% for i in range(1,25) %}
+                   <option value="{{ i }}">{{ i }}</option>
+                   {% endfor %}
+                 </select>
+               </div>
+             </td>
+   
+             <td>
+               <div class="dropdown my-5">
+                 <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalMinute" required>
+                   <option disabled selected>Minuti</option>
+                   {% for i in range(1,60) %}
+                   <option value="{{ i }}">{{ i }}</option>
+                   {% endfor %}
+                 </select>
+               </div>
+             </td>
+           
+            </tr>
+        </table>
+
+        <!--Input price-->
+        <div class="mb-3">
+            <label for="inputPrice" class="form-label">Prezzo</label>
+            <textarea class="form-control" type="text" name="inputPrice" aria-describedby="priceHelp" rows="1" required>{{ request.form['inputPrice'] }}</textarea>
+            <div id="priceHelp" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div>        
+
+      <button type="submit" class="btn btn-primary my-3">Conferma</button>
+      </form>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>
