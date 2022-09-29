@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package proto;
+
+service FlightsInfo {
+    rpc AddFlight(NewFlight) returns (AddResponse);
+}
+
+message NewFlight {
+    string id = 1;
+    string date = 2;
+    string departureAirport = 3;
+    string arrivalAirport = 4;
+    string departureTime = 5;
+    string arrivalTime = 6;
+    string airline = 7;
+    string price = 8;
+    int32 seats = 9;
+}
+
+message AddResponse {
+    bool isOk = 1;
+}
