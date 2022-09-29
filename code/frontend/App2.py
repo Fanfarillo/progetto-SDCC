@@ -1,7 +1,5 @@
 from flask import Flask, render_template, redirect, request
 from FroRpcReg import *
-from FroRpcMan import *
-from FroUtils import *
 
 app = Flask(__name__)
 
@@ -75,16 +73,11 @@ def addFlight(airline, fullName):
     if request.method == 'POST':
 
         flightId = request.form['inputId']
+        date = request.form['dayDropdown'] + "-" + request.form['monthDropdown'] + "-" + request.form['yearDropdown']
         departureAirport = request.form['inputDepartureAirport']
         arrivalAirport = request.form['inputArrivalAirport']
+        #TODO: sistemare orario di partenza e orario di arrivo
         price = request.form['inputPrice']
-
-        #this function returns a string like "DD-MM-YYYY"
-        date = getDate(request.form['dayDropdown'], request.form['monthDropdown'], request.form['yearDropdown'])
-
-        #this function returns a string like "HH:MMAM" or "HH:MMPM"
-        fullDepartureHour = getFullHour(request.form['departureHour'], request.form['departureMinute'])
-        fullArrivalHour = getFullHour(request.form['arrivalHour'], request.form['arrivalMinute'])
 
         #TODO: chiamata gRPC e tutte cose
         #TODO: return
