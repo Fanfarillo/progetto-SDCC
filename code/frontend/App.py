@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request
 from FroRpcReg import *
-from FroRpcMan import *
-from FroUtils import *
+#from FroRpcMan import *
+#from FroUtils import *
 
 app = Flask(__name__)
 
@@ -32,6 +32,18 @@ def accesso():
     
 @app.route("/booking", methods=('GET','POST'))
 def booking():
+	giorno = request.form['giorno']
+	print(giorno)
+	mese = request.form['mese']
+	print(mese)
+	anno = request.form['anno']
+	print(anno)
+	partenza = request.form['aereoporto_partenza']
+	print(partenza)
+	arrivo = request.form['aereoporto_arrivo']
+	print(arrivo)
+	persone = request.form['persone']
+	print(persone)
 	return render_template("Booking.html", items = [1,2,3])
 
 #sign up page

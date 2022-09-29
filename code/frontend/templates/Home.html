@@ -30,95 +30,95 @@
     </nav>
 
     <div class="container my-4 text-center" style="max-width: 1160px;">
-      <form action="/booking" method="POST">
-      <!--Messaggio di saluto-->
-      <h3 class="display-5" style="color: #646464;"><em>Ciao {{fullName}}!</em>
-      <br>Prenota subito un volo con Fly on the Cloud.</h3>
+      	<form action="/booking" method="POST">
+      		<!--Messaggio di saluto-->
+      		<h3 class="display-5" style="color: #646464;"><em>Ciao {{fullName}}!</em>
+      		<br>Prenota subito un volo con Fly on the Cloud.</h3>
 
-      <!--Dropdown per la selezione di data, aeroporto di partenza, aeroporto di destinazione e numero di biglietti da acquistare-->
-      <table align="center">
-        <tr>
+      		<!--Dropdown per la selezione di data, aeroporto di partenza, aeroporto di destinazione e numero di biglietti da acquistare-->
+      		<table align="center">
+        		<tr>
 
-          <td>
-            <div class="dropdown my-5">
-              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                <option disabled selected>Giorno</option>
-                {% for i in range(1,32) %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </td>
+          		<td>
+            		<div class="dropdown my-5">
+              		<select name="giorno" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                		<option disabled selected>Giorno</option>
+                		{% for i in range(1,32) %}
+                		<option value="{{ i }}">{{ i }}</option>
+                		{% endfor %}
+              		</select>
+            		</div>
+          		</td>
 
-          <td>
-            <div class="dropdown my-5">
-              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                <option disabled selected>Mese</option>
-                <option value="Gennaio">Gennaio</option>
-                <option value="Febbraio">Febbraio</option>
-                <option value="Marzo">Marzo</option>
-                <option value="Aprile">Aprile</option>
-                <option value="Maggio">Maggio</option>
-                <option value="Giugno">Giugno</option>
-                <option value="Luglio">Luglio</option>
-                <option value="Agosto">Agosto</option>
-                <option value="Settembre">Settembre</option>
-                <option value="Ottobre">Ottobre</option>
-                <option value="Novembre">Novembre</option>
-                <option value="Dicembre">Dicembre</option>
-              </select>
-            </div>
-          </td>
+          		<td>
+            		<div class="dropdown my-5">
+              		<select name="mese" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                		<option disabled selected>Mese</option>
+                		<option value="Gennaio">Gennaio</option>
+                		<option value="Febbraio">Febbraio</option>
+                		<option value="Marzo">Marzo</option>
+                		<option value="Aprile">Aprile</option>
+                		<option value="Maggio">Maggio</option>
+                		<option value="Giugno">Giugno</option>
+                		<option value="Luglio">Luglio</option>
+                		<option value="Agosto">Agosto</option>
+                		<option value="Settembre">Settembre</option>
+                		<option value="Ottobre">Ottobre</option>
+                		<option value="Novembre">Novembre</option>
+                		<option value="Dicembre">Dicembre</option>
+              		</select>
+            		</div>
+          		</td>
 
-          <td>
-            <div class="dropdown my-5">
-              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                <option disabled selected>Anno</option>
-                {% for i in range(2022,2024) %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </td>
+          		<td>
+            		<div class="dropdown my-5">
+              		<select name="anno" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                		<option disabled selected>Anno</option>
+		                {% for i in range(2022,2024) %}
+        		        <option value="{{ i }}">{{ i }}</option>
+        		        {% endfor %}
+        		      </select>
+        		    </div>
+        		</td>
           
-          <td>
-            <div class="dropdown my-5">
-              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                <option disabled selected>Aeroporto di partenza</option>
-                <option value="Fiumicino">Fiumicino (Roma)</option>
-                <option value="Heathrow">Heathrow (Londra)</option>
-                <option value="Schiphol">Schiphol (Amsterdam)</option>
-              </select>
-            </div>
-          </td>
+          		<td>
+            		<div class="dropdown my-5">
+              		<select name="aereoporto_partenza" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                		<option disabled selected>Aeroporto di partenza</option>
+                		<option value="Fiumicino">Fiumicino (Roma)</option>
+                		<option value="Heathrow">Heathrow (Londra)</option>
+                		<option value="Schiphol">Schiphol (Amsterdam)</option>
+              		</select>
+            		</div>
+          		</td>
 
-          <td>
-            <div class="dropdown my-5">
-              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                <option disabled selected>Aeroporto di arrivo</option>
-                <option value="Fiumicino">Fiumicino (Roma)</option>
-                <option value="Heathrow">Heathrow (Londra)</option>
-                <option value="Schiphol">Schiphol (Amsterdam)</option>
-              </select>
-            </div>
-          </td>
+          		<td>
+            		<div class="dropdown my-5">
+              		<select name="aereoporto_arrivo" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                		<option disabled selected>Aeroporto di arrivo</option>
+                		<option value="Fiumicino">Fiumicino (Roma)</option>
+                		<option value="Heathrow">Heathrow (Londra)</option>
+                		<option value="Schiphol">Schiphol (Amsterdam)</option>
+              		</select>
+            		</div>
+          		</td>
 
-          <td>
-            <div class="dropdown my-5">
-              <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                <option disabled selected>Numero di persone</option>
-                {% for i in range(1,11) %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </td>
+          		<td>
+            		<div class="dropdown my-5">
+              		<select name="persone" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+                		<option disabled selected>Numero di persone</option>
+		                {% for i in range(1,11) %}
+        		        <option value="{{ i }}">{{ i }}</option>
+        		        {% endfor %}
+        			</select>
+            		</div>
+          		</td>
 
-        </tr>
-      </table> 
+        		</tr>
+      		</table> 
       
-      <button type="submit" class="btn btn-primary my-5">Avanti</button>
-      </form>
+      		<button type="submit" class="btn btn-primary my-5">Avanti</button>
+    	</form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
