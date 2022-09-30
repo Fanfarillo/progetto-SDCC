@@ -33,7 +33,7 @@
 
       <h3 class="display-5" style="color: #646464;">Aggiungi un nuovo volo.</h3>
 
-      <form action="/{{airline}}/{{fullName}}/airlineHome/addFlight" method="POST">
+      <form action="/{{airline}}/{{fullName}}/addFlight" method="POST">
         <!--Input flight id-->
         <div class="mb-3">
             <label for="inputId" class="form-label">Id volo</label>
@@ -59,18 +59,9 @@
             <div class="dropdown my-5">
               <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="monthDropdown" required>
                 <option disabled selected>Mese</option>
-                <option value="Gennaio">Gennaio</option>
-                <option value="Febbraio">Febbraio</option>
-                <option value="Marzo">Marzo</option>
-                <option value="Aprile">Aprile</option>
-                <option value="Maggio">Maggio</option>
-                <option value="Giugno">Giugno</option>
-                <option value="Luglio">Luglio</option>
-                <option value="Agosto">Agosto</option>
-                <option value="Settembre">Settembre</option>
-                <option value="Ottobre">Ottobre</option>
-                <option value="Novembre">Novembre</option>
-                <option value="Dicembre">Dicembre</option>
+                {% for i in range(1,13) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
               </select>
             </div>
           </td>

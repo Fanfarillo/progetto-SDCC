@@ -25,6 +25,6 @@ def registerFlight(id, date, departureAirport, arrivalAirport, departureTime, ar
     stub = BooMan_pb2_grpc.FlightsAndPricesStub(channel)
 
     #get response from Flights Management service
-    output = stub.RegisterFlight(BooMan_pb2.NewFlight(id=id, date=date, departureAirport=departureAirport, arrivalAirport=arrivalAirport, departureTime=departureTime, arrivalTime=arrivalTime, airline=airline, price=price, seats=seats))
+    output = stub.RegisterFlight(BooMan_pb2.NewFlight2(id=id, date=date, departureAirport=departureAirport, arrivalAirport=arrivalAirport, departureTime=departureTime, arrivalTime=arrivalTime, airline=airline, price=price, seats=seats))
     #we need to return the boolean value
     return output.isOk    

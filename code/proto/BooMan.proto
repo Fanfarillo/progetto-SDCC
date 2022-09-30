@@ -4,7 +4,7 @@ package proto;
 
 service FlightsAndPrices {
     rpc SendId(IdMessage) returns (IdResponse);
-    rpc RegisterFlight(NewFlight) returns (RegisterResponse);
+    rpc RegisterFlight(NewFlight2) returns (RegisterResponse);
 }
 
 message IdMessage {
@@ -15,7 +15,7 @@ message IdResponse {
     bool isOk = 1;
 }
 
-message NewFlight {
+message NewFlight2 {
     string id = 1;
     string date = 2;
     string departureAirport = 3;

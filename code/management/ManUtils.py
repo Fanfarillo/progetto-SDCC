@@ -8,7 +8,7 @@ def checkDateExistance(dateStr):
 
     yearInt = int(yearStr)
 
-    if (dayStr=='31' and (monthStr=='02' monthStr=='04' or monthStr=='06' or monthStr=='09' or monthStr=='11')) or (dayStr=='30' and monthStr=='02'):
+    if (dayStr=='31' and (monthStr=='02' or monthStr=='04' or monthStr=='06' or monthStr=='09' or monthStr=='11')) or (dayStr=='30' and monthStr=='02'):
         return False
     elif dayStr=='29' and monthStr=='02' and (yearInt%4!=0 or (yearInt%100==0 and yearInt%400!=0)):
         return False

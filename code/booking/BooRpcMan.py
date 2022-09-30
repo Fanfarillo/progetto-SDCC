@@ -6,7 +6,7 @@ from proto import BooMan_pb2
 from proto import BooMan_pb2_grpc
 from BooDB import *
 
-class FlightsAndPricesServicer(FroMan_pb2_grpc.FlightsAndPricesServicer):
+class FlightsAndPricesServicer(BooMan_pb2_grpc.FlightsAndPricesServicer):
 
     def SendId(self, IdMessage, context):
         #check if the id was not used for an other available flight
@@ -15,8 +15,8 @@ class FlightsAndPricesServicer(FroMan_pb2_grpc.FlightsAndPricesServicer):
         output = BooMan_pb2.IdResponse(isOk=isNew)
         return output
 
-    def RegisterFlight(self, NewFlight, context):
-        storeFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, NewFlight.price, NewFlight.seats)
+    def RegisterFlight(self, NewFlight2, context):
+        storeFlight(NewFlight2.id, NewFlight2.date, NewFlight2.departureAirport, NewFlight2.arrivalAirport, NewFlight2.departureTime, NewFlight2.arrivalTime, NewFlight2.airline, NewFlight2.price, NewFlight2.seats)
 
         output = BooMan_pb2.RegisterResponse(isOk=True)
         return output

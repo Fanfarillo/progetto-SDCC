@@ -6,6 +6,7 @@ from datetime import datetime
 from proto import FroMan_pb2
 from proto import FroMan_pb2_grpc
 
+from ManRpcBoo import *
 from ManUtils import *
 
 class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
@@ -27,7 +28,11 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         isOk = (isNewFlightId and isExistentDate and NewFlight.departureAirport!=NewFlight.arrivalAirport and isValidAirline and isValidPrice and NewFlight.seats>0)
 
         if isOk:
+            #we can decide to do something with return value of registerFlight; at the moment we will not use it
             registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, NewFlight.price, NewFlight.seats)
+
+        output = FroMan_pb2.AddResponse(isOk=isOk)
+        return output
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

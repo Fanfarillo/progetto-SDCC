@@ -2,10 +2,10 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import Boo_pb2 as Boo__pb2
+from proto import FroMan_pb2 as proto_dot_FroMan__pb2
 
 
-class BookingServiceStub(object):
+class FlightsInfoStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -14,42 +14,42 @@ class BookingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.getAllFlights = channel.unary_unary(
-                '/proto.BookingService/getAllFlights',
-                request_serializer=Boo__pb2.getAllFlightsRequest.SerializeToString,
-                response_deserializer=Boo__pb2.getAllFlightsReply.FromString,
+        self.AddFlight = channel.unary_unary(
+                '/proto.FlightsInfo/AddFlight',
+                request_serializer=proto_dot_FroMan__pb2.NewFlight.SerializeToString,
+                response_deserializer=proto_dot_FroMan__pb2.AddResponse.FromString,
                 )
 
 
-class BookingServiceServicer(object):
+class FlightsInfoServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def getAllFlights(self, request, context):
+    def AddFlight(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_BookingServiceServicer_to_server(servicer, server):
+def add_FlightsInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'getAllFlights': grpc.unary_unary_rpc_method_handler(
-                    servicer.getAllFlights,
-                    request_deserializer=Boo__pb2.getAllFlightsRequest.FromString,
-                    response_serializer=Boo__pb2.getAllFlightsReply.SerializeToString,
+            'AddFlight': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddFlight,
+                    request_deserializer=proto_dot_FroMan__pb2.NewFlight.FromString,
+                    response_serializer=proto_dot_FroMan__pb2.AddResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'proto.BookingService', rpc_method_handlers)
+            'proto.FlightsInfo', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class BookingService(object):
+class FlightsInfo(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def getAllFlights(request,
+    def AddFlight(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class BookingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/proto.BookingService/getAllFlights',
-            Boo__pb2.getAllFlightsRequest.SerializeToString,
-            Boo__pb2.getAllFlightsReply.FromString,
+        return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/AddFlight',
+            proto_dot_FroMan__pb2.NewFlight.SerializeToString,
+            proto_dot_FroMan__pb2.AddResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

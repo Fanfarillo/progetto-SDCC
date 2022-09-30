@@ -15,11 +15,11 @@ def getHour(initialHour):
 
     if intHour == 0:
         hour = '12'
-    else if intHour > 0 and intHour < 10:
+    elif intHour > 0 and intHour < 10:
         hour = '0'+initialHour
-    else if intHour > 9 and intHour < 13:
+    elif intHour > 9 and intHour < 13:
         hour = initialHour
-    else if intHour > 12 and intHour < 22:
+    elif intHour > 12 and intHour < 22:
         hour = '0'+str(intHour-12)
     else:
         hour = str(intHour-12)
