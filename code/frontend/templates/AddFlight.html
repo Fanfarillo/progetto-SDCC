@@ -102,7 +102,7 @@
                  <label for="departureHour" class="form-label">Orario di partenza</label>
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureHour" required>
                    <option disabled selected>Ore</option>
-                   {% for i in range(1,25) %}
+                   {% for i in range(0,24) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
@@ -113,7 +113,7 @@
                <div class="dropdown my-5">
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureMinute" required>
                    <option disabled selected>Minuti</option>
-                   {% for i in range(1,60) %}
+                   {% for i in range(0,60) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
@@ -132,7 +132,7 @@
                  <label for="arrivalHour" class="form-label">Orario di arrivo</label>
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalHour" required>
                    <option disabled selected>Ore</option>
-                   {% for i in range(1,25) %}
+                   {% for i in range(0,24) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
@@ -143,7 +143,7 @@
                <div class="dropdown my-5">
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalMinute" required>
                    <option disabled selected>Minuti</option>
-                   {% for i in range(1,60) %}
+                   {% for i in range(0,60) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>

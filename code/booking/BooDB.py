@@ -1,5 +1,7 @@
 import boto3
 
+from decimal import *
+
 #this function returns true if there is no item with the specified id (i.e. the specified primary key); it returns false otherwise
 def isNewId(flightId):
     dynamodb = boto3.resource('dynamodb')
