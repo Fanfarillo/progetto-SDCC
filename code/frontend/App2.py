@@ -1,5 +1,8 @@
 from flask import Flask, render_template, redirect, request
 from FroRpcReg import *
+from FroRpcBoo import *
+#from FroRpcMan import *
+#from FroUtils import *
 
 app = Flask(__name__)
 
@@ -30,6 +33,21 @@ def accesso():
     
 @app.route("/booking", methods=('GET','POST'))
 def booking():
+	giorno = request.form['giorno']
+	print(giorno)
+	mese = request.form['mese']
+	print(mese)
+	anno = request.form['anno']
+	print(anno)
+	partenza = request.form['aereoporto_partenza']
+	print(partenza)
+	arrivo = request.form['aereoporto_arrivo']
+	print(arrivo)
+	persone = request.form['persone']
+	print(persone)
+	
+	sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
+	
 	return render_template("Booking.html", items = [1,2,3])
 
 #sign up page
@@ -73,11 +91,16 @@ def addFlight(airline, fullName):
     if request.method == 'POST':
 
         flightId = request.form['inputId']
-        date = request.form['dayDropdown'] + "-" + request.form['monthDropdown'] + "-" + request.form['yearDropdown']
         departureAirport = request.form['inputDepartureAirport']
         arrivalAirport = request.form['inputArrivalAirport']
-        #TODO: sistemare orario di partenza e orario di arrivo
         price = request.form['inputPrice']
+
+        #this function returns a string like "DD-MM-YYYY"
+        date = getDate(request.form['dayDropdown'], request.form['monthDropdown'], request.form['yearDropdown'])
+
+        #this function returns a string like "HH:MMAM" or "HH:MMPM"
+        fullDepartureHour = getFullHour(request.form['departureHour'], request.form['departureMinute'])
+        fullArrivalHour = getFullHour(request.form['arrivalHour'], request.form['arrivalMinute'])
 
         #TODO: chiamata gRPC e tutte cose
         #TODO: return

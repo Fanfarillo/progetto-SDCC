@@ -4,6 +4,8 @@ package proto;
 
 service BookingService {
     rpc getAllFlights(getAllFlightsRequest) returns (getAllFlightsReply);
+    rpc SendId(IdMessage) returns (IdResponse);
+    rpc RegisterFlight(NewFlight2) returns (RegisterResponse);
 }
 
 message getAllFlightsRequest {
@@ -20,3 +22,28 @@ message getAllFlightsReply {
 	string id = 1;
 	string compagnia = 2;
 }
+
+message IdMessage {
+    string id = 1;
+}
+
+message IdResponse {
+    bool isOk = 1;
+}
+
+message NewFlight2 {
+    string id = 1;
+    string date = 2;
+    string departureAirport = 3;
+    string arrivalAirport = 4;
+    string departureTime = 5;
+    string arrivalTime = 6;
+    string airline = 7;
+    string price = 8;
+    int32 seats = 9;
+}
+
+message RegisterResponse {
+    bool isOk = 1;
+}
+
