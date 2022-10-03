@@ -1,5 +1,5 @@
 import boto3
-
+from boto3.dynamodb.conditions import Attr
 from decimal import *
 
 #this function returns true if there is no item with the specified id (i.e. the specified primary key); it returns false otherwise
@@ -37,3 +37,47 @@ def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime,
             'Posti liberi': seats
         }
     )
+
+class Flight:
+	def __init__(self, idKey, compagnia_aerea):
+		self.idKey = idKey
+		self.compagnia_aerea = compagnia_aerea
+
+
+def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('Volo')
+
+    #read from 'Utente' table in DynamoDB
+    print(partenza)
+    print(str(giorno))
+    print(str(mese))
+    print(str(anno))
+    response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
+    
+    items = response['Items']
+    
+    #print(items)
+    
+    idKey = ''
+    compagnia_aerea = ''
+    flights = []
+    append = True
+    
+    #itero sui dizionari
+    for item in items:
+    	for key, value in item.items():
+    		if(key=='Id'):
+    			idKey = value
+    			#print(value)
+    		if(key=='Compagnia aerea'):
+    			compagnia_aerea = value    		
+    		if(idKey!= '' and compagnia_aerea!='' and append):
+    			append = False
+    			flights.append(Flight(idKey, compagnia_aerea))
+    	idKey = ''
+    	compagnia_aerea = ''
+    	append = True
+    print(flights)
+    
+    return flights

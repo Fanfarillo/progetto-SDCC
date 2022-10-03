@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request
 from FroRpcReg import *
 from FroRpcMan import *
+from FroRpcBoo import *
 from FroUtils import *
 
 NUM_SEATS = 156
@@ -34,19 +35,23 @@ def accesso():
     
 @app.route("/booking", methods=('GET','POST'))
 def booking():
-	giorno = request.form['giorno']
-	print(giorno)
-	mese = request.form['mese']
-	print(mese)
-	anno = request.form['anno']
-	print(anno)
-	partenza = request.form['aereoporto_partenza']
-	print(partenza)
-	arrivo = request.form['aereoporto_arrivo']
-	print(arrivo)
-	persone = request.form['persone']
-	print(persone)
-	return render_template("Booking.html", items = [1,2,3])
+    if request.method == 'POST':
+        giorno = request.form['giorno']
+        print(type(int(giorno)))
+        mese = request.form['mese']
+        print(mese)
+        anno = request.form['anno']
+        print(anno)
+        partenza = request.form['aereoporto_partenza']
+        print(partenza)
+        arrivo = request.form['aereoporto_arrivo']
+        print(arrivo)
+        persone = request.form['persone']
+        print(persone)
+        output = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
+        print(output)
+        return render_template("Booking.html", items = [1,2,3,4])
+    return render_template("Accesso.html")
 
 #sign up page
 @app.route("/iscriviti", methods=('GET','POST'))

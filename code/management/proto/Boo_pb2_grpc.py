@@ -14,7 +14,7 @@ class BookingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.getAllFlights = channel.unary_unary(
+        self.getAllFlights = channel.unary_stream(
                 '/proto.BookingService/getAllFlights',
                 request_serializer=proto_dot_Boo__pb2.getAllFlightsRequest.SerializeToString,
                 response_deserializer=proto_dot_Boo__pb2.getAllFlightsReply.FromString,
@@ -55,7 +55,7 @@ class BookingServiceServicer(object):
 
 def add_BookingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'getAllFlights': grpc.unary_unary_rpc_method_handler(
+            'getAllFlights': grpc.unary_stream_rpc_method_handler(
                     servicer.getAllFlights,
                     request_deserializer=proto_dot_Boo__pb2.getAllFlightsRequest.FromString,
                     response_serializer=proto_dot_Boo__pb2.getAllFlightsReply.SerializeToString,
@@ -91,7 +91,7 @@ class BookingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/proto.BookingService/getAllFlights',
+        return grpc.experimental.unary_stream(request, target, '/proto.BookingService/getAllFlights',
             proto_dot_Boo__pb2.getAllFlightsRequest.SerializeToString,
             proto_dot_Boo__pb2.getAllFlightsReply.FromString,
             options, channel_credentials,

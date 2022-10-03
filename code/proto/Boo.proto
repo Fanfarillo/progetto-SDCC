@@ -3,7 +3,7 @@ syntax = "proto3";
 package proto;
 
 service BookingService {
-    rpc getAllFlights(getAllFlightsRequest) returns (getAllFlightsReply);
+    rpc getAllFlights(getAllFlightsRequest) returns (stream getAllFlightsReply);
     rpc SendId(IdMessage) returns (IdResponse);
     rpc RegisterFlight(NewFlight2) returns (RegisterResponse);
 }
