@@ -37,7 +37,7 @@ def accesso():
 def booking():
     if request.method == 'POST':
         giorno = request.form['giorno']
-        print(type(int(giorno)))
+        print(giorno)
         mese = request.form['mese']
         print(mese)
         anno = request.form['anno']

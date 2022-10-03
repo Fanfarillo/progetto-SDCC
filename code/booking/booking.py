@@ -9,16 +9,16 @@ from BooDB import *
 class BookingInfoServicer(Boo_pb2_grpc.BookingServiceServicer):
 
     def getAllFlights(self, request, context):
-        print("ciao2")
         flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
         for flight in flights:
-            ret = Boo_pb2.getAllFlightsReply(flight.idKey, flight.compagnia_aerea)
+            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea)
+            print("ciao2")
             yield ret
     
     def SendId(self, IdMessage, context):
         #check if the id was not used for an other available flight
         isNew = isNewId(IdMessage.id)
-
+        print("ci")
         output = Boo_pb2.IdResponse(isOk=isNew)
         return output
 
@@ -36,6 +36,8 @@ Boo_pb2_grpc.add_BookingServiceServicer_to_server(BookingInfoServicer(), server)
 print('Starting server. Listening on port 50053.')
 server.add_insecure_port('[::]:50053')
 server.start()
+
+#server.wait_for_termination()
 
 try:
     while True:
