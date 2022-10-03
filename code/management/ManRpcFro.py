@@ -15,17 +15,20 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         #sanity checks are the following:
         #   1) Id should not exist yet
         #   2) Date should exist (e.g. it cannot be '31-04-2023')
-        #   3) Departure airport != arrival airport
-        #   4) Airline should be either EasyJet or ITA or Ryanair
-        #   5) Price should be a number and it should be greater than zero
-        #   6) Seats should be greater than zero
+        #   3) Date should be future
+        #   4) Departure airport != arrival airport
+        #   5) Airline should be either EasyJet or ITA or Ryanair
+        #   6) Price should be a number and it should be greater than zero
+        #   7) Seats should be greater than zero
 
         isNewFlightId = checkFlightId(NewFlight.id)                 #condition 1)
         isExistentDate = checkDateExistance(NewFlight.date)         #condition 2)
-        isValidAirline = (NewFlight.airline=='EasyJet' or NewFlight.airline=='ITA' or NewFlight.airline=='Ryanair')     #condition 4)
-        isValidPrice = NewFlight.price.replace('.','',1).isdigit()  #condition 5)
+        if isExistentDate:
+            isFutureDate = checkFutureDate(NewFlight.date)          #condition 3)
+        isValidAirline = (NewFlight.airline=='EasyJet' or NewFlight.airline=='ITA' or NewFlight.airline=='Ryanair')     #condition 5)
+        isValidPrice = NewFlight.price.replace('.','',1).isdigit()  #condition 6)
 
-        isOk = (isNewFlightId and isExistentDate and NewFlight.departureAirport!=NewFlight.arrivalAirport and isValidAirline and isValidPrice and NewFlight.seats>0)
+        isOk = (isNewFlightId and isExistentDate and isFutureDate and NewFlight.departureAirport!=NewFlight.arrivalAirport and isValidAirline and isValidPrice and NewFlight.seats>0)
 
         if isOk:
             #we can decide to do something with return value of registerFlight; at the moment we will not use it

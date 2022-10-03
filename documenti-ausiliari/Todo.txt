@@ -1,3 +1,1 @@
-1) Fare in modo che non si rompa tutto nel momento in cui giorno / mese / anno / ore / minuti non vengono selezionati nei relativi menù a tendina.
-2) Aggiungere il seguente controllo: la data del volo che si sta aggiungendo deve necessariamente essere futura.
-3) Fare in modo che nel db vengano memorizzati solo prezzi approssimati alla seconda cifra dopo la virgola.
+1) Fare in modo che nel db vengano memorizzati solo prezzi approssimati alla seconda cifra dopo la virgola.

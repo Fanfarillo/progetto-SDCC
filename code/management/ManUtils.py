@@ -1,3 +1,5 @@
+from datetime import datetime, date
+
 #this function checks if provided date exists
 #not existing dates are 30/02, 31/02, 31/04, 31/06, 31/09, 31/11 and, for not leap years, 29/09
 #NOTE: years that are multiple of 100 and are not multiple of 400 are NOT leap years
@@ -14,3 +16,12 @@ def checkDateExistance(dateStr):
         return False
     else:
         return True
+
+#this function checks if provided date is future (i.e. is greater than today)
+def checkFutureDate(dateStr):
+    dateObj = datetime.strptime(dateStr, '%d-%m-%Y').date()
+    today = date.today()
+    if dateObj > today:
+        return True
+    else:
+        return False

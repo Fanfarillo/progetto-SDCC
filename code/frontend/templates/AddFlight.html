@@ -46,9 +46,10 @@
 
           <td>
             <div class="dropdown my-5">
+              <label for="dayDropdown" class="form-label">Giorno</label><br>
               <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="dayDropdown" required>
-                <option disabled selected>Giorno</option>
-                {% for i in range(1,32) %}
+                <option selected value="1">1</option>
+                {% for i in range(2,32) %}
                 <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
               </select>
@@ -57,9 +58,10 @@
 
           <td>
             <div class="dropdown my-5">
+              <label for="monthDropdown" class="form-label">Mese</label><br>
               <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="monthDropdown" required>
-                <option disabled selected>Mese</option>
-                {% for i in range(1,13) %}
+                <option selected value="1">1</option>
+                {% for i in range(2,13) %}
                 <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
               </select>
@@ -68,9 +70,10 @@
 
           <td>
             <div class="dropdown my-5">
+              <label for="yearDropdown" class="form-label">Anno</label><br>
               <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="yearDropdown" required>
-                <option disabled selected>Anno</option>
-                {% for i in range(2022,2024) %}
+                <option selected value="2022">2022</option>
+                {% for i in range(2023,2025) %}
                 <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
               </select>
@@ -99,10 +102,10 @@
    
              <td>
                <div class="dropdown my-5">
-                 <label for="departureHour" class="form-label">Orario di partenza</label>
+                 <label for="departureHour" class="form-label">Orario di partenza (h) --</label><br>
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureHour" required>
-                   <option disabled selected>Ore</option>
-                   {% for i in range(0,24) %}
+                   <option selected value="0">0</option>
+                   {% for i in range(1,24) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
@@ -111,9 +114,10 @@
    
              <td>
                <div class="dropdown my-5">
+                 <label for="departureMinute" class="form-label">-- Orario di partenza (min)</label><br>
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureMinute" required>
-                   <option disabled selected>Minuti</option>
-                   {% for i in range(0,60) %}
+                   <option selected value="0">0</option>
+                   {% for i in range(1,60) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
@@ -129,10 +133,10 @@
    
              <td>
                <div class="dropdown my-5">
-                 <label for="arrivalHour" class="form-label">Orario di arrivo</label>
+                 <label for="arrivalHour" class="form-label">Orario di arrivo (h) ----</label><br>
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalHour" required>
-                   <option disabled selected>Ore</option>
-                   {% for i in range(0,24) %}
+                  <option selected value="0">0</option>
+                   {% for i in range(1,24) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
@@ -141,9 +145,10 @@
    
              <td>
                <div class="dropdown my-5">
+                 <label for="arrivalMinute" class="form-label">---- Orario di arrivo (min)</label><br>
                  <select class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalMinute" required>
-                   <option disabled selected>Minuti</option>
-                   {% for i in range(0,60) %}
+                   <option selected value="0">0</option>
+                   {% for i in range(1,60) %}
                    <option value="{{ i }}">{{ i }}</option>
                    {% endfor %}
                  </select>
