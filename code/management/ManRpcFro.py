@@ -37,6 +37,23 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         output = FroMan_pb2.AddResponse(isOk=isOk)
         return output
 
+    def ModifyFlight(self, UpdatedFlight, context):
+        #sanity checks are the following:
+        #   1) Flight id should already exist
+        #   2) Price should be a number and it should be greater than zero
+
+        isExistentFlightId = not checkFlightId(UpdatedFlight.flightId)      #condition 1)
+        isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()   #condition 2)
+
+        isOk = isExistentFlightId and isValidPrice
+
+        if isOk:
+            #we can decide to do something with return value of registerFlight; at the moment we will not use it
+            updateFlightPrice(UpdatedFlight.flightId, UpdatedFlight.newPrice)
+
+        output = FroMan_pb2.ModFlightResponse(isOk=isOk)
+        return output
+
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 FroMan_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)

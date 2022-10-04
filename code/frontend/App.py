@@ -109,7 +109,7 @@ def addFlight(airline, fullName):
 
         #if new flight info is ok, then notify the user; else go back to addFlight page because the user has to change something
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/addFlightOk")
+            return redirect("/"+airline+"/"+fullName+"/volo aggiunto")
         else:
             return render_template("AddFlight.html", airline=airline, fullName=fullName)
 
@@ -118,6 +118,18 @@ def addFlight(airline, fullName):
 #here the airline modifies the price of an existing flight
 @app.route("/<string:airline>/<string:fullName>/modifyFlight", methods=('GET', 'POST'))
 def modifyFlight(airline, fullName):
+    if request.method == 'POST':
+
+        flightId = request.form['inputId']
+        newPrice = request.form['inputPrice']
+
+        isOk = sendNewPrice(flightId, newPrice)
+
+        if isOk:
+            return redirect("/"+airline+"/"+fullName+"/prezzi modificati")
+        else:
+            return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
+
     return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price for seat selection
@@ -131,12 +143,12 @@ def modifyServicesPrices(airline, fullName):
     return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
 
 #here an ok message is shown
-@app.route("/<string:airline>/<string:fullName>/addFlightOk", methods=('GET', 'POST'))
-def showAddFlightOk(airline, fullName):
+@app.route("/<string:airline>/<string:fullName>/<string:okMessage>", methods=('GET', 'POST'))
+def showOkMessage(airline, fullName, okMessage):
     if request.method == 'POST':
         return redirect("/"+airline+"/"+fullName+"/airlineHome")
 
-    return render_template("AddFlightOk.html", airline=airline, fullName=fullName)
+    return render_template("ManagementOk.html", airline=airline, fullName=fullName, okMessage=okMessage)
 
 if __name__ == "__main__":
     app.run()

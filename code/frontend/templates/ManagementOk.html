@@ -30,9 +30,9 @@
     </nav>
 
     <div class="container my-4 text-center" style="max-width: 1160px;">
-      	<form action="/{{airline}}/{{fullName}}/addFlightOk" method="POST">
+      	<form action="/{{airline}}/{{fullName}}/{{okMessage}}" method="POST">
       		<!--Messaggio di avvenuta aggiunta del volo-->
-      		<h3 class="display-5" style="color: #646464;">Il volo è stato aggiunto correttamente.</h3>
+      		<h3 class="display-5" style="color: #646464;">{{okMessage}} correttamente.</h3>
       
       		<button type="submit" class="btn btn-primary my-5">Ok</button>
     	</form>

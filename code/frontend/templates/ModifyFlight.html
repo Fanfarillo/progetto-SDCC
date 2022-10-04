@@ -33,6 +33,23 @@
 
       <h3 class="display-5" style="color: #646464;">Modifica il prezzo di un volo già esistente.</h3>
 
+      <form action="/{{airline}}/{{fullName}}/modifyFlight" method="POST">
+        <!--Input flight id-->
+        <div class="mb-3">
+            <label for="inputId" class="form-label">Id volo</label>
+            <textarea class="form-control" type="text" name="inputId" rows="1" required>{{ request.form['inputId'] }}</textarea>
+        </div>
+
+        <!--Input new price-->
+        <div class="mb-3">
+            <label for="inputPrice" class="form-label">Nuovo prezzo</label>
+            <textarea class="form-control" type="text" name="inputPrice" aria-describedby="priceHelp" rows="1" required>{{ request.form['inputPrice'] }}</textarea>
+            <div id="priceHelp" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div>        
+
+        <button type="submit" class="btn btn-primary my-3">Conferma</button>
+      </form>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
