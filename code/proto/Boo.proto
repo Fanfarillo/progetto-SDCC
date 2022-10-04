@@ -6,6 +6,7 @@ service BookingService {
     rpc getAllFlights(getAllFlightsRequest) returns (stream getAllFlightsReply);
     rpc SendId(IdMessage) returns (IdResponse);
     rpc RegisterFlight(NewFlight2) returns (RegisterResponse);
+    rpc UpdateFlightPrice(UpdatedFlight2) returns (UpdateResponse);
 }
 
 message getAllFlightsRequest {

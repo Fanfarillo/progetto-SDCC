@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, request
 from FroRpcReg import *
+from FroRpcMan import *
 from FroRpcBoo import *
-#from FroRpcMan import *
-#from FroUtils import *
+from FroUtils import *
+
+NUM_SEATS = 156
 
 app = Flask(__name__)
 
@@ -33,22 +35,23 @@ def accesso():
     
 @app.route("/booking", methods=('GET','POST'))
 def booking():
-	giorno = request.form['giorno']
-	print(giorno)
-	mese = request.form['mese']
-	print(mese)
-	anno = request.form['anno']
-	print(anno)
-	partenza = request.form['aereoporto_partenza']
-	print(partenza)
-	arrivo = request.form['aereoporto_arrivo']
-	print(arrivo)
-	persone = request.form['persone']
-	print(persone)
-	
-	sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
-	
-	return render_template("Booking.html", items = [1,2,3])
+    if request.method == 'POST':
+        giorno = request.form['giorno']
+        print(giorno)
+        mese = request.form['mese']
+        print(mese)
+        anno = request.form['anno']
+        print(anno)
+        partenza = request.form['aereoporto_partenza']
+        print(partenza)
+        arrivo = request.form['aereoporto_arrivo']
+        print(arrivo)
+        persone = request.form['persone']
+        print(persone)
+        output = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
+        print(output)
+        return render_template("Booking.html", items = [1,2,3,4])
+    return render_template("Accesso.html")
 
 #sign up page
 @app.route("/iscriviti", methods=('GET','POST'))
@@ -86,7 +89,7 @@ def airlineHome(airline, fullName):
     return render_template("AirlineHome.html", airline=airline, fullName=fullName)
 
 #here the airline adds a new flight
-@app.route("/<string:airline>/<string:fullName>/airlineHome/addFlight", methods=('GET', 'POST'))
+@app.route("/<string:airline>/<string:fullName>/addFlight", methods=('GET', 'POST'))
 def addFlight(airline, fullName):
     if request.method == 'POST':
 
@@ -102,25 +105,50 @@ def addFlight(airline, fullName):
         fullDepartureHour = getFullHour(request.form['departureHour'], request.form['departureMinute'])
         fullArrivalHour = getFullHour(request.form['arrivalHour'], request.form['arrivalMinute'])
 
-        #TODO: chiamata gRPC e tutte cose
-        #TODO: return
+        isOk = sendNewFlight(flightId, date, departureAirport, arrivalAirport, fullDepartureHour, fullArrivalHour, airline, price, NUM_SEATS)
+
+        #if new flight info is ok, then notify the user; else go back to addFlight page because the user has to change something
+        if isOk:
+            return redirect("/"+airline+"/"+fullName+"/volo aggiunto")
+        else:
+            return render_template("AddFlight.html", airline=airline, fullName=fullName)
 
     return render_template("AddFlight.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price of an existing flight
-@app.route("/<string:airline>/<string:fullName>/airlineHome/modifyFlight", methods=('GET', 'POST'))
+@app.route("/<string:airline>/<string:fullName>/modifyFlight", methods=('GET', 'POST'))
 def modifyFlight(airline, fullName):
+    if request.method == 'POST':
+
+        flightId = request.form['inputId']
+        newPrice = request.form['inputPrice']
+
+        isOk = sendNewPrice(flightId, newPrice)
+
+        if isOk:
+            return redirect("/"+airline+"/"+fullName+"/prezzi modificati")
+        else:
+            return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
+
     return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price for seat selection
-@app.route("/<string:airline>/<string:fullName>/airlineHome/modifySeatsPrices", methods=('GET', 'POST'))
+@app.route("/<string:airline>/<string:fullName>/modifySeatsPrices", methods=('GET', 'POST'))
 def modifySeatsPrices(airline, fullName):
     return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price of extra-services
-@app.route("/<string:airline>/<string:fullName>/airlineHome/modifyServicesPrices", methods=('GET', 'POST'))
+@app.route("/<string:airline>/<string:fullName>/modifyServicesPrices", methods=('GET', 'POST'))
 def modifyServicesPrices(airline, fullName):
     return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
+
+#here an ok message is shown
+@app.route("/<string:airline>/<string:fullName>/<string:okMessage>", methods=('GET', 'POST'))
+def showOkMessage(airline, fullName, okMessage):
+    if request.method == 'POST':
+        return redirect("/"+airline+"/"+fullName+"/airlineHome")
+
+    return render_template("ManagementOk.html", airline=airline, fullName=fullName, okMessage=okMessage)
 
 if __name__ == "__main__":
     app.run()

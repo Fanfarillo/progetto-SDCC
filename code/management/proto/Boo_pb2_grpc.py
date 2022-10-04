@@ -29,6 +29,11 @@ class BookingServiceStub(object):
                 request_serializer=proto_dot_Boo__pb2.NewFlight2.SerializeToString,
                 response_deserializer=proto_dot_Boo__pb2.RegisterResponse.FromString,
                 )
+        self.UpdateFlightPrice = channel.unary_unary(
+                '/proto.BookingService/UpdateFlightPrice',
+                request_serializer=proto_dot_Boo__pb2.UpdatedFlight2.SerializeToString,
+                response_deserializer=proto_dot_Boo__pb2.UpdateResponse.FromString,
+                )
 
 
 class BookingServiceServicer(object):
@@ -52,6 +57,12 @@ class BookingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateFlightPrice(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BookingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -69,6 +80,11 @@ def add_BookingServiceServicer_to_server(servicer, server):
                     servicer.RegisterFlight,
                     request_deserializer=proto_dot_Boo__pb2.NewFlight2.FromString,
                     response_serializer=proto_dot_Boo__pb2.RegisterResponse.SerializeToString,
+            ),
+            'UpdateFlightPrice': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateFlightPrice,
+                    request_deserializer=proto_dot_Boo__pb2.UpdatedFlight2.FromString,
+                    response_serializer=proto_dot_Boo__pb2.UpdateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -128,5 +144,22 @@ class BookingService(object):
         return grpc.experimental.unary_unary(request, target, '/proto.BookingService/RegisterFlight',
             proto_dot_Boo__pb2.NewFlight2.SerializeToString,
             proto_dot_Boo__pb2.RegisterResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateFlightPrice(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/proto.BookingService/UpdateFlightPrice',
+            proto_dot_Boo__pb2.UpdatedFlight2.SerializeToString,
+            proto_dot_Boo__pb2.UpdateResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
