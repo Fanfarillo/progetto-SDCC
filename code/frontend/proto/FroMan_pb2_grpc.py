@@ -19,12 +19,23 @@ class FlightsInfoStub(object):
                 request_serializer=proto_dot_FroMan__pb2.NewFlight.SerializeToString,
                 response_deserializer=proto_dot_FroMan__pb2.AddResponse.FromString,
                 )
+        self.ModifyFlight = channel.unary_unary(
+                '/proto.FlightsInfo/ModifyFlight',
+                request_serializer=proto_dot_FroMan__pb2.UpdatedFlight.SerializeToString,
+                response_deserializer=proto_dot_FroMan__pb2.ModFlightResponse.FromString,
+                )
 
 
 class FlightsInfoServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def AddFlight(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ModifyFlight(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +48,11 @@ def add_FlightsInfoServicer_to_server(servicer, server):
                     servicer.AddFlight,
                     request_deserializer=proto_dot_FroMan__pb2.NewFlight.FromString,
                     response_serializer=proto_dot_FroMan__pb2.AddResponse.SerializeToString,
+            ),
+            'ModifyFlight': grpc.unary_unary_rpc_method_handler(
+                    servicer.ModifyFlight,
+                    request_deserializer=proto_dot_FroMan__pb2.UpdatedFlight.FromString,
+                    response_serializer=proto_dot_FroMan__pb2.ModFlightResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +78,22 @@ class FlightsInfo(object):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/AddFlight',
             proto_dot_FroMan__pb2.NewFlight.SerializeToString,
             proto_dot_FroMan__pb2.AddResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ModifyFlight(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/ModifyFlight',
+            proto_dot_FroMan__pb2.UpdatedFlight.SerializeToString,
+            proto_dot_FroMan__pb2.ModFlightResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

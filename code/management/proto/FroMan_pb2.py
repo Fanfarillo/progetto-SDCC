@@ -14,12 +14,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12proto/FroMan.proto\x12\x05proto\"\xb2\x01\n\tNewFlight\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\"\x1b\n\x0b\x41\x64\x64Response\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32@\n\x0b\x46lightsInfo\x12\x31\n\tAddFlight\x12\x10.proto.NewFlight\x1a\x12.proto.AddResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12proto/FroMan.proto\x12\x05proto\"\xb2\x01\n\tNewFlight\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\"\x1b\n\x0b\x41\x64\x64Response\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"3\n\rUpdatedFlight\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\"!\n\x11ModFlightResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\x80\x01\n\x0b\x46lightsInfo\x12\x31\n\tAddFlight\x12\x10.proto.NewFlight\x1a\x12.proto.AddResponse\x12>\n\x0cModifyFlight\x12\x14.proto.UpdatedFlight\x1a\x18.proto.ModFlightResponseb\x06proto3')
 
 
 
 _NEWFLIGHT = DESCRIPTOR.message_types_by_name['NewFlight']
 _ADDRESPONSE = DESCRIPTOR.message_types_by_name['AddResponse']
+_UPDATEDFLIGHT = DESCRIPTOR.message_types_by_name['UpdatedFlight']
+_MODFLIGHTRESPONSE = DESCRIPTOR.message_types_by_name['ModFlightResponse']
 NewFlight = _reflection.GeneratedProtocolMessageType('NewFlight', (_message.Message,), {
   'DESCRIPTOR' : _NEWFLIGHT,
   '__module__' : 'proto.FroMan_pb2'
@@ -34,6 +36,20 @@ AddResponse = _reflection.GeneratedProtocolMessageType('AddResponse', (_message.
   })
 _sym_db.RegisterMessage(AddResponse)
 
+UpdatedFlight = _reflection.GeneratedProtocolMessageType('UpdatedFlight', (_message.Message,), {
+  'DESCRIPTOR' : _UPDATEDFLIGHT,
+  '__module__' : 'proto.FroMan_pb2'
+  # @@protoc_insertion_point(class_scope:proto.UpdatedFlight)
+  })
+_sym_db.RegisterMessage(UpdatedFlight)
+
+ModFlightResponse = _reflection.GeneratedProtocolMessageType('ModFlightResponse', (_message.Message,), {
+  'DESCRIPTOR' : _MODFLIGHTRESPONSE,
+  '__module__' : 'proto.FroMan_pb2'
+  # @@protoc_insertion_point(class_scope:proto.ModFlightResponse)
+  })
+_sym_db.RegisterMessage(ModFlightResponse)
+
 _FLIGHTSINFO = DESCRIPTOR.services_by_name['FlightsInfo']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -42,6 +58,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _NEWFLIGHT._serialized_end=208
   _ADDRESPONSE._serialized_start=210
   _ADDRESPONSE._serialized_end=237
-  _FLIGHTSINFO._serialized_start=239
-  _FLIGHTSINFO._serialized_end=303
+  _UPDATEDFLIGHT._serialized_start=239
+  _UPDATEDFLIGHT._serialized_end=290
+  _MODFLIGHTRESPONSE._serialized_start=292
+  _MODFLIGHTRESPONSE._serialized_end=325
+  _FLIGHTSINFO._serialized_start=328
+  _FLIGHTSINFO._serialized_end=456
 # @@protoc_insertion_point(module_scope)

@@ -6,3 +6,5 @@ python3 -m grpc_tools.protoc -I. --python_out=./management --grpc_python_out=./m
 
 python3 -m grpc_tools.protoc -I. --python_out=./management --grpc_python_out=./management ./proto/Boo.proto
 python3 -m grpc_tools.protoc -I. --python_out=./booking --grpc_python_out=./booking ./proto/Boo.proto
+
+python3 -m grpc_tools.protoc -I. --python_out=./frontend --grpc_python_out=./frontend ./proto/Boo.proto

@@ -51,3 +51,11 @@ message RegisterResponse {
     bool isOk = 1;
 }
 
+message UpdatedFlight2 {
+    string flightId = 1;
+    string newPrice = 2;
+}
+
+message UpdateResponse {
+    bool isOk = 1;
+}
