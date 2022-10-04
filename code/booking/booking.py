@@ -8,12 +8,12 @@ from BooDB import *
 
 class BookingInfoServicer(Boo_pb2_grpc.BookingServiceServicer):
 
-    """def getAllFlights(self, request, context):
+    def getAllFlights(self, request, context):
         flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
         for flight in flights:
-            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea, flight.arrivo, flight.partenza, flight.data, flight.orario)
+            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea, arrivo = flight.arrivo, partenza = flight.partenza, data = flight.data, orario = flight.orario)
             print("ciao2")
-            yield ret"""
+            yield ret
     
     def SendId(self, IdMessage, context):
         #check if the id was not used for an other available flight

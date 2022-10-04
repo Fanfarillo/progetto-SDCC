@@ -75,7 +75,7 @@ def storeUpdatedFlight(flightId, newPrice):
     )
 
 class Flight:
-    def __init__(self, idKey, compagnia_aerea):
+    def __init__(self, idKey, compagnia_aerea, arrivo, partenza, orario, data):
         self.idKey = idKey
         self.compagnia_aerea = compagnia_aerea
         self.arrivo = arrivo
@@ -88,16 +88,9 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Volo')
 
-    #read from 'Utente' table in DynamoDB
-    print(partenza)
-    print(str(giorno))
-    print(str(mese))
-    print(str(anno))
     response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
     
     items = response['Items']
-    
-    #print(items)
     
     idKey = ''
     compagnia_aerea = ''
@@ -113,7 +106,6 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
         for key, value in item.items():
             if(key=='Id'):
                 idKey = value
-    			#print(value)
             if(key=='Compagnia aerea'):
                 compagnia_aerea = value  
             if(key=='Aeroporto arrivo'):

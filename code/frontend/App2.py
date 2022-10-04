@@ -48,9 +48,9 @@ def booking():
         print(arrivo)
         persone = request.form['persone']
         print(persone)
-        output = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
-        print(output)
-        return render_template("Booking.html", items = [1,2,3,4])
+        cards = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
+        print(len(cards))
+        return render_template("Booking.html", items = cards)
     return render_template("Accesso.html")
 
 #sign up page
