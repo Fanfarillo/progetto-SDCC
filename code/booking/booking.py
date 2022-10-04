@@ -11,7 +11,7 @@ class BookingInfoServicer(Boo_pb2_grpc.BookingServiceServicer):
     def getAllFlights(self, request, context):
         flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
         for flight in flights:
-            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea)
+            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea, flight.arrivo, flight.partenza, flight.data, flight.orario)
             print("ciao2")
             yield ret
     

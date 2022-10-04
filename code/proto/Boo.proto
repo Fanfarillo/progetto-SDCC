@@ -21,6 +21,10 @@ message getAllFlightsRequest {
 message getAllFlightsReply {
 	string id = 1;
 	string compagnia = 2;
+    string arrivo = 3;
+    string partenza = 4;
+    string data = 5;
+    string orario = 6;
 }
 
 message IdMessage {

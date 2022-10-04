@@ -42,6 +42,10 @@ class Flight:
 	def __init__(self, idKey, compagnia_aerea):
 		self.idKey = idKey
 		self.compagnia_aerea = compagnia_aerea
+        self.arrivo = arrivo
+        self.partenza = partenza
+        self.orario = orario
+        self.data = data
 
 
 def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
@@ -61,6 +65,10 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     
     idKey = ''
     compagnia_aerea = ''
+    arrivo = ''
+    partenza = ''
+    data = ''
+    orario = ''
     flights = []
     append = True
     
@@ -71,12 +79,24 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     			idKey = value
     			#print(value)
     		if(key=='Compagnia aerea'):
-    			compagnia_aerea = value    		
-    		if(idKey!= '' and compagnia_aerea!='' and append):
+    			compagnia_aerea = value  
+            if(key=='Aeroporto arrivo'):
+                arrivo = value
+            if(key=='Aeroporto partenza'):  
+                partenza = value
+            if(key=='Data')
+                data = value
+            if(key=='Orario arrivo')
+                orario = value		
+    		if(idKey!= '' and compagnia_aerea!='' and append and arrivo!='' and partenza!='' and data!='' and orario!=''):
     			append = False
-    			flights.append(Flight(idKey, compagnia_aerea))
+    			flights.append(Flight(idKey, compagnia_aerea, arrivo, partenza, orario, data)
     	idKey = ''
     	compagnia_aerea = ''
+        arrivo = ''
+        partenza = ''
+        data = ''
+        orario = ''
     	append = True
     print(flights)
     

@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fproto/Boo.proto\x12\x05proto\"\x8b\x01\n\x14getAllFlightsRequest\x12\x0e\n\x06giorno\x18\x01 \x01(\x05\x12\x0c\n\x04mese\x18\x02 \x01(\x05\x12\x0c\n\x04\x61nno\x18\x03 \x01(\x05\x12\x19\n\x11\x61\x65reoporto_arrivo\x18\x04 \x01(\t\x12\x1b\n\x13\x61\x65reoporto_partenza\x18\x05 \x01(\t\x12\x0f\n\x07persone\x18\x06 \x01(\x05\"3\n\x12getAllFlightsReply\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tcompagnia\x18\x02 \x01(\t\"\x17\n\tIdMessage\x12\n\n\x02id\x18\x01 \x01(\t\"\x1a\n\nIdResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"\xb3\x01\n\nNewFlight2\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\" \n\x10RegisterResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\xc8\x01\n\x0e\x42ookingService\x12I\n\rgetAllFlights\x12\x1b.proto.getAllFlightsRequest\x1a\x19.proto.getAllFlightsReply0\x01\x12-\n\x06SendId\x12\x10.proto.IdMessage\x1a\x11.proto.IdResponse\x12<\n\x0eRegisterFlight\x12\x11.proto.NewFlight2\x1a\x17.proto.RegisterResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fproto/Boo.proto\x12\x05proto\"\x8b\x01\n\x14getAllFlightsRequest\x12\x0e\n\x06giorno\x18\x01 \x01(\x05\x12\x0c\n\x04mese\x18\x02 \x01(\x05\x12\x0c\n\x04\x61nno\x18\x03 \x01(\x05\x12\x19\n\x11\x61\x65reoporto_arrivo\x18\x04 \x01(\t\x12\x1b\n\x13\x61\x65reoporto_partenza\x18\x05 \x01(\t\x12\x0f\n\x07persone\x18\x06 \x01(\x05\"s\n\x12getAllFlightsReply\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tcompagnia\x18\x02 \x01(\t\x12\x0e\n\x06\x61rrivo\x18\x03 \x01(\t\x12\x10\n\x08partenza\x18\x04 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x05 \x01(\t\x12\x0e\n\x06orario\x18\x06 \x01(\t\"\x17\n\tIdMessage\x12\n\n\x02id\x18\x01 \x01(\t\"\x1a\n\nIdResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"\xb3\x01\n\nNewFlight2\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\" \n\x10RegisterResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\xc8\x01\n\x0e\x42ookingService\x12I\n\rgetAllFlights\x12\x1b.proto.getAllFlightsRequest\x1a\x19.proto.getAllFlightsReply0\x01\x12-\n\x06SendId\x12\x10.proto.IdMessage\x1a\x11.proto.IdResponse\x12<\n\x0eRegisterFlight\x12\x11.proto.NewFlight2\x1a\x17.proto.RegisterResponseb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.Boo_pb2', globals())
@@ -23,15 +23,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _GETALLFLIGHTSREQUEST._serialized_start=27
   _GETALLFLIGHTSREQUEST._serialized_end=166
   _GETALLFLIGHTSREPLY._serialized_start=168
-  _GETALLFLIGHTSREPLY._serialized_end=219
-  _IDMESSAGE._serialized_start=221
-  _IDMESSAGE._serialized_end=244
-  _IDRESPONSE._serialized_start=246
-  _IDRESPONSE._serialized_end=272
-  _NEWFLIGHT2._serialized_start=275
-  _NEWFLIGHT2._serialized_end=454
-  _REGISTERRESPONSE._serialized_start=456
-  _REGISTERRESPONSE._serialized_end=488
-  _BOOKINGSERVICE._serialized_start=491
-  _BOOKINGSERVICE._serialized_end=691
+  _GETALLFLIGHTSREPLY._serialized_end=283
+  _IDMESSAGE._serialized_start=285
+  _IDMESSAGE._serialized_end=308
+  _IDRESPONSE._serialized_start=310
+  _IDRESPONSE._serialized_end=336
+  _NEWFLIGHT2._serialized_start=339
+  _NEWFLIGHT2._serialized_end=518
+  _REGISTERRESPONSE._serialized_start=520
+  _REGISTERRESPONSE._serialized_end=552
+  _BOOKINGSERVICE._serialized_start=555
+  _BOOKINGSERVICE._serialized_end=755
 # @@protoc_insertion_point(module_scope)
