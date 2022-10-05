@@ -36,6 +36,7 @@ def accesso():
 @app.route("/booking", methods=('GET','POST'))
 def booking():
     if request.method == 'POST':
+        #acquisisco i dati inseriti in input dall'utente
         giorno = request.form['giorno']
         print(giorno)
         mese = request.form['mese']
@@ -46,6 +47,9 @@ def booking():
         print(partenza)
         arrivo = request.form['aereoporto_arrivo']
         print(arrivo)
+        if(partenza == arrivo):
+            stringa = "L'AREOPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO\nPROVA AD INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE"
+            return render_template("errorePrenotazione.html", errore = stringa)
         persone = request.form['persone']
         print(persone)
         cards = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)

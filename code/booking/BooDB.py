@@ -88,7 +88,7 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Volo')
 
-    response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
+    response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Aeroporto arrivo').eq(arrivo) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
     
     items = response['Items']
     
@@ -129,5 +129,7 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
         append = True
 
     print(flights)
+
+    #forse qua bisogna implementare la SAGA per ottenere i posti ancora disponibili per il volo
     
     return flights
