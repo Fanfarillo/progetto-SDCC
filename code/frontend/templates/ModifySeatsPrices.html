@@ -37,7 +37,7 @@
       <table align="center">
         <tr>
           <td>
-            <img src="{{url_for('static', filename='Aereo.png')}}" alt="Aereo" width="190" height="684">
+            <img src="{{url_for('static', filename='Aereo.png')}}" alt="Aereo" width="142.5" height="513">
           </td>
           <td>
             <img src="{{url_for('static', filename='LegendaPosti.png')}}" alt="LegendaPosti" width="411" height="193">
@@ -47,35 +47,35 @@
 
       <form action="/{{airline}}/{{fullName}}/modifySeatsPrices" method="POST">
         <!--Input prezzo fila 1-->
-        <div class="mb-3">
+        <div class="my-5">
             <label for="inputPrice1" class="form-label">Nuovo prezzo fila 1</label>
             <textarea class="form-control" type="text" name="inputPrice1" aria-describedby="priceHelp1" rows="1" required>{{ request.form['inputPrice1'] }}</textarea>
             <div id="priceHelp1" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
         </div>
 
         <!--Input prezzo file 2-5-->
-        <div class="mb-3">
+        <div class="my-5">
           <label for="inputPrice2" class="form-label">Nuovo prezzo file 2-5</label>
           <textarea class="form-control" type="text" name="inputPrice2" aria-describedby="priceHelp2" rows="1" required>{{ request.form['inputPrice2'] }}</textarea>
           <div id="priceHelp2" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
         </div> 
         
         <!--Input prezzo file 6-15-->
-        <div class="mb-3">
+        <div class="my-5">
           <label for="inputPrice6" class="form-label">Nuovo prezzo file 6-15</label>
           <textarea class="form-control" type="text" name="inputPrice6" aria-describedby="priceHelp6" rows="1" required>{{ request.form['inputPrice6'] }}</textarea>
           <div id="priceHelp6" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
         </div>
 
         <!--Input prezzo file 16-17-->
-        <div class="mb-3">
+        <div class="my-5">
           <label for="inputPrice16" class="form-label">Nuovo prezzo file 16-17</label>
           <textarea class="form-control" type="text" name="inputPrice16" aria-describedby="priceHelp16" rows="1" required>{{ request.form['inputPrice16'] }}</textarea>
           <div id="priceHelp16" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
         </div>
 
         <!--Input prezzo file 18-26-->
-        <div class="mb-3">
+        <div class="my-5">
           <label for="inputPrice18" class="form-label">Nuovo prezzo file 18-26</label>
           <textarea class="form-control" type="text" name="inputPrice18" aria-describedby="priceHelp18" rows="1" required>{{ request.form['inputPrice18'] }}</textarea>
           <div id="priceHelp18" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>

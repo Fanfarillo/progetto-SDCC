@@ -61,7 +61,7 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
 
         #if all the prices are ok, then save them into remote database (DynamoDB)
         if isOk:
-            storeSeatsPrices(UpdatedSeats.price1, UpdatedSeats.price2, UpdatedSeats.price6, UpdatedSeats.price16, UpdatedSeats.price18)
+            storeSeatsPrices(UpdatedSeats.airline, UpdatedSeats.price1, UpdatedSeats.price2, UpdatedSeats.price6, UpdatedSeats.price16, UpdatedSeats.price18)
 
         output = FroMan_pb2.ModSeatsResponse(isOk=isOk)
         return output

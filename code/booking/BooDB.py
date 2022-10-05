@@ -43,7 +43,7 @@ def storeUpdatedFlight(flightId, newPrice):
     table = dynamodb.Table('Volo')
 
     #read from 'Volo' table in DynamoDB
-    response = table.getItem(
+    response = table.get_item(
 	    Key = {
 	        'Id': flightId,
 	    }

@@ -33,6 +33,52 @@
 
       <h3 class="display-5" style="color: #646464;">Modifica i prezzi dei servizi aggiuntivi.</h3>
 
+      <form action="/{{airline}}/{{fullName}}/modifyServicesPrices" method="POST">
+        <!--Input prezzo del bagaglio in stiva aggiuntivo medio (max 20 kg)-->
+        <div class="my-5">
+            <label for="inputPrice1" class="form-label">Nuovo prezzo del bagaglio in stiva aggiuntivo medio (max 20 kg)</label>
+            <textarea class="form-control" type="text" name="inputPrice1" aria-describedby="priceHelp1" rows="1" required>{{ request.form['inputPrice1'] }}</textarea>
+            <div id="priceHelp1" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div>
+
+        <!--Input prezzo del bagaglio in stiva aggiuntivo grande (max 30 kg)-->
+        <div class="my-5">
+          <label for="inputPrice2" class="form-label">Nuovo prezzo del bagaglio in stiva aggiuntivo grande (max 30 kg)</label>
+          <textarea class="form-control" type="text" name="inputPrice2" aria-describedby="priceHelp2" rows="1" required>{{ request.form['inputPrice2'] }}</textarea>
+          <div id="priceHelp2" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div> 
+        
+        <!--Input prezzo del bagaglio speciale-->
+        <div class="my-5">
+          <label for="inputPrice3" class="form-label">Nuovo prezzo del bagaglio speciale</label>
+          <textarea class="form-control" type="text" name="inputPrice3" aria-describedby="priceHelp3" rows="1" required>{{ request.form['inputPrice3'] }}</textarea>
+          <div id="priceHelp3" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div>
+
+        <!--Input prezzo dell'animale domestico in cabina-->
+        <div class="my-5">
+          <label for="inputPrice4" class="form-label">Nuovo prezzo dell'animale domestico in cabina</label>
+          <textarea class="form-control" type="text" name="inputPrice4" aria-describedby="priceHelp4" rows="1" required>{{ request.form['inputPrice4'] }}</textarea>
+          <div id="priceHelp4" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div>
+
+        <!--Input prezzo dell'assicurazione bagagli-->
+        <div class="my-5">
+          <label for="inputPrice5" class="form-label">Nuovo prezzo dell'assicurazione bagagli</label>
+          <textarea class="form-control" type="text" name="inputPrice5" aria-describedby="priceHelp5" rows="1" required>{{ request.form['inputPrice5'] }}</textarea>
+          <div id="priceHelp5" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div> 
+
+        <!--Input prezzo del trasporto neonato-->
+        <div class="my-5">
+          <label for="inputPrice6" class="form-label">Nuovo prezzo del trasporto neonato</label>
+          <textarea class="form-control" type="text" name="inputPrice6" aria-describedby="priceHelp6" rows="1" required>{{ request.form['inputPrice6'] }}</textarea>
+          <div id="priceHelp6" class="form-text">La parte intera del prezzo deve essere separata dall'eventuale parte decimale con un punto.</div>
+        </div>  
+
+        <button type="submit" class="btn btn-primary my-3">Conferma</button>
+      </form>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>

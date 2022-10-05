@@ -34,11 +34,12 @@ message ModFlightResponse {
 }
 
 message UpdatedSeats {
-    string price1 = 1;
-    string price2 = 2;
-    string price6 = 3;
-    string price16 = 4;
-    string price18 = 5;
+    string airline = 1;
+    string price1 = 2;
+    string price2 = 3;
+    string price6 = 4;
+    string price16 = 5;
+    string price18 = 6;
 }
 
 message ModSeatsResponse {

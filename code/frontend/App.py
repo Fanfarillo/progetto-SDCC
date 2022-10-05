@@ -109,7 +109,7 @@ def addFlight(airline, fullName):
 
         #if new flight info is ok, then notify the user; else go back to addFlight page because the user has to change something
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/volo aggiunto")
+            return redirect("/"+airline+"/"+fullName+"/Volo aggiunto")
         else:
             return render_template("AddFlight.html", airline=airline, fullName=fullName)
 
@@ -126,7 +126,7 @@ def modifyFlight(airline, fullName):
         isOk = sendNewPrice(flightId, newPrice)
 
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/prezzi modificati")
+            return redirect("/"+airline+"/"+fullName+"/Prezzi modificati")
         else:
             return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
 
@@ -143,15 +143,29 @@ def modifySeatsPrices(airline, fullName):
         price16 = request.form['inputPrice16']
         price18 = request.form['inputPrice18']
 
-        isOk = sendSeatsPrices(price1, price2, price6, price16, price18)
+        isOk = sendSeatsPrices(airline, price1, price2, price6, price16, price18)
 
-        #TODO: if-else branch
+        if isOk:
+            return redirect("/"+airline+"/"+fullName+"/Prezzi modificati")
+        else:
+            return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
 
     return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price of extra-services
 @app.route("/<string:airline>/<string:fullName>/modifyServicesPrices", methods=('GET', 'POST'))
 def modifyServicesPrices(airline, fullName):
+    if request.method == 'POST':
+
+        priceBM = request.form['inputPrice1']
+        priceBG = request.form['inputPrice2']
+        priceBS = request.form['inputPrice3']
+        priceAD = request.form['inputPrice4']
+        priceAS = request.form['inputPrice5']
+        priceTN = request.form['inputPrice6']
+
+        isOk = sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAS, priceTN)
+
     return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
 
 #here an ok message is shown
