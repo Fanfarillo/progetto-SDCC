@@ -1,12 +1,16 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from FroRpcReg import *
 from FroRpcMan import *
 from FroRpcBoo import *
 from FroUtils import *
+from flask_session import Session #nuovo
 
 NUM_SEATS = 156
 
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False #nuovo
+app.config["SESSION_TYPE"] = "filesystem"   #nuovo
+Session(app)    #nuovo
 
 #very first page
 @app.route("/")
@@ -25,16 +29,25 @@ def accesso():
 
         #if credentials are correct then go ahead; else they have to be changed before going to the next page
         if response.isCorrect == True and response.storedType == "Turista":      #tourist case
+            session["mail"] = email
             return redirect("/"+response.name+" "+response.surname+"/home")
         elif response.isCorrect == True and response.storedType != "Turista":    #airline case
+            session["mail"] = email
             return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
         else:
             return render_template("Accesso.html")
 
     return render_template("Accesso.html")
-    
+
+
 @app.route("/booking", methods=('GET','POST'))
 def booking():
+    print(session.get("mail"))
+    if not session.get("mail"):
+        print("Dentro")
+        return redirect("/accedi", 302)
+    print("Fuori")
+
     if request.method == 'POST':
         #acquisisco i dati inseriti in input dall'utente
         giorno = request.form['giorno']
