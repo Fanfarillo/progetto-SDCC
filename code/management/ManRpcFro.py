@@ -8,6 +8,7 @@ from proto import FroMan_pb2_grpc
 
 from ManRpcBoo import *
 from ManUtils import *
+from ManDB import *
 
 class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
 
@@ -52,6 +53,17 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
             updateFlightPrice(UpdatedFlight.flightId, UpdatedFlight.newPrice)
 
         output = FroMan_pb2.ModFlightResponse(isOk=isOk)
+        return output
+
+    def ModifySeats(self, UpdatedSeats, context):
+        #all the prices should be numbers and should be greater than zero
+        isOk = (UpdatedSeats.price1.replace('.','',1).isdigit() and UpdatedSeats.price2.replace('.','',1).isdigit() and UpdatedSeats.price6.replace('.','',1).isdigit() and UpdatedSeats.price16.replace('.','',1).isdigit() and UpdatedSeats.price18.replace('.','',1).isdigit())
+
+        #if all the prices are ok, then save them into remote database (DynamoDB)
+        if isOk:
+            storeSeatsPrices(UpdatedSeats.price1, UpdatedSeats.price2, UpdatedSeats.price6, UpdatedSeats.price16, UpdatedSeats.price18)
+
+        output = FroMan_pb2.ModSeatsResponse(isOk=isOk)
         return output
 
 #create gRPC server

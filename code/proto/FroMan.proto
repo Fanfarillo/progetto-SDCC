@@ -5,6 +5,7 @@ package proto;
 service FlightsInfo {
     rpc AddFlight(NewFlight) returns (AddResponse);
     rpc ModifyFlight(UpdatedFlight) returns (ModFlightResponse);
+    rpc ModifySeats(UpdatedSeats) returns (ModSeatsResponse);
 }
 
 message NewFlight {
@@ -29,5 +30,17 @@ message UpdatedFlight {
 }
 
 message ModFlightResponse {
+    bool isOk = 1;
+}
+
+message UpdatedSeats {
+    string price1 = 1;
+    string price2 = 2;
+    string price6 = 3;
+    string price16 = 4;
+    string price18 = 5;
+}
+
+message ModSeatsResponse {
     bool isOk = 1;
 }

@@ -135,6 +135,18 @@ def modifyFlight(airline, fullName):
 #here the airline modifies the price for seat selection
 @app.route("/<string:airline>/<string:fullName>/modifySeatsPrices", methods=('GET', 'POST'))
 def modifySeatsPrices(airline, fullName):
+    if request.method == 'POST':
+
+        price1 = request.form['inputPrice1']
+        price2 = request.form['inputPrice2']
+        price6 = request.form['inputPrice6']
+        price16 = request.form['inputPrice16']
+        price18 = request.form['inputPrice18']
+
+        isOk = sendSeatsPrices(price1, price2, price6, price16, price18)
+
+        #TODO: if-else branch
+
     return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
 
 #here the airline modifies the price of extra-services
