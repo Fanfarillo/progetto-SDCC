@@ -41,8 +41,7 @@ def accesso():
     return render_template("Accesso.html")
     
 @app.route("/booking", methods=('GET','POST'))
-def booking():
-    
+def booking():    
     print(session.get(request.form.get("fullName")))
     if not session.get(request.form.get("fullName")):
         print("Dentro")
@@ -87,9 +86,11 @@ def iscrizione():
 
         #if password==passwordConfirm then go ahead; else passwordConfirm has to be changed before going to the next page
         if isOk and userType == "Turista":
-            return redirect("/"+name+" "+surname+"/home")
+            #return redirect("/"+name+" "+surname+"/home")
+            return redirect('/accedi')
         elif isOk and userType != "Turista":
-            return redirect("/"+airline+"/"+name+" "+surname+"/airlineHome")
+            #return redirect("/"+airline+"/"+name+" "+surname+"/airlineHome")
+            return redirect('/accedi')
         else:
             return render_template("Iscrizione.html")
 
@@ -98,10 +99,11 @@ def iscrizione():
 #here the user specifies some information about the flight he wants to book
 @app.route("/<string:fullName>/home", methods=('GET','POST'))
 def home(fullName):
-    """print(session.get(request.form.get(fullName)))
-    if not session.get(request.form.get(fullName)):
+    #print(fullName)
+    #print(session.get(fullName))
+    if not session.get(session.get(fullName)):
         print("Dentro")
-        return redirect("/accedi", 302)"""
+        return redirect("/accedi", 302)
     print("Fuori")
     return render_template("Home.html", fullName=fullName)
 
