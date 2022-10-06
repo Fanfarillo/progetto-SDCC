@@ -1,12 +1,17 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session #nuovo
 from FroRpcReg import *
 from FroRpcMan import *
 from FroRpcBoo import *
 from FroUtils import *
+from flask_session import Session #nuovo
 
 NUM_SEATS = 156
 
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False #nuovo
+app.config["SESSION_TYPE"] = "filesystem"   #nuovo
+Session(app)    #nuovo
+
 
 #very first page
 @app.route("/")
@@ -17,12 +22,14 @@ def menu():
 @app.route("/accedi", methods=('GET','POST'))
 def accesso():
     if request.method == 'POST':
-
+        print("POST")
         email = request.form['inputEmail']
         password = request.form['inputPassword']
-
         response = sendCredentials(email, password)
-
+        key = response.name+" "+response.surname
+        #print(key)
+        session[key] = key
+        #print(session.get(key))
         #if credentials are correct then go ahead; else they have to be changed before going to the next page
         if response.isCorrect == True and response.storedType == "Turista":      #tourist case
             return redirect("/"+response.name+" "+response.surname+"/home")
@@ -30,12 +37,20 @@ def accesso():
             return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
         else:
             return render_template("Accesso.html")
-
+    print("GET")
     return render_template("Accesso.html")
     
 @app.route("/booking", methods=('GET','POST'))
 def booking():
+    
+    print(session.get(request.form.get("fullName")))
+    if not session.get(request.form.get("fullName")):
+        print("Dentro")
+        return redirect("/accedi", 302)
+    print("Fuori")
+
     if request.method == 'POST':
+        #acquisisco i dati inseriti in input dall'utente
         giorno = request.form['giorno']
         print(giorno)
         mese = request.form['mese']
@@ -46,18 +61,20 @@ def booking():
         print(partenza)
         arrivo = request.form['aereoporto_arrivo']
         print(arrivo)
+        if(partenza == arrivo):
+            stringa = "L'AREOPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO\nPROVA AD INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE"
+            return render_template("errorePrenotazione.html", errore = stringa)
         persone = request.form['persone']
         print(persone)
-        output = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
-        print(output)
-        return render_template("Booking.html", items = [1,2,3,4])
+        cards = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
+        print(len(cards))
+        return render_template("Booking.html", items = cards)
     return render_template("Accesso.html")
 
 #sign up page
 @app.route("/iscriviti", methods=('GET','POST'))
 def iscrizione():
     if request.method == 'POST':
-
         email = request.form['inputEmail']
         name = request.form['inputName']
         surname = request.form['inputSurname']
@@ -81,6 +98,11 @@ def iscrizione():
 #here the user specifies some information about the flight he wants to book
 @app.route("/<string:fullName>/home", methods=('GET','POST'))
 def home(fullName):
+    """print(session.get(request.form.get(fullName)))
+    if not session.get(request.form.get(fullName)):
+        print("Dentro")
+        return redirect("/accedi", 302)"""
+    print("Fuori")
     return render_template("Home.html", fullName=fullName)
 
 #here the airline specifies which information has to be managed
