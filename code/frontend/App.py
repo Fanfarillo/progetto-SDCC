@@ -161,10 +161,15 @@ def modifyServicesPrices(airline, fullName):
         priceBG = request.form['inputPrice2']
         priceBS = request.form['inputPrice3']
         priceAD = request.form['inputPrice4']
-        priceAS = request.form['inputPrice5']
+        priceAB = request.form['inputPrice5']
         priceTN = request.form['inputPrice6']
 
-        isOk = sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAS, priceTN)
+        isOk = sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN)
+
+        if isOk:
+            return redirect("/"+airline+"/"+fullName+"/Prezzi modificati")
+        else:
+            return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
 
     return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
 

@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12proto/FroMan.proto\x12\x05proto\"\xb2\x01\n\tNewFlight\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\"\x1b\n\x0b\x41\x64\x64Response\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"3\n\rUpdatedFlight\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\"!\n\x11ModFlightResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"q\n\x0cUpdatedSeats\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0e\n\x06price1\x18\x02 \x01(\t\x12\x0e\n\x06price2\x18\x03 \x01(\t\x12\x0e\n\x06price6\x18\x04 \x01(\t\x12\x0f\n\x07price16\x18\x05 \x01(\t\x12\x0f\n\x07price18\x18\x06 \x01(\t\" \n\x10ModSeatsResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\xbd\x01\n\x0b\x46lightsInfo\x12\x31\n\tAddFlight\x12\x10.proto.NewFlight\x1a\x12.proto.AddResponse\x12>\n\x0cModifyFlight\x12\x14.proto.UpdatedFlight\x1a\x18.proto.ModFlightResponse\x12;\n\x0bModifySeats\x12\x13.proto.UpdatedSeats\x1a\x17.proto.ModSeatsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12proto/FroMan.proto\x12\x05proto\"\xb2\x01\n\tNewFlight\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\"\x1b\n\x0b\x41\x64\x64Response\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"3\n\rUpdatedFlight\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\"!\n\x11ModFlightResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"q\n\x0cUpdatedSeats\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0e\n\x06price1\x18\x02 \x01(\t\x12\x0e\n\x06price2\x18\x03 \x01(\t\x12\x0e\n\x06price6\x18\x04 \x01(\t\x12\x0f\n\x07price16\x18\x05 \x01(\t\x12\x0f\n\x07price18\x18\x06 \x01(\t\" \n\x10ModSeatsResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"\x88\x01\n\x0fUpdatedServices\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0f\n\x07priceBM\x18\x02 \x01(\t\x12\x0f\n\x07priceBG\x18\x03 \x01(\t\x12\x0f\n\x07priceBS\x18\x04 \x01(\t\x12\x0f\n\x07priceAD\x18\x05 \x01(\t\x12\x0f\n\x07priceAB\x18\x06 \x01(\t\x12\x0f\n\x07priceTN\x18\x07 \x01(\t\"#\n\x13ModServicesResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\x83\x02\n\x0b\x46lightsInfo\x12\x31\n\tAddFlight\x12\x10.proto.NewFlight\x1a\x12.proto.AddResponse\x12>\n\x0cModifyFlight\x12\x14.proto.UpdatedFlight\x1a\x18.proto.ModFlightResponse\x12;\n\x0bModifySeats\x12\x13.proto.UpdatedSeats\x1a\x17.proto.ModSeatsResponse\x12\x44\n\x0eModifyServices\x12\x16.proto.UpdatedServices\x1a\x1a.proto.ModServicesResponseb\x06proto3')
 
 
 
@@ -24,6 +24,8 @@ _UPDATEDFLIGHT = DESCRIPTOR.message_types_by_name['UpdatedFlight']
 _MODFLIGHTRESPONSE = DESCRIPTOR.message_types_by_name['ModFlightResponse']
 _UPDATEDSEATS = DESCRIPTOR.message_types_by_name['UpdatedSeats']
 _MODSEATSRESPONSE = DESCRIPTOR.message_types_by_name['ModSeatsResponse']
+_UPDATEDSERVICES = DESCRIPTOR.message_types_by_name['UpdatedServices']
+_MODSERVICESRESPONSE = DESCRIPTOR.message_types_by_name['ModServicesResponse']
 NewFlight = _reflection.GeneratedProtocolMessageType('NewFlight', (_message.Message,), {
   'DESCRIPTOR' : _NEWFLIGHT,
   '__module__' : 'proto.FroMan_pb2'
@@ -66,6 +68,20 @@ ModSeatsResponse = _reflection.GeneratedProtocolMessageType('ModSeatsResponse', 
   })
 _sym_db.RegisterMessage(ModSeatsResponse)
 
+UpdatedServices = _reflection.GeneratedProtocolMessageType('UpdatedServices', (_message.Message,), {
+  'DESCRIPTOR' : _UPDATEDSERVICES,
+  '__module__' : 'proto.FroMan_pb2'
+  # @@protoc_insertion_point(class_scope:proto.UpdatedServices)
+  })
+_sym_db.RegisterMessage(UpdatedServices)
+
+ModServicesResponse = _reflection.GeneratedProtocolMessageType('ModServicesResponse', (_message.Message,), {
+  'DESCRIPTOR' : _MODSERVICESRESPONSE,
+  '__module__' : 'proto.FroMan_pb2'
+  # @@protoc_insertion_point(class_scope:proto.ModServicesResponse)
+  })
+_sym_db.RegisterMessage(ModServicesResponse)
+
 _FLIGHTSINFO = DESCRIPTOR.services_by_name['FlightsInfo']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -82,6 +98,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _UPDATEDSEATS._serialized_end=440
   _MODSEATSRESPONSE._serialized_start=442
   _MODSEATSRESPONSE._serialized_end=474
-  _FLIGHTSINFO._serialized_start=477
-  _FLIGHTSINFO._serialized_end=666
+  _UPDATEDSERVICES._serialized_start=477
+  _UPDATEDSERVICES._serialized_end=613
+  _MODSERVICESRESPONSE._serialized_start=615
+  _MODSERVICESRESPONSE._serialized_end=650
+  _FLIGHTSINFO._serialized_start=653
+  _FLIGHTSINFO._serialized_end=912
 # @@protoc_insertion_point(module_scope)

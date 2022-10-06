@@ -6,6 +6,7 @@ service FlightsInfo {
     rpc AddFlight(NewFlight) returns (AddResponse);
     rpc ModifyFlight(UpdatedFlight) returns (ModFlightResponse);
     rpc ModifySeats(UpdatedSeats) returns (ModSeatsResponse);
+    rpc ModifyServices(UpdatedServices) returns (ModServicesResponse);
 }
 
 message NewFlight {
@@ -43,5 +44,19 @@ message UpdatedSeats {
 }
 
 message ModSeatsResponse {
+    bool isOk = 1;
+}
+
+message UpdatedServices {
+    string airline = 1;
+    string priceBM = 2;
+    string priceBG = 3;
+    string priceBS = 4;
+    string priceAD = 5;
+    string priceAB = 6;
+    string priceTN = 7;
+}
+
+message ModServicesResponse {
     bool isOk = 1;
 }

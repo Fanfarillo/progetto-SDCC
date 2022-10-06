@@ -66,6 +66,16 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         output = FroMan_pb2.ModSeatsResponse(isOk=isOk)
         return output
 
+    def ModifyServices(self, UpdatedServices, context):
+        #all the prices should be numbers and should be greater than zero
+        isOk = (UpdatedServices.priceBM.replace('.','',1).isdigit() and UpdatedServices.priceBG.replace('.','',1).isdigit() and UpdatedServices.priceBS.replace('.','',1).isdigit() and UpdatedServices.priceAD.replace('.','',1).isdigit() and UpdatedServices.priceAB.replace('.','',1).isdigit() and UpdatedServices.priceTN.replace('.','',1).isdigit())
+
+        if isOk:
+            storeServicesPrices(UpdatedServices.airline, UpdatedServices.priceBM, UpdatedServices.priceBG, UpdatedServices.priceBS, UpdatedServices.priceAD, UpdatedServices.priceAB, UpdatedServices.priceTN)
+
+        output = FroMan_pb2.ModServicesResponse(isOk=isOk)
+        return output
+
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 FroMan_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)

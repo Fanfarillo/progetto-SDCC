@@ -40,3 +40,15 @@ def sendSeatsPrices(airline, price1, price2, price6, price16, price18):
     output = stub.ModifySeats(FroMan_pb2.UpdatedSeats(airline=airline, price1=price1, price2=price2, price6=price6, price16=price16, price18=price18))
     #we need to return the boolean value
     return output.isOk 
+
+def sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN):
+    #open gRPC channel
+    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
+
+    #create client stub
+    stub = FroMan_pb2_grpc.FlightsInfoStub(channel)
+
+    #get response from Flights Management service
+    output = stub.ModifyServices(FroMan_pb2.UpdatedServices(airline=airline, priceBM=priceBM, priceBG=priceBG, priceBS=priceBS, priceAD=priceAD, priceAB=priceAB, priceTN=priceTN))
+    #we need to return the boolean value
+    return output.isOk 
