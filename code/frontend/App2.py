@@ -62,7 +62,7 @@ def booking():
         print(arrivo)
         if(partenza == arrivo):
             stringa = "L'AREOPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO\nPROVA AD INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE"
-            return render_template("errorePrenotazione.html", errore = stringa)
+            return render_template("errore.html", errore = stringa)
         persone = request.form['persone']
         print(persone)
         cards = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
