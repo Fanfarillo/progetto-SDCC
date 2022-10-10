@@ -36,7 +36,6 @@ def accesso():
             return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
         else:
             return render_template("Accesso.html")
-    print("GET")
     return render_template("Accesso.html")
     
 @app.route("/<string:fullName>/booking", methods=('GET','POST'))
@@ -77,16 +76,25 @@ def serviziAggiuntivi(fullName, idVolo):
     if not session.get(fullName):
         return redirect("/accedi", 302)
     print("persone = " + session.get(fullName))
-    return render_template("Home.html")
+    return render_template("serviziAggiuntivi.html")
 
 #logout
 @app.route("/<string:fullName>/logout")
-def logout(fullName):
+def logoutUtentePrenotazione(fullName):
     print(session.get(fullName))
     if not session.get(fullName):
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
     session.pop(session.get(fullName))
+    return redirect("/accedi")
+
+@app.route("/<string:airline>/<string:fullName>/logout")
+def logoutUtenteAirline(airline, fullName):
+    print(session.get(airline+fullName))
+    if not session.get(airline+fullName):
+        stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
+        return render_template("errore.html", errore = stringa)
+    session.pop(session.get(airline+fullName))
     return redirect("/accedi")
 
 
