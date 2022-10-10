@@ -13,13 +13,14 @@ class Result:
 
 
 class Card:
-    def __init__(self, idVolo, compagnia, arrivo, partenza, orario, data):
+    def __init__(self, idVolo, compagnia, arrivo, partenza, orario, data, prezzoTotale):
         self.idVolo = idVolo
         self.compagnia = compagnia
         self.arrivo = arrivo
         self.partenza = partenza
         self.orario = orario
         self.data = data
+        self.prezzoTotale = prezzoTotale
 
 def sendBookingInfo(giorno, mese, anno, aereoporto_partenza, aereoporto_arrivo, persone):
     #open gRPC channel
@@ -32,12 +33,12 @@ def sendBookingInfo(giorno, mese, anno, aereoporto_partenza, aereoporto_arrivo, 
         stub = Boo_pb2_grpc.BookingServiceStub(channel)
         print(stub)
         #get response from Registration service
-    
+        print("LOG: prima del ciclo...")
         #output = stub.getAllFlights(Boo_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone)))
         for entry in stub.getAllFlights(Boo_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone))):
             print(entry.id)
             count = count + 1
-            cards.append(Card(entry.id, entry.compagnia, entry.arrivo, entry.partenza, entry.orario, entry.data))
+            cards.append(Card(entry.id, entry.compagnia, entry.arrivo, entry.partenza, entry.orario, entry.data, entry.prezzoBase))
         #output = stub.SendId(Boo_pb2.IdMessage(id = "stringa"))
         #we need to return the boolean value
         result = Result(cards, count)

@@ -56,9 +56,11 @@ def booking(fullName):
             return render_template("errore.html", errore = stringa)
         persone = request.form['persone']
         result = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
-        session.pop(session.get(fullName))
+        session.pop(fullName)
         #Per portarmi avanti l'informazione relativa alle persone'
         session[fullName] = persone
+        for card in result.cards:
+            card.prezzoTotale = float(card.prezzoTotale) * float(persone)
         return render_template("Booking.html", items = result.cards, num = result.num, fullName = fullName)
     return redirect("/accedi")
 
@@ -85,7 +87,8 @@ def logoutUtentePrenotazione(fullName):
     if not session.get(fullName):
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
-    session.pop(session.get(fullName))
+    #session.pop(session.get(fullName))
+    session.pop(fullName)
     return redirect("/accedi")
 
 @app.route("/<string:airline>/<string:fullName>/logout")
@@ -94,7 +97,8 @@ def logoutUtenteAirline(airline, fullName):
     if not session.get(airline+fullName):
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
-    session.pop(session.get(airline+fullName))
+    #session.pop(session.get(airline+fullName))
+    session.pop(airline+fullName)
     return redirect("/accedi")
 
 

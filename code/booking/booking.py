@@ -9,9 +9,10 @@ from BooDB import *
 class BookingInfoServicer(Boo_pb2_grpc.BookingServiceServicer):
 
     def getAllFlights(self, request, context):
+        print("LOG: prima della retrieves flights...")
         flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
         for flight in flights:
-            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea, arrivo = flight.arrivo, partenza = flight.partenza, data = flight.data, orario = flight.orario)
+            ret = Boo_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea, arrivo = flight.arrivo, partenza = flight.partenza, data = flight.data, orario = flight.orario, prezzoBase = flight.prezzo)
             print("ciao2")
             yield ret
     

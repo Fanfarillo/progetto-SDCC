@@ -34,6 +34,11 @@ class FlightsInfoStub(object):
                 request_serializer=proto_dot_FroMan__pb2.UpdatedServices.SerializeToString,
                 response_deserializer=proto_dot_FroMan__pb2.ModServicesResponse.FromString,
                 )
+        self.GetPriceFlight = channel.unary_unary(
+                '/proto.FlightsInfo/GetPriceFlight',
+                request_serializer=proto_dot_FroMan__pb2.PriceRequest.SerializeToString,
+                response_deserializer=proto_dot_FroMan__pb2.PriceReply.FromString,
+                )
 
 
 class FlightsInfoServicer(object):
@@ -63,6 +68,12 @@ class FlightsInfoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetPriceFlight(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FlightsInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -85,6 +96,11 @@ def add_FlightsInfoServicer_to_server(servicer, server):
                     servicer.ModifyServices,
                     request_deserializer=proto_dot_FroMan__pb2.UpdatedServices.FromString,
                     response_serializer=proto_dot_FroMan__pb2.ModServicesResponse.SerializeToString,
+            ),
+            'GetPriceFlight': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPriceFlight,
+                    request_deserializer=proto_dot_FroMan__pb2.PriceRequest.FromString,
+                    response_serializer=proto_dot_FroMan__pb2.PriceReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -161,5 +177,22 @@ class FlightsInfo(object):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/ModifyServices',
             proto_dot_FroMan__pb2.UpdatedServices.SerializeToString,
             proto_dot_FroMan__pb2.ModServicesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPriceFlight(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/GetPriceFlight',
+            proto_dot_FroMan__pb2.PriceRequest.SerializeToString,
+            proto_dot_FroMan__pb2.PriceReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

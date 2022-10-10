@@ -76,6 +76,10 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         output = FroMan_pb2.ModServicesResponse(isOk=isOk)
         return output
 
+    def GetPriceFlight(self, request, context):
+        response = getPrice(request.idVolo)
+        return FroMan_pb2.PriceReply(price=str(response))
+
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 FroMan_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)

@@ -1,6 +1,11 @@
 import boto3
+import grpc
 from boto3.dynamodb.conditions import Attr
 from decimal import *
+from proto import FroMan_pb2
+from proto import FroMan_pb2_grpc
+
+ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
 
 #this function returns true if there is no item with the specified id (i.e. the specified primary key); it returns false otherwise
 def isNewId(flightId):
@@ -75,13 +80,14 @@ def storeUpdatedFlight(flightId, newPrice):
     )
 
 class Flight:
-    def __init__(self, idKey, compagnia_aerea, arrivo, partenza, orario, data):
+    def __init__(self, idKey, compagnia_aerea, arrivo, partenza, orario, data, prezzo):
         self.idKey = idKey
         self.compagnia_aerea = compagnia_aerea
         self.arrivo = arrivo
         self.partenza = partenza
         self.orario = orario
         self.data = data
+        self.prezzo = prezzo
 
 
 def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
@@ -118,7 +124,7 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
                 orario = value
             if(idKey!= '' and compagnia_aerea!='' and append and arrivo!='' and partenza!='' and data!='' and orario!=''):
                 append = False
-                flights.append(Flight(idKey, compagnia_aerea, arrivo, partenza, orario, data))
+                flights.append(Flight(idKey, compagnia_aerea, arrivo, partenza, orario, data, -1))
 
         idKey = ''
         compagnia_aerea = ''
@@ -129,7 +135,18 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
         append = True
 
     print(flights)
+    
+    #open gRPC channel
+    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
+
+    #create client stub
+    stub = FroMan_pb2_grpc.FlightsInfoStub(channel)
+    
+    for flight in flights:
+        #print("CICLOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        response = stub.GetPriceFlight(FroMan_pb2.PriceRequest(idVolo=flight.idKey))
+        print(response.price)
+        flight.prezzo = response.price
 
     #forse qua bisogna implementare la SAGA per ottenere i posti ancora disponibili per il volo
-    
     return flights

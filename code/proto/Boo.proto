@@ -26,6 +26,7 @@ message getAllFlightsReply {
     string partenza = 4;
     string data = 5;
     string orario = 6;
+    string prezzoBase = 7;
 }
 
 message IdMessage {

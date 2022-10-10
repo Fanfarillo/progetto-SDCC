@@ -1,5 +1,5 @@
 import boto3
-
+from boto3.dynamodb.conditions import Attr
 from decimal import *
 
 def storeSeatsPrices(airline, price1, price2, price6, price16, price18):
@@ -34,3 +34,13 @@ def storeServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, pr
             'Neonato': Decimal(priceTN)
         }
     )
+
+def getPrice(idVolo):
+    print(idVolo)
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('Volo')
+
+    response = table.scan(FilterExpression=Attr('Id').eq(idVolo))
+
+    print(response['Items'][0]['Prezzo base'])
+    return response['Items'][0]['Prezzo base']
