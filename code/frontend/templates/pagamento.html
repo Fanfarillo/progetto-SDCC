@@ -31,39 +31,20 @@
     </nav>
 
     <div class="container mt-5" style="background-color: #ffffff;">
-      <div class="mb-3">
-        <label for="compagnia" class="form-label">Compagnia aerea</label>
-        <input type="text" class="form-control" name="compagnia" aria-describedby="partenzaHelp" value="{{ compagnia }}" readonly>
-      </div>
+      <form action="/accedi" method="POST">
+        <div class="mb-3">
+            <label for="user-email" class="form-label">Inserire indirizzo di posta elettronica a cui inviare la prenotazione del volo</label>
+            <input type="email" class="form-control" name="user-email" aria-describedby="emailHelp" value="{{ request.form['user-email'] }}" required>
+        </div>
 
-      <!--Aereoporto di Partenza-->
-      <div class="mb-3">
-        <label for="partenza" class="form-label">Aereoporto di partenza</label>
-        <input type="text" class="form-control" name="partenza" aria-describedby="partenzaHelp" value="{{ partenza }}" readonly>
-      </div>
-
-      <!--Aereoporto di Arrivo-->
-      <div class="mb-3">
-        <label for="arrivo" class="form-label">Aereoporto di arrivo</label>
-        <input type="text" class="form-control" name="arrivo" value="{{ arrivo }}" readonly>
-      </div>
-
-      <!--Aereoporto di Partenza-->
-      <div class="mb-3">
-        <label for="data" class="form-label">Data</label>
-        <input type="text" class="form-control" name="data" aria-describedby="partenzaHelp" value="{{ data }}" readonly>
-      </div>
-
-      <div class="mb-3">
-        <label for="orario" class="form-label">Orario</label>
-        <input type="text" class="form-control" name="orario" aria-describedby="partenzaHelp" value="{{ orario }}" readonly>
-      </div>
-
-      <div class="mb-3">
-        <label for="prezzo" class="form-label">Prezzo totale</label>
-        <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="{{ prezzoTotale }}" readonly>
-      </div>
-      <form action="/{{ fullName }}/{{ idVolo }}/pagamento" method="POST">
+        <p>Selezionare la carta con cui si desidera pagare:</p>
+        <input type="radio" id="carta1" name="carta" value="carta1">
+        <label for="carta1">carta 1</label><br>
+        <input type="radio" id="carta2" name="carta" value="carta2">
+        <label for="carta2">carta 2</label><br>  
+        <input type="radio" id="carta3" name="carta" value="carta3">
+        <label for="carta3">carta 3</label><br><br>
+      
         <button type="submit" class="btn btn-primary my-3">Conferma</button>
       </form>
     </div>

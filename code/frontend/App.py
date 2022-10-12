@@ -41,7 +41,8 @@ def accesso():
 @app.route("/<string:fullName>/booking", methods=('GET','POST'))
 def booking(fullName):    
     print(session.get(fullName))
-    if not session.get(fullName):
+    #if not session.get(fullName):
+    if session.get(fullName) is None:
         return redirect("/accedi", 302)
 
     if request.method == 'POST':
@@ -55,27 +56,67 @@ def booking(fullName):
             stringa = "L'AREOPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO\nPROVA AD INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE"
             return render_template("errore.html", errore = stringa)
         persone = request.form['persone']
-        result = sendBookingInfo(giorno, mese, anno, partenza, arrivo, persone)
+        result = sendBookingInfo(giorno, mese, anno, arrivo, partenza, persone)
         session.pop(fullName)
         #Per portarmi avanti l'informazione relativa alle persone'
-        session[fullName] = persone
+        session[fullName] = {'persone':persone, 'cards':result.cards}
         for card in result.cards:
             card.prezzoTotale = float(card.prezzoTotale) * float(persone)
         return render_template("Booking.html", items = result.cards, num = result.num, fullName = fullName)
     return redirect("/accedi")
 
+@app.route("/<string:fullName>/<string:idVolo>/pagamento", methods=('GET','POST'))
+def confermaRiepilogo(fullName, idVolo):
+    #if not session.get(fullName):
+    if session.get(fullName) is None:
+        return redirect("/accedi", 302)
+    if request.method == 'POST':
+        return render_template("pagamento.html", fullName = fullName)
+    else:
+        return redirect("/accedi", 302)
+
+
 @app.route("/<string:fullName>/<string:idVolo>/resoconto")
 def resoconto(fullName, idVolo):
     #TODO implementare il resoconto
-    if not session.get(fullName):
+    #if not session.get(fullName):
+    if session.get(fullName) is None:
         return redirect("/accedi", 302)
-    print("persone = " + session.get(fullName))
-    return render_template("resoconto.html")
+    diz = session.get(fullName)    
+    pers = diz['persone']
+    print("persone = " + pers)
+    cards = diz['cards']
+    partenza = None
+    arrivo = None
+    compagnia = None
+    orario = None
+    data = None
+    prezzoTotale = None
+    for card in cards:
+        if card.idVolo == idVolo:
+            partenza = card.partenza
+            print("PARTENZA= ", card.partenza)
+            arrivo = card.arrivo
+            print("ARRIVO= ", card.arrivo)
+            compagnia = card.compagnia
+            print("PARTENZA= ", card.compagnia)
+            orario = card.orario
+            print("PARTENZA= ", card.orario)
+            data = card.data
+            print("PARTENZA= ", card.data)
+            prezzoTotale = card.prezzoTotale
+            print("PARTENZA= ", card.prezzoTotale) 
+    if(partenza == None and arrivo == None and compagnia == None and orario == None and data == None and prezzoTotale == None):
+        session.pop(fullName)
+        session[fullName] = fullName
+        return redirect("/"+fullName+"/home", 302)
+    return render_template("resoconto.html", fullName = fullName, idVolo = idVolo, arrivo = arrivo, partenza = partenza, compagnia = compagnia, orario = orario, data = data, prezzoTotale = prezzoTotale)
 
 @app.route("/<string:fullName>/<string:idVolo>/serviziAggiuntivi")
 def serviziAggiuntivi(fullName, idVolo):
     #TODO implementare i servizi aggiuntivi
-    if not session.get(fullName):
+    #if not session.get(fullName):
+    if session.get(fullName) is None:
         return redirect("/accedi", 302)
     print("persone = " + session.get(fullName))
     return render_template("serviziAggiuntivi.html")
@@ -83,8 +124,10 @@ def serviziAggiuntivi(fullName, idVolo):
 #logout
 @app.route("/<string:fullName>/logout")
 def logoutUtentePrenotazione(fullName):
-    print(session.get(fullName))
-    if not session.get(fullName):
+    #print(session.get(fullName))
+    #if not session.get(fullName):
+    print("sono qua: ",session.get(fullName))
+    if session.get(fullName) is None:
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
     #session.pop(session.get(fullName))
@@ -94,7 +137,8 @@ def logoutUtentePrenotazione(fullName):
 @app.route("/<string:airline>/<string:fullName>/logout")
 def logoutUtenteAirline(airline, fullName):
     print(session.get(airline+fullName))
-    if not session.get(airline+fullName):
+    #if not session.get(airline+fullName):
+    if session.get(airline+fullName) is None:
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
     #session.pop(session.get(airline+fullName))
@@ -131,14 +175,17 @@ def iscrizione():
 #here the user specifies some information about the flight he wants to book
 @app.route("/<string:fullName>/home", methods=('GET','POST'))
 def home(fullName):
-    if not session.get(session.get(fullName)):
+    #if not session.get(session.get(fullName)):
+    print("sono qua: ",session.get(fullName))
+    if session.get(fullName) is None:
         return redirect("/accedi", 302)
     return render_template("Home.html", fullName=fullName)
 
 #here the airline specifies which information has to be managed
 @app.route("/<string:airline>/<string:fullName>/airlineHome", methods=('GET', 'POST'))
 def airlineHome(airline, fullName):
-    if not session.get(session.get(airline + fullName)):
+    #if not session.get(session.get(airline + fullName)):
+    if session.get(airline + fullName) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     return render_template("AirlineHome.html", airline=airline, fullName=fullName)
@@ -146,7 +193,8 @@ def airlineHome(airline, fullName):
 #here the airline adds a new flight
 @app.route("/<string:airline>/<string:fullName>/addFlight", methods=('GET', 'POST'))
 def addFlight(airline, fullName):
-    if not session.get(session.get(airline + fullName)):
+    #if not session.get(session.get(airline + fullName)):
+    if session.get(airline + fullName) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -176,7 +224,8 @@ def addFlight(airline, fullName):
 #here the airline modifies the price of an existing flight
 @app.route("/<string:airline>/<string:fullName>/modifyFlight", methods=('GET', 'POST'))
 def modifyFlight(airline, fullName):
-    if not session.get(session.get(airline + fullName)):
+    #if not session.get(session.get(airline + fullName)):
+    if session.get(airline + fullName) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -196,7 +245,8 @@ def modifyFlight(airline, fullName):
 #here the airline modifies the price for seat selection
 @app.route("/<string:airline>/<string:fullName>/modifySeatsPrices", methods=('GET', 'POST'))
 def modifySeatsPrices(airline, fullName):
-    if not session.get(session.get(airline + fullName)):
+    #if not session.get(session.get(airline + fullName)):
+    if session.get(airline + fullName) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -219,7 +269,8 @@ def modifySeatsPrices(airline, fullName):
 #here the airline modifies the price of extra-services
 @app.route("/<string:airline>/<string:fullName>/modifyServicesPrices", methods=('GET', 'POST'))
 def modifyServicesPrices(airline, fullName):
-    if not session.get(session.get(airline + fullName)):
+    #if not session.get(session.get(airline + fullName)):
+    if session.get(airline + fullName) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -243,7 +294,8 @@ def modifyServicesPrices(airline, fullName):
 #here an ok message is shown
 @app.route("/<string:airline>/<string:fullName>/<string:okMessage>", methods=('GET', 'POST'))
 def showOkMessage(airline, fullName, okMessage):
-    if not session.get(session.get(airline + fullName)):
+    #if not session.get(session.get(airline + fullName)):
+    if session.get(airline + fullName) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
