@@ -53,13 +53,16 @@ def accesso():
 @app.route("/<string:fullName>/booking", methods=('GET','POST'))
 def booking(fullName):
 
-    #sessione.get(fullName) = fullName se la richiesta è valida; altrimenti, vale None
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None
+    """
     if session.get(fullName) is None:
-        return redirect("/accedi", 302)
+        return redirect("/accedi", 401)
 
-    keys = session.get(fullName).keys()
-
-    #Controllo se i metadati di sessione sono corretti oppure sono alterati
+    """
+    Controllo se i metadati di sessione sono corretti oppure sono alterati.
+    Il valore di session.get(fullName) deve essere uguale a fullName della URL
+    """
     if session.get(fullName) == fullName:
         if request.method == 'POST':
             #acquisisco i dati inseriti in input dall'utente
@@ -76,32 +79,54 @@ def booking(fullName):
                 return render_template("errore.html", errore = stringa)
 
             result = sendBookingInfo(giorno, mese, anno, arrivo, partenza, persone)
-            #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
-            session.pop(fullName)
-            #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
-            session[fullName] = {'fullName':fullName, 'persone':persone, 'cards':result.cards}
+
             for card in result.cards:
                 #Dal microservizio ottenfo il prezzo a persona per il biglietto
                 #Di conseguenza, necessito di eseguire questa moltiplicazione per ottenere il PREZZO TOTALE
                 card.prezzoTotale = float(card.prezzoTotale) * float(persone)
-            #E'necessario portarmi appresso l'informazione relativa al fullName che mi permette di gestire completamente la sessione
+
+            #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
+            session.pop(fullName)
+            #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
+            session[fullName] = {'fullName':fullName, 'persone':persone, 'cards':result.cards}
+
             print("[DEBUG SESSIONE (/fullName/booking)]: key = " + fullName + "   value = " + str(session.get(fullName)))
+
+            #E'necessario portarmi appresso l'informazione relativa al fullName che mi permette di gestire completamente la sessione
             return render_template("Booking.html", items = result.cards, num = result.num, fullName = fullName)
     
         return redirect("/accedi")
     else:
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
         session.pop(fullName)
-        redirect("/accedi")
+        return redirect("/accedi", 401)
 
 
 
 #@app.route("/<string:fullName>/<string:idVolo/pagamento", methods=('GET','POST'))
-@app.route("/<string:fullName>/pagamento", methods=('GET','POST'))
-def confermaRiepilogo(fullName):
+@app.route("/<string:fullName>/<string:idVolo>/pagamento", methods=('GET','POST'))
+def confermaRiepilogo(fullName, idVolo):
     print("[DEBUG SESSIONE (/fullName/pagamento)]: key = " + fullName + "   value = " + str(session.get(fullName)))
-    #if not session.get(fullName):
+    
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None
+    """
     if session.get(fullName) is None:
-        return redirect("/accedi", 302)
+        return redirect("/accedi", 401)
+
+    diz = session.get(fullName)
+
+    if(not isinstance(diz, dict) or len(diz.keys())!=4 or diz['fullName']!=fullName or diz['idVolo']!=idVolo):
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
+        session.pop(fullName)
+        return redirect("/accedi", 401)    
+
     if request.method == 'POST':
         return render_template("pagamento.html", fullName = fullName)
     
@@ -112,47 +137,62 @@ def confermaRiepilogo(fullName):
 
 @app.route("/<string:fullName>/<string:idVolo>/resoconto")
 def resoconto(fullName, idVolo):
+
     #TODO implementare il resoconto
 
-    #if not session.get(fullName):
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None
+    """
     if session.get(fullName) is None:
-        return redirect("/accedi", 302)
+        return redirect("/accedi", 401)
 
-    #Non solo devo controllare se esiste la chiave ma devo anche verificare se il dizionario è configurato correttamente
+    """
+    Non solo devo controllare se esiste la chiave ma devo anche verificare se 
+    il dizionario è configurato correttamente per la sessione
+    """
     diz = session.get(fullName)
-    if(not isinstance(diz, dict) || len(diz.keys())!=3 or diz['fullName'!=fullName or diz['idVolo']!=idVolo):
+
+    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['fullName']!=fullName):
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
         session.pop(fullName)
-        return redirect("/accedi")
+        return redirect("/accedi", 401)
 
     cards = diz['cards']
     check = False
 
     for card in cards:
         if card.idVolo == idVolo:
-            #Mi registro il fatto che l'identificativo passato nella URL effettivamente corrisponde ad uno dei voli esistenti
+            """
+            Mi registro il fatto che l'identificativo passato nella URL effettivamente
+            corrisponde ad uno dei voli esistenti nello stato della sessione
+            """
             check = True
+
             partenza = card.partenza
             print("PARTENZA= ", card.partenza)
             arrivo = card.arrivo
             print("ARRIVO= ", card.arrivo)
             compagnia = card.compagnia
-            print("PARTENZA= ", card.compagnia)
+            print("COMPAGNIA= ", card.compagnia)
             orario = card.orario
-            print("PARTENZA= ", card.orario)
+            print("ORARIO= ", card.orario)
             data = card.data
-            print("PARTENZA= ", card.data)
+            print("DATA= ", card.data)
             prezzoTotale = card.prezzoTotale
-            print("PARTENZA= ", card.prezzoTotale) 
+            print("PREZZO TOTALE= ", card.prezzoTotale) 
 
     if(not check):
-        #Nella URL è stato inserito l'identificativo di un volo insesistente, magari per sbaglio da parte dell'utente oppure come tentativo di attacco
+        """
+        Nella URL è stato inserito l'identificativo di un volo insesistente,
+        magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
         session.pop(fullName)
-        """
-        Modifico i metadati di sessione che mi porto appresso ritornando al valore che la sessione ha nel momento in cui sono alla Home
-        Quindi non ho più le informazioni relative alle persone, ai risultati della ricerca e all'identificativo del volo che ho scelto
-        """
-        session[fullName] = fullName
-        return redirect("/"+fullName+"/home", 302)
+        return redirect("/accedi", 401)
 
     #Mi porto appresso anche le informazioni relative al volo che è stato selezionato dall'utente
     diz['idVolo'] = idVolo
@@ -206,6 +246,7 @@ def logoutUtenteAirline(airline, fullName):
 @app.route("/iscriviti", methods=('GET','POST'))
 def iscrizione():
     if request.method == 'POST':
+        #Ottengo i dati inseriti dall'utente
         email = request.form['inputEmail']
         name = request.form['inputName']
         surname = request.form['inputSurname']
@@ -218,10 +259,8 @@ def iscrizione():
 
         #if password==passwordConfirm then go ahead; else passwordConfirm has to be changed before going to the next page
         if isOk and userType == "Turista":
-            #return redirect("/"+name+" "+surname+"/home")
             return redirect('/accedi')
         elif isOk and userType != "Turista":
-            #return redirect("/"+airline+"/"+name+" "+surname+"/airlineHome")
             return redirect('/accedi')
         else:
             return render_template("Iscrizione.html")
@@ -229,14 +268,19 @@ def iscrizione():
     return render_template("Iscrizione.html")
 
 
-
-#here the user specifies some information about the flight he wants to book
 @app.route("/<string:fullName>/home", methods=('GET','POST'))
 def home(fullName):
-    #if not session.get(session.get(fullName)):
     print("[DEBUG SESSIONE (/fullName/home)]: key = " + fullName + "   value = " + str(session.get(fullName)))
-    if (session.get(fullName) is None) or (session.get(fullName)!=fullName):
-        return redirect("/accedi", 302)
+
+    if session.get(fullName) is None:
+        #Questo utente ancora non ha effettuato accesso con le credenziali...
+        return redirect("/accedi", 401)
+    
+    if session.get(fullName)!=fullName:
+        #Errore nella gestione della sessione...
+        session.pop(fullName)
+        return redirect("/accedi", 401)
+
     return render_template("Home.html", fullName=fullName)
 
 
