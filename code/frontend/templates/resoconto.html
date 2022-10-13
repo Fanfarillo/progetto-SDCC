@@ -63,7 +63,7 @@
         <label for="prezzo" class="form-label">Prezzo totale</label>
         <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="{{ prezzoTotale }}" readonly>
       </div>
-      <form action="/{{ fullName }}/{{ idVolo }}/pagamento" method="POST">
+      <form action="/{{ fullName }}/pagamento" method="POST">
         <button type="submit" class="btn btn-primary my-3">Conferma</button>
       </form>
     </div>
