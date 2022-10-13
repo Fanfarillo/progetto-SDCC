@@ -1,7 +1,7 @@
 import grpc
 
-from proto import Boo_pb2
-from proto import Boo_pb2_grpc
+from proto import Booking_pb2
+from proto import Booking_pb2_grpc
 
 ADDR_PORT = 'localhost:50053'   #server_IP_addr:port_num
 
@@ -30,12 +30,12 @@ def sendBookingInfo(giorno, mese, anno, aereoporto_partenza, aereoporto_arrivo, 
     with grpc.insecure_channel(ADDR_PORT) as channel: #server_IP_addr:port_num
     
     #create client stub
-        stub = Boo_pb2_grpc.BookingServiceStub(channel)
+        stub = Booking_pb2_grpc.BookingServiceStub(channel)
         print(stub)
         #get response from Registration service
         print("LOG: prima del ciclo...")
         #output = stub.getAllFlights(Boo_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone)))
-        for entry in stub.getAllFlights(Boo_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone))):
+        for entry in stub.getAllFlights(Booking_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone))):
             print(entry.id)
             count = count + 1
             cards.append(Card(entry.id, entry.compagnia, entry.arrivo, entry.partenza, entry.orario, entry.data, entry.prezzoBase))

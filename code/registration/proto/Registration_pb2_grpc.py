@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from proto import FroReg_pb2 as proto_dot_FroReg__pb2
+from proto import Registration_pb2 as proto_dot_Registration__pb2
 
 
 class UsersInfoStub(object):
@@ -16,13 +16,13 @@ class UsersInfoStub(object):
         """
         self.SignUp = channel.unary_unary(
                 '/proto.UsersInfo/SignUp',
-                request_serializer=proto_dot_FroReg__pb2.SignUpInfo.SerializeToString,
-                response_deserializer=proto_dot_FroReg__pb2.SignUpResponse.FromString,
+                request_serializer=proto_dot_Registration__pb2.SignUpInfo.SerializeToString,
+                response_deserializer=proto_dot_Registration__pb2.SignUpResponse.FromString,
                 )
         self.SignIn = channel.unary_unary(
                 '/proto.UsersInfo/SignIn',
-                request_serializer=proto_dot_FroReg__pb2.Credentials.SerializeToString,
-                response_deserializer=proto_dot_FroReg__pb2.SignInResponse.FromString,
+                request_serializer=proto_dot_Registration__pb2.Credentials.SerializeToString,
+                response_deserializer=proto_dot_Registration__pb2.SignInResponse.FromString,
                 )
 
 
@@ -46,13 +46,13 @@ def add_UsersInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SignUp': grpc.unary_unary_rpc_method_handler(
                     servicer.SignUp,
-                    request_deserializer=proto_dot_FroReg__pb2.SignUpInfo.FromString,
-                    response_serializer=proto_dot_FroReg__pb2.SignUpResponse.SerializeToString,
+                    request_deserializer=proto_dot_Registration__pb2.SignUpInfo.FromString,
+                    response_serializer=proto_dot_Registration__pb2.SignUpResponse.SerializeToString,
             ),
             'SignIn': grpc.unary_unary_rpc_method_handler(
                     servicer.SignIn,
-                    request_deserializer=proto_dot_FroReg__pb2.Credentials.FromString,
-                    response_serializer=proto_dot_FroReg__pb2.SignInResponse.SerializeToString,
+                    request_deserializer=proto_dot_Registration__pb2.Credentials.FromString,
+                    response_serializer=proto_dot_Registration__pb2.SignInResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -76,8 +76,8 @@ class UsersInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.UsersInfo/SignUp',
-            proto_dot_FroReg__pb2.SignUpInfo.SerializeToString,
-            proto_dot_FroReg__pb2.SignUpResponse.FromString,
+            proto_dot_Registration__pb2.SignUpInfo.SerializeToString,
+            proto_dot_Registration__pb2.SignUpResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -93,7 +93,7 @@ class UsersInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.UsersInfo/SignIn',
-            proto_dot_FroReg__pb2.Credentials.SerializeToString,
-            proto_dot_FroReg__pb2.SignInResponse.FromString,
+            proto_dot_Registration__pb2.Credentials.SerializeToString,
+            proto_dot_Registration__pb2.SignInResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

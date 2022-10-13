@@ -203,13 +203,70 @@ def resoconto(fullName, idVolo):
 
 
 
-@app.route("/<string:fullName>/<string:idVolo>/serviziAggiuntivi")
-def serviziAggiuntivi(fullName, idVolo):
+@app.route("/<string:fullName>/<string:compagnia>/<string:idVolo>/serviziAggiuntivi")
+def serviziAggiuntivi(fullName, compagnia, idVolo):
     #TODO implementare i servizi aggiuntivi
-    #if not session.get(fullName):
+
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None
+    """
     if session.get(fullName) is None:
-        return redirect("/accedi", 302)
-    print("persone = " + session.get(fullName))
+        return redirect("/accedi", 401)
+
+    """
+    Non solo devo controllare se esiste la chiave ma devo anche verificare se 
+    il dizionario è configurato correttamente per la sessione
+    """
+    diz = session.get(fullName)
+
+    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['fullName']!=fullName):
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
+        session.pop(fullName)
+        return redirect("/accedi", 401)
+
+    cards = diz['cards']
+
+    #Per vedere se l'identificativo del volo selezionato sta tra le possibili scelte dell'utente
+    check = False
+
+    for card in cards:
+        if card.idVolo == idVolo:
+            """
+            Mi registro il fatto che l'identificativo passato nella URL effettivamente
+            corrisponde ad uno dei voli esistenti nello stato della sessione
+            """
+            check = True 
+
+    if(not check):
+        """
+        Nella URL è stato inserito l'identificativo di un volo insesistente,
+        magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
+        session.pop(fullName)
+        return redirect("/accedi", 401)
+
+    #Mi porto appresso anche le informazioni relative al volo che è stato selezionato dall'utente
+    diz['idVolo'] = idVolo
+    session.pop(fullName)
+    session[fullName] = diz
+
+    #Ottengo il costo dei posti della compagnia aerea in questione
+    prezzoDeiPosti = sendIdFlightSeatsPrice(compagnia)
+    for prezzo in prezzoDeiPosti:
+        print("[POSTO] = " + str(prezzo))
+
+    #Ottengo il costo dei servizi aggiuntivi della compagnia aerea in questione
+    prezzoDeiServiziAggiuntivi = sendIdFlightAdditionalService(compagnia)
+    for prezzo in prezzoDeiServiziAggiuntivi:
+        print("[SERVIZIO AGGIUNTIVO] = " + str(prezzo))
+
+
+    print("[DEBUG SESSION (/fullName/idVolo/servuzuAggiuntivi)]: key = " + fullName + "  value = " + str(session.get(fullName)))    
     return render_template("serviziAggiuntivi.html")
 
 

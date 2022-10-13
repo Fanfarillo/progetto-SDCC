@@ -1,7 +1,7 @@
 import grpc
 
-from proto import FroReg_pb2
-from proto import FroReg_pb2_grpc
+from proto import Registration_pb2
+from proto import Registration_pb2_grpc
 
 ADDR_PORT = 'localhost:50051'   #server_IP_addr:port_num
 
@@ -10,10 +10,10 @@ def sendSignUpInfo(email, name, surname, password, passwordConfirm, userType, ai
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
     #create client stub
-    stub = FroReg_pb2_grpc.UsersInfoStub(channel)
+    stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
     #get response from Registration service
-    output = stub.SignUp(FroReg_pb2.SignUpInfo(email=email, name=name, surname=surname, password=password, passwordConfirm=passwordConfirm, userType=userType, airline=airline))
+    output = stub.SignUp(Registration_pb2.SignUpInfo(email=email, name=name, surname=surname, password=password, passwordConfirm=passwordConfirm, userType=userType, airline=airline))
     #we need to return the boolean value
     return output.isOk
 
@@ -22,9 +22,9 @@ def sendCredentials(email, password):
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
     #create client stub
-    stub = FroReg_pb2_grpc.UsersInfoStub(channel)
+    stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
     #get response from Registration service
-    output = stub.SignIn(FroReg_pb2.Credentials(email=email, password=password))
+    output = stub.SignIn(Registration_pb2.Credentials(email=email, password=password))
     #here we need to return the entire output (i.e. the entire received message)
     return output

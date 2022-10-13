@@ -2,6 +2,54 @@ import boto3
 from boto3.dynamodb.conditions import Attr
 from decimal import *
 
+def getAllSeatsFlight(compagnia):
+    print("Compagnia: " + compagnia)
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('PrezzoPosti')
+
+    response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
+    primo = response['Items'][0]['1']
+    print("1: "+str(primo))
+    secondo = response['Items'][0]['2-5']
+    print("2-5: "+str(secondo))
+    terzo = response['Items'][0]['6-15']
+    print("6-15: "+str(terzo))
+    quarto = response['Items'][0]['16-17']
+    print("16-17: "+str(quarto))
+    quinto = response['Items'][0]['18-26']
+    print("18-26: "+str(quinto))
+
+    prezzi = []
+    prezzi.append(primo)
+    prezzi.append(secondo)
+    prezzi.append(terzo)
+    prezzi.append(quarto)
+    prezzi.append(quinto)
+
+    return prezzi
+
+
+def getAlladditionalServicesFlight(compagnia):
+    print(compagnia)
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('Servizi')
+
+    response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
+
+    bagaglioStivaMedio = response['Items'][0]['Bagaglio in stiva medio']
+    print(str(bagaglioStivaMedio))
+    animaleDomestico = response['Items'][0]['Animale domestico']
+    print(str(animaleDomestico))
+    assicurazioneBagagli = response['Items'][0]['Assicurazione bagagli']
+    print(str(assicurazioneBagagli))
+    bagaglioStivaGrande = response['Items'][0]['Bagaglio in stiva grande']
+    print(str(bagaglioStivaGrande))
+    bagaglioSpeciale = response['Items'][0]['Bagaglio speciale']
+    print(str(bagaglioSpeciale))
+    neonato = response['Items'][0]['Neonato']
+    print(str(neonato))
+    return 2
+
 def storeSeatsPrices(airline, price1, price2, price6, price16, price18):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('PrezzoPosti')

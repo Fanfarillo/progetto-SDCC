@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from proto import FroMan_pb2 as proto_dot_FroMan__pb2
+from proto import Managment_pb2 as proto_dot_Managment__pb2
 
 
 class FlightsInfoStub(object):
@@ -16,28 +16,38 @@ class FlightsInfoStub(object):
         """
         self.AddFlight = channel.unary_unary(
                 '/proto.FlightsInfo/AddFlight',
-                request_serializer=proto_dot_FroMan__pb2.NewFlight.SerializeToString,
-                response_deserializer=proto_dot_FroMan__pb2.AddResponse.FromString,
+                request_serializer=proto_dot_Managment__pb2.NewFlight.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.AddResponse.FromString,
                 )
         self.ModifyFlight = channel.unary_unary(
                 '/proto.FlightsInfo/ModifyFlight',
-                request_serializer=proto_dot_FroMan__pb2.UpdatedFlight.SerializeToString,
-                response_deserializer=proto_dot_FroMan__pb2.ModFlightResponse.FromString,
+                request_serializer=proto_dot_Managment__pb2.UpdatedFlight.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.ModFlightResponse.FromString,
                 )
         self.ModifySeats = channel.unary_unary(
                 '/proto.FlightsInfo/ModifySeats',
-                request_serializer=proto_dot_FroMan__pb2.UpdatedSeats.SerializeToString,
-                response_deserializer=proto_dot_FroMan__pb2.ModSeatsResponse.FromString,
+                request_serializer=proto_dot_Managment__pb2.UpdatedSeats.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.ModSeatsResponse.FromString,
                 )
         self.ModifyServices = channel.unary_unary(
                 '/proto.FlightsInfo/ModifyServices',
-                request_serializer=proto_dot_FroMan__pb2.UpdatedServices.SerializeToString,
-                response_deserializer=proto_dot_FroMan__pb2.ModServicesResponse.FromString,
+                request_serializer=proto_dot_Managment__pb2.UpdatedServices.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.ModServicesResponse.FromString,
                 )
         self.GetPriceFlight = channel.unary_unary(
                 '/proto.FlightsInfo/GetPriceFlight',
-                request_serializer=proto_dot_FroMan__pb2.PriceRequest.SerializeToString,
-                response_deserializer=proto_dot_FroMan__pb2.PriceReply.FromString,
+                request_serializer=proto_dot_Managment__pb2.PriceRequest.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.PriceReply.FromString,
+                )
+        self.GetAllSeatsFlight = channel.unary_stream(
+                '/proto.FlightsInfo/GetAllSeatsFlight',
+                request_serializer=proto_dot_Managment__pb2.SeatCostRequest.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.SeatCostReply.FromString,
+                )
+        self.GetAlladditionalServicesFlight = channel.unary_stream(
+                '/proto.FlightsInfo/GetAlladditionalServicesFlight',
+                request_serializer=proto_dot_Managment__pb2.AdditionalServiceCostRequest.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.AdditionalServiceCostReply.FromString,
                 )
 
 
@@ -74,33 +84,55 @@ class FlightsInfoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAllSeatsFlight(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAlladditionalServicesFlight(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FlightsInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'AddFlight': grpc.unary_unary_rpc_method_handler(
                     servicer.AddFlight,
-                    request_deserializer=proto_dot_FroMan__pb2.NewFlight.FromString,
-                    response_serializer=proto_dot_FroMan__pb2.AddResponse.SerializeToString,
+                    request_deserializer=proto_dot_Managment__pb2.NewFlight.FromString,
+                    response_serializer=proto_dot_Managment__pb2.AddResponse.SerializeToString,
             ),
             'ModifyFlight': grpc.unary_unary_rpc_method_handler(
                     servicer.ModifyFlight,
-                    request_deserializer=proto_dot_FroMan__pb2.UpdatedFlight.FromString,
-                    response_serializer=proto_dot_FroMan__pb2.ModFlightResponse.SerializeToString,
+                    request_deserializer=proto_dot_Managment__pb2.UpdatedFlight.FromString,
+                    response_serializer=proto_dot_Managment__pb2.ModFlightResponse.SerializeToString,
             ),
             'ModifySeats': grpc.unary_unary_rpc_method_handler(
                     servicer.ModifySeats,
-                    request_deserializer=proto_dot_FroMan__pb2.UpdatedSeats.FromString,
-                    response_serializer=proto_dot_FroMan__pb2.ModSeatsResponse.SerializeToString,
+                    request_deserializer=proto_dot_Managment__pb2.UpdatedSeats.FromString,
+                    response_serializer=proto_dot_Managment__pb2.ModSeatsResponse.SerializeToString,
             ),
             'ModifyServices': grpc.unary_unary_rpc_method_handler(
                     servicer.ModifyServices,
-                    request_deserializer=proto_dot_FroMan__pb2.UpdatedServices.FromString,
-                    response_serializer=proto_dot_FroMan__pb2.ModServicesResponse.SerializeToString,
+                    request_deserializer=proto_dot_Managment__pb2.UpdatedServices.FromString,
+                    response_serializer=proto_dot_Managment__pb2.ModServicesResponse.SerializeToString,
             ),
             'GetPriceFlight': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPriceFlight,
-                    request_deserializer=proto_dot_FroMan__pb2.PriceRequest.FromString,
-                    response_serializer=proto_dot_FroMan__pb2.PriceReply.SerializeToString,
+                    request_deserializer=proto_dot_Managment__pb2.PriceRequest.FromString,
+                    response_serializer=proto_dot_Managment__pb2.PriceReply.SerializeToString,
+            ),
+            'GetAllSeatsFlight': grpc.unary_stream_rpc_method_handler(
+                    servicer.GetAllSeatsFlight,
+                    request_deserializer=proto_dot_Managment__pb2.SeatCostRequest.FromString,
+                    response_serializer=proto_dot_Managment__pb2.SeatCostReply.SerializeToString,
+            ),
+            'GetAlladditionalServicesFlight': grpc.unary_stream_rpc_method_handler(
+                    servicer.GetAlladditionalServicesFlight,
+                    request_deserializer=proto_dot_Managment__pb2.AdditionalServiceCostRequest.FromString,
+                    response_serializer=proto_dot_Managment__pb2.AdditionalServiceCostReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -124,8 +156,8 @@ class FlightsInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/AddFlight',
-            proto_dot_FroMan__pb2.NewFlight.SerializeToString,
-            proto_dot_FroMan__pb2.AddResponse.FromString,
+            proto_dot_Managment__pb2.NewFlight.SerializeToString,
+            proto_dot_Managment__pb2.AddResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -141,8 +173,8 @@ class FlightsInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/ModifyFlight',
-            proto_dot_FroMan__pb2.UpdatedFlight.SerializeToString,
-            proto_dot_FroMan__pb2.ModFlightResponse.FromString,
+            proto_dot_Managment__pb2.UpdatedFlight.SerializeToString,
+            proto_dot_Managment__pb2.ModFlightResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -158,8 +190,8 @@ class FlightsInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/ModifySeats',
-            proto_dot_FroMan__pb2.UpdatedSeats.SerializeToString,
-            proto_dot_FroMan__pb2.ModSeatsResponse.FromString,
+            proto_dot_Managment__pb2.UpdatedSeats.SerializeToString,
+            proto_dot_Managment__pb2.ModSeatsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -175,8 +207,8 @@ class FlightsInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/ModifyServices',
-            proto_dot_FroMan__pb2.UpdatedServices.SerializeToString,
-            proto_dot_FroMan__pb2.ModServicesResponse.FromString,
+            proto_dot_Managment__pb2.UpdatedServices.SerializeToString,
+            proto_dot_Managment__pb2.ModServicesResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -192,7 +224,41 @@ class FlightsInfo(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.FlightsInfo/GetPriceFlight',
-            proto_dot_FroMan__pb2.PriceRequest.SerializeToString,
-            proto_dot_FroMan__pb2.PriceReply.FromString,
+            proto_dot_Managment__pb2.PriceRequest.SerializeToString,
+            proto_dot_Managment__pb2.PriceReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllSeatsFlight(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/proto.FlightsInfo/GetAllSeatsFlight',
+            proto_dot_Managment__pb2.SeatCostRequest.SerializeToString,
+            proto_dot_Managment__pb2.SeatCostReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAlladditionalServicesFlight(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/proto.FlightsInfo/GetAlladditionalServicesFlight',
+            proto_dot_Managment__pb2.AdditionalServiceCostRequest.SerializeToString,
+            proto_dot_Managment__pb2.AdditionalServiceCostReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

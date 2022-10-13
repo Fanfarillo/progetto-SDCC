@@ -2,8 +2,8 @@ import boto3
 import grpc
 from boto3.dynamodb.conditions import Attr
 from decimal import *
-from proto import FroMan_pb2
-from proto import FroMan_pb2_grpc
+from proto import Managment_pb2
+from proto import Managment_pb2_grpc
 
 ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
 
@@ -140,11 +140,11 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
     #create client stub
-    stub = FroMan_pb2_grpc.FlightsInfoStub(channel)
+    stub = Managment_pb2_grpc.FlightsInfoStub(channel)
     
     for flight in flights:
         #print("CICLOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-        response = stub.GetPriceFlight(FroMan_pb2.PriceRequest(idVolo=flight.idKey))
+        response = stub.GetPriceFlight(Managment_pb2.PriceRequest(idVolo=flight.idKey))
         print(response.price)
         flight.prezzo = response.price
 

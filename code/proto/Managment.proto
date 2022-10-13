@@ -8,6 +8,24 @@ service FlightsInfo {
     rpc ModifySeats(UpdatedSeats) returns (ModSeatsResponse);
     rpc ModifyServices(UpdatedServices) returns (ModServicesResponse);
     rpc GetPriceFlight(PriceRequest) returns (PriceReply);
+    rpc GetAllSeatsFlight(SeatCostRequest) returns (stream SeatCostReply);
+    rpc GetAlladditionalServicesFlight(AdditionalServiceCostRequest) returns (stream AdditionalServiceCostReply);
+}
+
+message SeatCostRequest {
+    string compagnia = 1;
+}
+
+message SeatCostReply {
+    int32 prezzo = 1;
+}
+
+message AdditionalServiceCostRequest {
+    string compagnia = 1;
+}
+
+message AdditionalServiceCostReply {
+    int32 prezzo = 1;
 }
 
 message PriceRequest {

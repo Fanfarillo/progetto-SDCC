@@ -3,14 +3,14 @@ import time
 
 from concurrent import futures
 from datetime import datetime
-from proto import FroMan_pb2
-from proto import FroMan_pb2_grpc
+from proto import Managment_pb2
+from proto import Managment_pb2_grpc
 
 from ManRpcBoo import *
 from ManUtils import *
 from ManDB import *
 
-class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
+class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
     def AddFlight(self, NewFlight, context):
         #sanity checks are the following:
@@ -35,7 +35,7 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
             registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, NewFlight.price, NewFlight.seats)
 
-        output = FroMan_pb2.AddResponse(isOk=isOk)
+        output = Managment_pb2.AddResponse(isOk=isOk)
         return output
 
     def ModifyFlight(self, UpdatedFlight, context):
@@ -52,7 +52,7 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
             updateFlightPrice(UpdatedFlight.flightId, UpdatedFlight.newPrice)
 
-        output = FroMan_pb2.ModFlightResponse(isOk=isOk)
+        output = Managment_pb2.ModFlightResponse(isOk=isOk)
         return output
 
     def ModifySeats(self, UpdatedSeats, context):
@@ -63,7 +63,7 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         if isOk:
             storeSeatsPrices(UpdatedSeats.airline, UpdatedSeats.price1, UpdatedSeats.price2, UpdatedSeats.price6, UpdatedSeats.price16, UpdatedSeats.price18)
 
-        output = FroMan_pb2.ModSeatsResponse(isOk=isOk)
+        output = Managment_pb2.ModSeatsResponse(isOk=isOk)
         return output
 
     def ModifyServices(self, UpdatedServices, context):
@@ -73,16 +73,31 @@ class FlightsInfoServicer(FroMan_pb2_grpc.FlightsInfoServicer):
         if isOk:
             storeServicesPrices(UpdatedServices.airline, UpdatedServices.priceBM, UpdatedServices.priceBG, UpdatedServices.priceBS, UpdatedServices.priceAD, UpdatedServices.priceAB, UpdatedServices.priceTN)
 
-        output = FroMan_pb2.ModServicesResponse(isOk=isOk)
+        output = Managment_pb2.ModServicesResponse(isOk=isOk)
         return output
 
     def GetPriceFlight(self, request, context):
         response = getPrice(request.idVolo)
-        return FroMan_pb2.PriceReply(price=str(response))
+        return Managment_pb2.PriceReply(price=str(response))
+
+    def GetAllSeatsFlight(self, request, context):
+        print("Man1 Inizio")
+        prezzi = getAllSeatsFlight(request.compagnia)
+        print("Man1 Fine")
+        for item in prezzi:
+            print(type(item))
+            ret = Managment_pb2.SeatCostReply(prezzo=int(item))            
+            yield ret
+
+    def GetAlladditionalServicesFlight(self, request, context):
+        print("Man2 Inizio")
+        response = getAlladditionalServicesFlight(request.compagnia)
+        print("Man2 Fine")
+        yield Managment_pb2.AdditionalServiceCostReply(prezzo=response)
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-FroMan_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)
+Managment_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)
 
 print('Starting server. Listening on port 50052.')
 server.add_insecure_port('[::]:50052')

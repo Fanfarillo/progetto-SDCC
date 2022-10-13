@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from proto import Boo_pb2 as proto_dot_Boo__pb2
+from proto import Booking_pb2 as proto_dot_Booking__pb2
 
 
 class BookingServiceStub(object):
@@ -16,23 +16,23 @@ class BookingServiceStub(object):
         """
         self.getAllFlights = channel.unary_stream(
                 '/proto.BookingService/getAllFlights',
-                request_serializer=proto_dot_Boo__pb2.getAllFlightsRequest.SerializeToString,
-                response_deserializer=proto_dot_Boo__pb2.getAllFlightsReply.FromString,
+                request_serializer=proto_dot_Booking__pb2.getAllFlightsRequest.SerializeToString,
+                response_deserializer=proto_dot_Booking__pb2.getAllFlightsReply.FromString,
                 )
         self.SendId = channel.unary_unary(
                 '/proto.BookingService/SendId',
-                request_serializer=proto_dot_Boo__pb2.IdMessage.SerializeToString,
-                response_deserializer=proto_dot_Boo__pb2.IdResponse.FromString,
+                request_serializer=proto_dot_Booking__pb2.IdMessage.SerializeToString,
+                response_deserializer=proto_dot_Booking__pb2.IdResponse.FromString,
                 )
         self.RegisterFlight = channel.unary_unary(
                 '/proto.BookingService/RegisterFlight',
-                request_serializer=proto_dot_Boo__pb2.NewFlight2.SerializeToString,
-                response_deserializer=proto_dot_Boo__pb2.RegisterResponse.FromString,
+                request_serializer=proto_dot_Booking__pb2.NewFlight2.SerializeToString,
+                response_deserializer=proto_dot_Booking__pb2.RegisterResponse.FromString,
                 )
         self.UpdateFlightPrice = channel.unary_unary(
                 '/proto.BookingService/UpdateFlightPrice',
-                request_serializer=proto_dot_Boo__pb2.UpdatedFlight2.SerializeToString,
-                response_deserializer=proto_dot_Boo__pb2.UpdateResponse.FromString,
+                request_serializer=proto_dot_Booking__pb2.UpdatedFlight2.SerializeToString,
+                response_deserializer=proto_dot_Booking__pb2.UpdateResponse.FromString,
                 )
 
 
@@ -68,23 +68,23 @@ def add_BookingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'getAllFlights': grpc.unary_stream_rpc_method_handler(
                     servicer.getAllFlights,
-                    request_deserializer=proto_dot_Boo__pb2.getAllFlightsRequest.FromString,
-                    response_serializer=proto_dot_Boo__pb2.getAllFlightsReply.SerializeToString,
+                    request_deserializer=proto_dot_Booking__pb2.getAllFlightsRequest.FromString,
+                    response_serializer=proto_dot_Booking__pb2.getAllFlightsReply.SerializeToString,
             ),
             'SendId': grpc.unary_unary_rpc_method_handler(
                     servicer.SendId,
-                    request_deserializer=proto_dot_Boo__pb2.IdMessage.FromString,
-                    response_serializer=proto_dot_Boo__pb2.IdResponse.SerializeToString,
+                    request_deserializer=proto_dot_Booking__pb2.IdMessage.FromString,
+                    response_serializer=proto_dot_Booking__pb2.IdResponse.SerializeToString,
             ),
             'RegisterFlight': grpc.unary_unary_rpc_method_handler(
                     servicer.RegisterFlight,
-                    request_deserializer=proto_dot_Boo__pb2.NewFlight2.FromString,
-                    response_serializer=proto_dot_Boo__pb2.RegisterResponse.SerializeToString,
+                    request_deserializer=proto_dot_Booking__pb2.NewFlight2.FromString,
+                    response_serializer=proto_dot_Booking__pb2.RegisterResponse.SerializeToString,
             ),
             'UpdateFlightPrice': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateFlightPrice,
-                    request_deserializer=proto_dot_Boo__pb2.UpdatedFlight2.FromString,
-                    response_serializer=proto_dot_Boo__pb2.UpdateResponse.SerializeToString,
+                    request_deserializer=proto_dot_Booking__pb2.UpdatedFlight2.FromString,
+                    response_serializer=proto_dot_Booking__pb2.UpdateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -108,8 +108,8 @@ class BookingService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/proto.BookingService/getAllFlights',
-            proto_dot_Boo__pb2.getAllFlightsRequest.SerializeToString,
-            proto_dot_Boo__pb2.getAllFlightsReply.FromString,
+            proto_dot_Booking__pb2.getAllFlightsRequest.SerializeToString,
+            proto_dot_Booking__pb2.getAllFlightsReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -125,8 +125,8 @@ class BookingService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.BookingService/SendId',
-            proto_dot_Boo__pb2.IdMessage.SerializeToString,
-            proto_dot_Boo__pb2.IdResponse.FromString,
+            proto_dot_Booking__pb2.IdMessage.SerializeToString,
+            proto_dot_Booking__pb2.IdResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -142,8 +142,8 @@ class BookingService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.BookingService/RegisterFlight',
-            proto_dot_Boo__pb2.NewFlight2.SerializeToString,
-            proto_dot_Boo__pb2.RegisterResponse.FromString,
+            proto_dot_Booking__pb2.NewFlight2.SerializeToString,
+            proto_dot_Booking__pb2.RegisterResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,7 +159,7 @@ class BookingService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/proto.BookingService/UpdateFlightPrice',
-            proto_dot_Boo__pb2.UpdatedFlight2.SerializeToString,
-            proto_dot_Boo__pb2.UpdateResponse.FromString,
+            proto_dot_Booking__pb2.UpdatedFlight2.SerializeToString,
+            proto_dot_Booking__pb2.UpdateResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
