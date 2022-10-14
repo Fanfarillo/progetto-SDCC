@@ -214,8 +214,8 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
         return redirect("/accedi", 401)
 
     """
-    Non solo devo controllare se esiste la chiave ma devo anche verificare se 
-    il dizionario è configurato correttamente per la sessione
+    Non solo devo controllare se esiste la sessione ma devo anche verificare se 
+    il dizionario è configurato correttamente per la sessione corrente
     """
     diz = session.get(fullName)
 
@@ -231,7 +231,6 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
 
     #Per vedere se l'identificativo del volo selezionato sta tra le possibili scelte dell'utente
     check = False
-
     for card in cards:
         if card.idVolo == idVolo:
             """
@@ -256,18 +255,25 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     session[fullName] = diz
 
     #Ottengo il costo dei posti della compagnia aerea in questione
-    prezzoDeiPosti = sendIdFlightSeatsPrice(compagnia)
-    for prezzo in prezzoDeiPosti:
-        print("[POSTO] = " + str(prezzo))
+    seatsFlight = sendIdCompanySeatsPrice(compagnia)
+    print("[1]: " + str(seatsFlight.primo))
+    print("[2-5]: " + str(seatsFlight.secondo))
+    print("[6-15]: " + str(seatsFlight.terzo))
+    print("[16-17]: " + str(seatsFlight.quarto))
+    print("[18-26]: " + str(seatsFlight.quinto))
 
     #Ottengo il costo dei servizi aggiuntivi della compagnia aerea in questione
-    prezzoDeiServiziAggiuntivi = sendIdFlightAdditionalService(compagnia)
-    for prezzo in prezzoDeiServiziAggiuntivi:
-        print("[SERVIZIO AGGIUNTIVO] = " + str(prezzo))
+    additionalServices = sendIdCompanydditionalService(compagnia)
+    print("bagaglioSpeciale: " + str(additionalServices.bagaglioSpeciale))
+    print("bagaglioStivaMedio: " + str(additionalServices.bagaglioStivaMedio))
+    print("bagaglioStivaGrande: " + str(additionalServices.bagaglioStivaGrande))
+    print("assicurazioneBagagli: " + str(additionalServices.assicurazioneBagagli))
+    print("animaleDomestico: " + str(additionalServices.animaleDomestico))
+    print("neonato: " + str(additionalServices.neonato))
 
 
     print("[DEBUG SESSION (/fullName/idVolo/servuzuAggiuntivi)]: key = " + fullName + "  value = " + str(session.get(fullName)))    
-    return render_template("serviziAggiuntivi.html")
+    return render_template("serviziAggiuntivi.html", seatsFlight = seatsFlight, additionalServices = additionalServices)
 
 
 

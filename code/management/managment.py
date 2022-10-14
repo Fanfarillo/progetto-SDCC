@@ -81,19 +81,35 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         return Managment_pb2.PriceReply(price=str(response))
 
     def GetAllSeatsFlight(self, request, context):
-        print("Man1 Inizio")
         prezzi = getAllSeatsFlight(request.compagnia)
-        print("Man1 Fine")
+
+        """
+        1. 1
+        2. 2-5
+        3. 6-15
+        4. 16-17
+        5. 18-26
+        """
+
         for item in prezzi:
-            print(type(item))
             ret = Managment_pb2.SeatCostReply(prezzo=int(item))            
             yield ret
 
     def GetAlladditionalServicesFlight(self, request, context):
-        print("Man2 Inizio")
-        response = getAlladditionalServicesFlight(request.compagnia)
-        print("Man2 Fine")
-        yield Managment_pb2.AdditionalServiceCostReply(prezzo=response)
+        prezzi = getAlladditionalServicesFlight(request.compagnia)
+        
+        """
+        1. bagaglioSpeciale
+        2. bagaglioStivaMedio
+        3. bagaglioStivaGrande
+        4. assicurazioneBagagli
+        5. animaleDomestico
+        6. neonato
+        """
+
+        for item in prezzi:
+            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=int(item))
+            yield ret
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

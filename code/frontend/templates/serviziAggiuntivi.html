@@ -36,10 +36,36 @@
           <button type="submit" class="btn btn-primary my-3">Avanti</button>        
         </form>
         <form action="/accedi" method="GET">
-          <button type="submit" class="btn btn-primary my-3">Indietro</button>        
+          <button type="submit" class="btn btn-primary my-3" >Indietro</button>        
         </form>
       </div>
-    </div>
+
+      <div class="container my-4 text-center" style="max-width: 1160px;">
+
+        <h3 class="display-5" style="color: #646464;">Selezionare i posti che si desidera prenotare</h3>
+  
+        <!--Immagine che mostra i posti dell'aereo + legenda-->
+        <table align="center">
+          <tr>
+            <td>
+              <img src="{{url_for('static', filename='Aereo.png')}}" alt="Aereo" width="142.5" height="513">
+            </td>
+            <td>
+              <img src="{{url_for('static', filename='LegendaPosti.png')}}" alt="LegendaPosti" width="411" height="193">
+            </td>
+            <td>
+              <select width=300 style="width: 350px"
+              size="8" multiple>
+              <option value='blue'>Blue</option>
+              <option value='green'>Green</option>
+              <option value='red'>Red</option>
+              <option value='yellow'>Yellow</option>
+              <option value='orange'>Orange</option>
+            </select>
+            </td>
+          </tr>
+        </table>
+      </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 

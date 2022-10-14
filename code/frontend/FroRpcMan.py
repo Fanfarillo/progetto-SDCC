@@ -5,41 +5,73 @@ from proto import Managment_pb2_grpc
 
 ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
 
-def sendIdFlightSeatsPrice(compagnia):
-    #open gRPC channel
+class AdditionalServices:
+    def __init__(self, bagaglioSpeciale, bagaglioStivaMedio, bagaglioStivaGrande, assicurazioneBagagli, animaleDomestico, neonato):
+        self.bagaglioStivaMedio = bagaglioStivaMedio
+        self.animaleDomestico = animaleDomestico
+        self.assicurazioneBagagli = assicurazioneBagagli
+        self.bagaglioStivaGrande = bagaglioStivaGrande
+        self.bagaglioSpeciale = bagaglioSpeciale
+        self.neonato = neonato
+
+class SeatsFlight:
+    def __init__(self, primo, secondo, terzo, quarto, quinto):
+        self.primo = primo
+        self.secondo = secondo
+        self.terzo = terzo
+        self.quarto = quarto
+        self.quinto = quinto
+
+def sendIdCompanySeatsPrice(compagnia):
+    # Apertura di un gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
-    #create client stub
+    # Creazione del client stub
     stub = Managment_pb2_grpc.FlightsInfoStub(channel)
 
-    count = 0
     output = []
-    #get response from Flights Management service
+    # Ottengo uno stream di messaggio da parte del Server
     for entry in stub.GetAllSeatsFlight(Managment_pb2.SeatCostRequest(compagnia=compagnia)):
         #print(entry.prezzo)
         output.append(entry.prezzo)
-        count = count + 1
-    #we need to return the boolean value
     
-    return output
+    """
+    output[0] = primo
+    output[1] = secondo
+    output[2] = terzo
+    output[3] = quarto
+    output[4] = quinto   
+    """
+    
+    seatsFlight = SeatsFlight(output[0], output[1], output[2], output[3], output[4])
+    return seatsFlight
 
-def sendIdFlightAdditionalService(compagnia):
-    #open gRPC channel
+def sendIdCompanydditionalService(compagnia):
+
+    #TODO: che succede se la compagnia non ha servizi aggiuntivi?
+
+    # Apertura di un gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
-    #create client stub
+    # Creazione del client stub
     stub = Managment_pb2_grpc.FlightsInfoStub(channel)
 
-    count = 0
     output = []
-    #get response from Flights Management service
+    # Ottengo uno stream di messaggio da parte del Server
     for entry in stub.GetAlladditionalServicesFlight(Managment_pb2.AdditionalServiceCostRequest(compagnia=compagnia)):
         #print(entry.prezzo)
         output.append(entry.prezzo)
-        count = count + 1
-    #we need to return the boolean value
+    """
+    output[0] = bagaglioSpeciale
+    output[1] = bagaglioStivaMedio
+    output[2] = bagaglioStivaGrande
+    output[3] = assicurazioneBagagli
+    output[4] = animaleDomestico
+    output[5] = neonato
+    """
+    additionalServices = AdditionalServices(output[0], output[1], output[2], output[3], output[4], output[5])
     
-    return output
+    return additionalServices
 
 
 def sendNewFlight(id, date, departureAirport, arrivalAirport, departureTime, arrivalTime, airline, price, seats):
