@@ -27,34 +27,34 @@ Possono esserci tre tipi di utenti: il turista, che effettua la prenotazione del
 modifica può appunto riguardare il prezzo) e l'amministratore, che può recuperare le statistiche e i dati.
 
 TRAINING SET TIPO
-9	hh	RM	yes	(-> 30€)
-8	gg	MI	yes	(-> 32€)
-7	ff	NA	yes	(-> 35€)
-6	gg	RM	yes	(-> 34€)
-5	ff	MI	yes	(-> 40€)		--> AVG: 40,22€
-4	gg	NA	no	(-> 44€)
-3	hh	RM	no	(-> 46€)
-2	gg	MI	no	(-> 50€)
-1	dd	NA	no	(-> 51€)
+9	hh	RM	MI	yes	(-> 30€)
+8	gg	MI	RM	yes	(-> 32€)
+7	ff	NA	MI	yes	(-> 35€)
+6	gg	RM	NA	yes	(-> 34€)
+5	ff	MI	NA	yes	(-> 40€)		--> AVG: 40,22€
+4	gg	NA	RM	no	(-> 44€)
+3	hh	RM	NA	no	(-> 46€)
+2	gg	MI	RM	no	(-> 50€)
+1	dd	NA	MI	no	(-> 51€)
 
 TESTING SET TIPO
-5	dd	RM	no
-4	dd	RM	yes 	X
-3	dd	RM	no
-2	dd	RM	no
-1	dd	RM	no
-5	ff	RM	no
-4	ff	RM	no
-3	ff	RM	no
-2	ff	RM	yes
-1	ff	RM	yes
-5	gg	RM	no
-4	gg	RM	yes	X
-3	gg	RM	no
-2	gg	RM	yes
-1	gg	RM	yes
-5	hh	RM	no
-4	hh	RM	yes	X
-3	hh	RM	no
-2	hh	RM	no
-1	hh	RM	yes
+20	hh	RM	MI	no
+19	hh	RM	MI	yes 	X
+18	hh	RM	MI	no
+17	hh	RM	MI	no
+16	hh	RM	MI	yes
+15	hh	RM	MI	yes
+14	hh	RM	MI	no
+13	hh	RM	MI	no
+12	hh	RM	MI	yes
+11	hh	RM	MI	yes
+10	hh	RM	MI	no
+9	hh	RM	MI	yes
+8	hh	RM	MI	no
+7	hh	RM	MI	yes
+6	hh	RM	MI	yes
+5	hh	RM	MI	no
+4	hh	RM	MI	no
+3	hh	RM	MI	no
+2	hh	RM	MI	no
+1	hh	RM	MI	no
