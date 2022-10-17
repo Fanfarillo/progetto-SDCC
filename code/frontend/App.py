@@ -254,6 +254,9 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     session.pop(fullName)
     session[fullName] = diz
 
+    #Ottengo i posti disponibili relativi al volo che è stato selezionato
+    postiDisponibiliVolo = sendIdVoloPostiDisponibili(idVolo)
+
     #Ottengo il costo dei posti della compagnia aerea in questione
     seatsFlight = sendIdCompanySeatsPrice(compagnia)
     print("[1]: " + str(seatsFlight.primo))

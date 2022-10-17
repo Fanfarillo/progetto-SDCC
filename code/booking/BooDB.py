@@ -90,6 +90,20 @@ class Flight:
         self.prezzo = prezzo
 
 
+
+
+def retrieveAvailableSeats(idVolo):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('PostiOccupati')
+
+    response = table.scan(FilterExpression=Attr('IdVolo').eq(idVolo))    
+    items = response['Items']
+
+    print(Items)
+
+    return 
+
+
 def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Volo')

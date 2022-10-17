@@ -6,6 +6,14 @@ from proto import Booking_pb2
 from proto import Booking_pb2_grpc
 from BooDB import *
 
+postiTotali = ["A1", "B1", "C1", "D1", "E1", "F1","A2", "B2", "C2", "D2", "E2", "F2","A3", "B3", "C3", "D3", "E3", "F3",
+"A4", "B4", "C4", "D4", "E4", "F4", "A5", "B5", "C5", "D5", "E5", "F5","A6", "B6", "C6", "D6", "E6", "F6","A1", "B1", "C1", "D1", "E1", "F1",
+"A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1",
+"A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1",
+"A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1",
+"A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1",
+"A1", "B1", "C1", "D1", "E1", "F1","A1", "B1", "C1", "D1", "E1", "F1"]
+
 class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
     def getAllFlights(self, request, context):
@@ -32,6 +40,12 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
         storeUpdatedFlight(UpdatedFlight2.flightId, UpdatedFlight2.newPrice)
         output = Booking_pb2.UpdateResponse(isOk=True)
         return output
+    
+    def getAllAvailableSeatsForFlight(self, request, context):
+        print("[BOOKING] getAllAvailableSeatsForFlight")
+        output = retrieveAvailableSeats
+        ret = Booking_pb2.AvailableSeatReply(idPosto = "A1", disponibilita = True)
+        return ret
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
