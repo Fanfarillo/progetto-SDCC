@@ -276,7 +276,7 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
 
 
     print("[DEBUG SESSION (/fullName/idVolo/servuzuAggiuntivi)]: key = " + fullName + "  value = " + str(session.get(fullName)))    
-    return render_template("serviziAggiuntivi.html", seatsFlight = seatsFlight, additionalServices = additionalServices)
+    return render_template("serviziAggiuntivi.html", seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
 
 

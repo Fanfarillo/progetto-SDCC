@@ -52,18 +52,14 @@ def sendBookingInfo(giorno, mese, anno, aereoporto_partenza, aereoporto_arrivo, 
 
 
 def sendIdVoloPostiDisponibili(idVolo):
-    #open gRPC channel
-    print("entrato...")
+
     with grpc.insecure_channel(ADDR_PORT) as channel: #server_IP_addr:port_num
-        count = 0
-    #create client stub
+
+        postiDisponibili = []
         stub = Booking_pb2_grpc.BookingServiceStub(channel)
-        print(stub)
-        #get response from Registration service
-        print("LOG: prima del ciclo...")
-        #output = stub.getAllFlights(Boo_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone)))
         for entry in stub.getAllAvailableSeatsForFlight(Booking_pb2.AvailableSeatRequest(idVolo = idVolo)):
-            print(entry.idPosto)
-            count = count + 1
+            postiDisponibili.append(entry.idPosto)
+
+        return postiDisponibili
 
 

@@ -33,16 +33,36 @@
     <div class="container mt-5" style="background-color: #ffffff;">
       <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="display: flex;justify-content: space-between;">
         <form action="/accedi" method="GET">
-          <button type="submit" class="btn btn-primary my-3">Avanti</button>        
+          <button type="submit" class="btn btn-primary my-3">Indietro</button>        
         </form>
         <form action="/accedi" method="GET">
-          <button type="submit" class="btn btn-primary my-3" >Indietro</button>        
+          <button type="submit" class="btn btn-primary my-3" >Avanti</button>        
         </form>
       </div>
 
       <div class="container my-4 text-center" style="max-width: 1160px;">
-
-        <h3 class="display-5" style="color: #646464;">Selezionare i posti che si desidera prenotare</h3>
+        <div style="padding-bottom: 100px;">
+        <h3 class="display-3" style="color: #646464;">Selezionare i posti che si desidera prenotare</h3>
+        </div>
+      <h1 class="display-6" style="color: #646464;">Il prezzo dei posti disponibili per file è illustrato all'interno della tabella</h1>
+        <div style="padding-top: 50px;padding-bottom: 50px;">
+        <table align="center" style="border:1px solid black;width: 100%;">
+          <tr>
+            <th style="border:1px solid black;">Fila 1</th>
+            <th style="border:1px solid black;">File 2-5</th>
+            <th style="border:1px solid black;">File 6-15</th>
+            <th style="border:1px solid black;">Fila 16-17</th>
+            <th style="border:1px solid black;">Fila 18-26</th>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">${{ seatsFlight.primo }}</td>
+            <td style="border:1px solid black;">${{ seatsFlight.secondo }}</td>
+            <td style="border:1px solid black;">${{ seatsFlight.terzo }}</td>
+            <td style="border:1px solid black;">${{ seatsFlight.quarto }}</td>
+            <td style="border:1px solid black;">${{ seatsFlight.quinto }}</td> 
+          </tr>
+        </table>
+      </div>
   
         <!--Immagine che mostra i posti dell'aereo + legenda-->
         <table align="center">
@@ -51,20 +71,54 @@
               <img src="{{url_for('static', filename='Aereo.png')}}" alt="Aereo" width="142.5" height="513">
             </td>
             <td>
+              <h1 class="display-6" style="color: #646464;">Descrizione dei posti</h1>
               <img src="{{url_for('static', filename='LegendaPosti.png')}}" alt="LegendaPosti" width="411" height="193">
             </td>
             <td>
+              <h1 class="display-6" style="color: #646464;">Seleziona i posti</h1>
               <select width=300 style="width: 350px"
               size="8" multiple>
-              <option value='blue'>Blue</option>
-              <option value='green'>Green</option>
-              <option value='red'>Red</option>
-              <option value='yellow'>Yellow</option>
-              <option value='orange'>Orange</option>
+            {% for posto in postiDisponibiliVolo %}
+              <option value='{{ posto }}'>{{ posto }}</option>
+            {% endfor %}
             </select>
             </td>
           </tr>
         </table>
+        <h3 class="display-3" style="color: #646464;">Selezionare i servizi aggiuntivi</h3>
+        <h1 class="display-6" style="color: #646464;">Il prezzo dei servizi aggiuntivi è il seguente:</h1>
+
+
+        <div style="padding-top: 50px;padding-bottom: 50px;">
+          <table align="center" style="border:1px solid black;width: 100%;">
+            <tr>
+              <th style="border:1px solid black;">Bagaglio speciale</th>
+              <th style="border:1px solid black;">Bagaglio stiva medio</th>
+              <th style="border:1px solid black;">Bagaglio stiva grande</th>
+              <th style="border:1px solid black;">Assicurazione bagagli</th>
+              <th style="border:1px solid black;">Animale domestico</th>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">${{ additionalServices.bagaglioSpeciale }}</td>
+              <td style="border:1px solid black;">${{ additionalServices.bagaglioStivaMedio }}</td>
+              <td style="border:1px solid black;">${{ additionalServices.bagaglioStivaGrande }}</td>
+              <td style="border:1px solid black;">${{ additionalServices.assicurazioneBagagli }}</td>
+              <td style="border:1px solid black;">${{ additionalServices.animaleDomestico }}</td> 
+            </tr>
+          </table>
+          <table align="center">
+            <tr>
+              <td>
+                <select width=300 style="width: 350px"
+              size="8" multiple>
+            {% for posto in postiDisponibiliVolo %}
+              <option value='{{ posto }}'>{{ posto }}</option>
+            {% endfor %}
+            </select>
+              </td>
+            </tr>
+          </table>
+        </div>      
       </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>

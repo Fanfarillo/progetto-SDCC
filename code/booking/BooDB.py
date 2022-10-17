@@ -93,11 +93,23 @@ class Flight:
 
 
 def retrieveAvailableSeats(idVolo, postiTotali):
+
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('PostiOccupati')
 
+    """
+    Ottengo le informazioni relative ai posti disponibili
+    solamente per il volo richiesto. Poiché l'identificativo
+    rappresenta la chiave primaria, allora ottengo una sola
+    riga al più.
+    """
     response = table.scan(FilterExpression=Attr('IdVolo').eq(idVolo))   
-    print(response) 
+    print(response)
+
+    """
+    Il valore di items è una array che ha esattamente un elemento
+    poiché l'identificativo del volo è la chiave primaria.
+    """
     items = response['Items']
 
     print(items)
@@ -110,24 +122,33 @@ def retrieveAvailableSeats(idVolo, postiTotali):
     if(len(items)==0):
         return []
     
-    """
-    Il valore di items è una array che ha esattamente un elemento
-    poiché l'identificativo del volo è la chiave primaria.
-    """
-
     #Estraggo il dizionario relativo alla riga
     row = items[0]
-
+    print(row)
     keys = row.keys()
-    first = True
+
+    """
+    Tolgo dalla lista 'postiTotali' tutti i posti che non
+    sono attualmente disponibili. Per fare ciò osservo che
+    le chiavi del dizionario rappresenta i posti che sono
+    attulmente occupati. Tuttavia, tra le chiavi abbiamo
+    anche l'identificativo del volo. Di conseguenza, nel
+    momento in cui il dizionario contiene solamente la chiave
+    dell'identificativo del volo allora non ci sono posti che
+    risultano essere occupati. L'iterazione relativa all'ID del
+    volo la saltiamo poiché non rappresenta un posto.
+    """
     for key in keys:
-        print(type(key))
-        if(first):
-            first = False
+        if(row[key]==idVolo):
             continue
-        postiTotali.remove(key)
+        try:
+            postiTotali.remove(key)
+        except:
+            print("[ECCEZIONE]: " + key)
+        
 
 
+    #Restituisco tutti e soli i posti attualmente disponibili
     return postiTotali
 
 
