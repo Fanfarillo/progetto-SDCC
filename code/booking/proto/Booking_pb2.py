@@ -13,29 +13,33 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13proto/Booking.proto\x12\x05proto\"\x8b\x01\n\x14getAllFlightsRequest\x12\x0e\n\x06giorno\x18\x01 \x01(\x05\x12\x0c\n\x04mese\x18\x02 \x01(\x05\x12\x0c\n\x04\x61nno\x18\x03 \x01(\x05\x12\x19\n\x11\x61\x65reoporto_arrivo\x18\x04 \x01(\t\x12\x1b\n\x13\x61\x65reoporto_partenza\x18\x05 \x01(\t\x12\x0f\n\x07persone\x18\x06 \x01(\x05\"\x87\x01\n\x12getAllFlightsReply\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tcompagnia\x18\x02 \x01(\t\x12\x0e\n\x06\x61rrivo\x18\x03 \x01(\t\x12\x10\n\x08partenza\x18\x04 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x05 \x01(\t\x12\x0e\n\x06orario\x18\x06 \x01(\t\x12\x12\n\nprezzoBase\x18\x07 \x01(\t\"\x17\n\tIdMessage\x12\n\n\x02id\x18\x01 \x01(\t\"\x1a\n\nIdResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"\xb3\x01\n\nNewFlight2\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\" \n\x10RegisterResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"4\n\x0eUpdatedFlight2\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\"\x1e\n\x0eUpdateResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\x8b\x02\n\x0e\x42ookingService\x12I\n\rgetAllFlights\x12\x1b.proto.getAllFlightsRequest\x1a\x19.proto.getAllFlightsReply0\x01\x12-\n\x06SendId\x12\x10.proto.IdMessage\x1a\x11.proto.IdResponse\x12<\n\x0eRegisterFlight\x12\x11.proto.NewFlight2\x1a\x17.proto.RegisterResponse\x12\x41\n\x11UpdateFlightPrice\x12\x15.proto.UpdatedFlight2\x1a\x15.proto.UpdateResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13proto/Booking.proto\x12\x05proto\"%\n\x12\x41vailableSeatReply\x12\x0f\n\x07idPosto\x18\x01 \x01(\t\"&\n\x14\x41vailableSeatRequest\x12\x0e\n\x06idVolo\x18\x01 \x01(\t\"\x8b\x01\n\x14getAllFlightsRequest\x12\x0e\n\x06giorno\x18\x01 \x01(\x05\x12\x0c\n\x04mese\x18\x02 \x01(\x05\x12\x0c\n\x04\x61nno\x18\x03 \x01(\x05\x12\x19\n\x11\x61\x65reoporto_arrivo\x18\x04 \x01(\t\x12\x1b\n\x13\x61\x65reoporto_partenza\x18\x05 \x01(\t\x12\x0f\n\x07persone\x18\x06 \x01(\x05\"\x87\x01\n\x12getAllFlightsReply\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tcompagnia\x18\x02 \x01(\t\x12\x0e\n\x06\x61rrivo\x18\x03 \x01(\t\x12\x10\n\x08partenza\x18\x04 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x05 \x01(\t\x12\x0e\n\x06orario\x18\x06 \x01(\t\x12\x12\n\nprezzoBase\x18\x07 \x01(\t\"\x17\n\tIdMessage\x12\n\n\x02id\x18\x01 \x01(\t\"\x1a\n\nIdResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"\xb3\x01\n\nNewFlight2\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\" \n\x10RegisterResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"4\n\x0eUpdatedFlight2\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\"\x1e\n\x0eUpdateResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x32\xe6\x02\n\x0e\x42ookingService\x12I\n\rgetAllFlights\x12\x1b.proto.getAllFlightsRequest\x1a\x19.proto.getAllFlightsReply0\x01\x12-\n\x06SendId\x12\x10.proto.IdMessage\x1a\x11.proto.IdResponse\x12<\n\x0eRegisterFlight\x12\x11.proto.NewFlight2\x1a\x17.proto.RegisterResponse\x12\x41\n\x11UpdateFlightPrice\x12\x15.proto.UpdatedFlight2\x1a\x15.proto.UpdateResponse\x12Y\n\x1dgetAllAvailableSeatsForFlight\x12\x1b.proto.AvailableSeatRequest\x1a\x19.proto.AvailableSeatReply0\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.Booking_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _GETALLFLIGHTSREQUEST._serialized_start=31
-  _GETALLFLIGHTSREQUEST._serialized_end=170
-  _GETALLFLIGHTSREPLY._serialized_start=173
-  _GETALLFLIGHTSREPLY._serialized_end=308
-  _IDMESSAGE._serialized_start=310
-  _IDMESSAGE._serialized_end=333
-  _IDRESPONSE._serialized_start=335
-  _IDRESPONSE._serialized_end=361
-  _NEWFLIGHT2._serialized_start=364
-  _NEWFLIGHT2._serialized_end=543
-  _REGISTERRESPONSE._serialized_start=545
-  _REGISTERRESPONSE._serialized_end=577
-  _UPDATEDFLIGHT2._serialized_start=579
-  _UPDATEDFLIGHT2._serialized_end=631
-  _UPDATERESPONSE._serialized_start=633
-  _UPDATERESPONSE._serialized_end=663
-  _BOOKINGSERVICE._serialized_start=666
-  _BOOKINGSERVICE._serialized_end=933
+  _AVAILABLESEATREPLY._serialized_start=30
+  _AVAILABLESEATREPLY._serialized_end=67
+  _AVAILABLESEATREQUEST._serialized_start=69
+  _AVAILABLESEATREQUEST._serialized_end=107
+  _GETALLFLIGHTSREQUEST._serialized_start=110
+  _GETALLFLIGHTSREQUEST._serialized_end=249
+  _GETALLFLIGHTSREPLY._serialized_start=252
+  _GETALLFLIGHTSREPLY._serialized_end=387
+  _IDMESSAGE._serialized_start=389
+  _IDMESSAGE._serialized_end=412
+  _IDRESPONSE._serialized_start=414
+  _IDRESPONSE._serialized_end=440
+  _NEWFLIGHT2._serialized_start=443
+  _NEWFLIGHT2._serialized_end=622
+  _REGISTERRESPONSE._serialized_start=624
+  _REGISTERRESPONSE._serialized_end=656
+  _UPDATEDFLIGHT2._serialized_start=658
+  _UPDATEDFLIGHT2._serialized_end=710
+  _UPDATERESPONSE._serialized_start=712
+  _UPDATERESPONSE._serialized_end=742
+  _BOOKINGSERVICE._serialized_start=745
+  _BOOKINGSERVICE._serialized_end=1103
 # @@protoc_insertion_point(module_scope)

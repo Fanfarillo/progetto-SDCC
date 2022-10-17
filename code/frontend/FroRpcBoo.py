@@ -55,7 +55,7 @@ def sendIdVoloPostiDisponibili(idVolo):
     #open gRPC channel
     print("entrato...")
     with grpc.insecure_channel(ADDR_PORT) as channel: #server_IP_addr:port_num
-    
+        count = 0
     #create client stub
         stub = Booking_pb2_grpc.BookingServiceStub(channel)
         print(stub)
@@ -64,7 +64,6 @@ def sendIdVoloPostiDisponibili(idVolo):
         #output = stub.getAllFlights(Boo_pb2.getAllFlightsRequest(giorno=int(giorno), mese=int(mese), anno=int(anno), aereoporto_arrivo=aereoporto_arrivo, aereoporto_partenza=aereoporto_partenza, persone=int(persone)))
         for entry in stub.getAllAvailableSeatsForFlight(Booking_pb2.AvailableSeatRequest(idVolo = idVolo)):
             print(entry.idPosto)
-            print(entry.str(disponibilita))
             count = count + 1
 
 

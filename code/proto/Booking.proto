@@ -7,12 +7,11 @@ service BookingService {
     rpc SendId(IdMessage) returns (IdResponse);
     rpc RegisterFlight(NewFlight2) returns (RegisterResponse);
     rpc UpdateFlightPrice(UpdatedFlight2) returns (UpdateResponse);
-    rpc getAllAvailableSeatsForFlight(AvailableSeatRequest) returns (AvailableSeatReply);
+    rpc getAllAvailableSeatsForFlight(AvailableSeatRequest) returns (stream AvailableSeatReply);
 }
 
 message AvailableSeatReply {
     string idPosto = 1;
-    bool disponibilita = 2;
 }
 
 message AvailableSeatRequest {

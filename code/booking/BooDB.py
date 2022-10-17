@@ -92,16 +92,44 @@ class Flight:
 
 
 
-def retrieveAvailableSeats(idVolo):
+def retrieveAvailableSeats(idVolo, postiTotali):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('PostiOccupati')
 
-    response = table.scan(FilterExpression=Attr('IdVolo').eq(idVolo))    
+    response = table.scan(FilterExpression=Attr('IdVolo').eq(idVolo))   
+    print(response) 
     items = response['Items']
 
-    print(Items)
+    print(items)
 
-    return 
+    """
+    In questo scenario, si sta richiedendo di accedere ai posti disponibili
+    per un volo che ha un identificativo che non è contenuto all'interno del
+    database.
+    """
+    if(len(items)==0):
+        return []
+    
+    """
+    Il valore di items è una array che ha esattamente un elemento
+    poiché l'identificativo del volo è la chiave primaria.
+    """
+
+    #Estraggo il dizionario relativo alla riga
+    row = items[0]
+
+    keys = row.keys()
+    first = True
+    for key in keys:
+        print(type(key))
+        if(first):
+            first = False
+            continue
+        postiTotali.remove(key)
+
+
+    return postiTotali
+
 
 
 def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
