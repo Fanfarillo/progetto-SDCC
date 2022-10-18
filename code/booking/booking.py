@@ -14,10 +14,10 @@ postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 
 "A21", "B21", "C21", "D21", "E21", "F21","A22", "B22", "C22", "D22", "E22", "F22","A23", "B23", "C23", "D23", "E23", "F23","A24", "B24", "C24", "D24", "E24", "F24",
 "A25", "B25", "C25", "D25", "E25", "F25","A26", "B26", "C26", "D26", "E26", "F26"]
 
+
+
+
 class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
-
-
-
     def getAllFlights(self, request, context):
         print("LOG: prima della retrieves flights...")
         flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
@@ -52,9 +52,7 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
 
     def getAllAvailableSeatsForFlight(self, request, context):
-        print("[BOOKING] getAllAvailableSeatsForFlight")
         postiDisponibili = retrieveAvailableSeats(request.idVolo, postiTotali)
-        #output = retrieveAvailableSeats("222")
         for posto in postiDisponibili:
             ret = Booking_pb2.AvailableSeatReply(idPosto = posto)
             yield ret

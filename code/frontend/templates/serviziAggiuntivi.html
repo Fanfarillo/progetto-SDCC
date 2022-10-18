@@ -22,8 +22,6 @@
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
               <a class="nav-link active" aria-current="page" href="/{{ fullName }}/home" style="color: #ffffff;">Home</a>
-              <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
-              <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
               <a class="nav-link" href="/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
@@ -106,18 +104,22 @@
               <td style="border:1px solid black;">${{ additionalServices.animaleDomestico }}</td> 
             </tr>
           </table>
+          <div style="padding-top: 50px;">
           <table align="center">
             <tr>
               <td>
                 <select width=300 style="width: 350px"
               size="8" multiple>
-            {% for posto in postiDisponibiliVolo %}
-              <option value='{{ posto }}'>{{ posto }}</option>
-            {% endfor %}
+              <option value='Bagaglio speciale'>Bagaglio speciale</option>
+              <option value='Bagaglio speciale'>Bagaglio stiva medio</option>
+              <option value='Bagaglio speciale'>Bagaglio stiva grande</option>
+              <option value='Bagaglio speciale'>Assicurazione bagagli</option>
+              <option value='Bagaglio speciale'>Animale domestico</option>
             </select>
               </td>
             </tr>
           </table>
+        </div>
         </div>      
       </div>
 

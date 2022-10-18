@@ -36,32 +36,42 @@ def accesso():
 
         #Se le credenziali sono corrette allora si va avanti
         if response.isCorrect == True and response.storedType == "Turista":
-            session[fullName] = fullName
-            print("[DEBUG SESSIONE (/accedi)]: key = " + fullName + "   value = " + str(session.get(fullName)))
             return redirect("/"+response.name+" "+response.surname+"/home")
         elif response.isCorrect == True and response.storedType != "Turista":
-            session[response.storedType + fullName] = response.storedType + fullName
             return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
         else:
             return render_template("Accesso.html")
         
-    #Utile nel momento in cui viene eseguita una richiesta GET
+    # Utile nel momento in cui viene eseguita una richiesta GET
     return render_template("Accesso.html")
 
 
 
 @app.route("/<string:fullName>/booking", methods=('GET','POST'))
 def booking(fullName):
-
     """
     Arrivato a questo punto, devo avere uno stato differente da None
     """
     if session.get(fullName) is None:
         return redirect("/accedi", 401)
 
+
+    diz = session.get(fullName)
+    if(isinstance(diz,dict)):
+        keys = diz.keys()
+        if 'idVolo' in keys:
+            diz.pop('idVolo')
+            session.pop(fullName)
+            session[fullName] = diz
+            print("[DEBUG SESSIONE (/fullName/booking)]: key = " + fullName + "   value = " + str(session.get(fullName)))
+            return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), fullName = fullName)
+
+
     """
     Controllo se i metadati di sessione sono corretti oppure sono alterati.
-    Il valore di session.get(fullName) deve essere uguale a fullName della URL
+    Il valore di session.get(fullName) deve essere uguale a fullName della URL.
+    Anche se un attaccante scrivesse /fullName/home senza eseguire l'accesso,
+    il controllo precedente permette di bloccarlo.
     """
     if session.get(fullName) == fullName:
         if request.method == 'POST':
@@ -81,8 +91,11 @@ def booking(fullName):
             result = sendBookingInfo(giorno, mese, anno, arrivo, partenza, persone)
 
             for card in result.cards:
-                #Dal microservizio ottenfo il prezzo a persona per il biglietto
-                #Di conseguenza, necessito di eseguire questa moltiplicazione per ottenere il PREZZO TOTALE
+                """
+                Dal microservizio ottengo il prezzo a persona per il biglietto.
+                Di conseguenza, necessito di eseguire questa moltiplicazione per
+                ottenere il PREZZO TOTALE.
+                """
                 card.prezzoTotale = float(card.prezzoTotale) * float(persone)
 
             #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
@@ -109,7 +122,7 @@ def booking(fullName):
 #@app.route("/<string:fullName>/<string:idVolo/pagamento", methods=('GET','POST'))
 @app.route("/<string:fullName>/<string:idVolo>/pagamento", methods=('GET','POST'))
 def confermaRiepilogo(fullName, idVolo):
-    print("[DEBUG SESSIONE (/fullName/pagamento)]: key = " + fullName + "   value = " + str(session.get(fullName)))
+    print("[DEBUG SESSIONE (/fullName/idVolo/pagamento)]: key = " + fullName + "   value = " + str(session.get(fullName)))
     
     """
     Arrivato a questo punto, devo avere uno stato differente da None
@@ -135,11 +148,9 @@ def confermaRiepilogo(fullName, idVolo):
 
 
 
-@app.route("/<string:fullName>/<string:idVolo>/resoconto")
-def resoconto(fullName, idVolo):
-
+@app.route("/<string:fullName>/<string:compagnia>/<string:idVolo>/resoconto")
+def resoconto(fullName, compagnia, idVolo):
     #TODO implementare il resoconto
-
     """
     Arrivato a questo punto, devo avere uno stato differente da None
     """
@@ -148,14 +159,15 @@ def resoconto(fullName, idVolo):
 
     """
     Non solo devo controllare se esiste la chiave ma devo anche verificare se 
-    il dizionario è configurato correttamente per la sessione
+    il dizionario è configurato correttamente per la sessione:
+    {'fullName':value1, 'persone':value2, 'cards':value3}
     """
     diz = session.get(fullName)
 
     if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['fullName']!=fullName):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
-        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
         session.pop(fullName)
         return redirect("/accedi", 401)
@@ -172,24 +184,18 @@ def resoconto(fullName, idVolo):
             check = True
 
             partenza = card.partenza
-            print("PARTENZA= ", card.partenza)
             arrivo = card.arrivo
-            print("ARRIVO= ", card.arrivo)
             compagnia = card.compagnia
-            print("COMPAGNIA= ", card.compagnia)
             orario = card.orario
-            print("ORARIO= ", card.orario)
             data = card.data
-            print("DATA= ", card.data)
             prezzoTotale = card.prezzoTotale
-            print("PREZZO TOTALE= ", card.prezzoTotale) 
 
     if(not check):
         """
         Nella URL è stato inserito l'identificativo di un volo insesistente,
         magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
         Faccio la pop per eliminare lo stato della sessione poiché vengo
-        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
         session.pop(fullName)
         return redirect("/accedi", 401)
@@ -198,7 +204,7 @@ def resoconto(fullName, idVolo):
     diz['idVolo'] = idVolo
     session.pop(fullName)
     session[fullName] = diz
-    print("[DEBUG SESSIONE (/fullName/home)]: key = " + fullName + "   value = " + str(session.get(fullName)))
+    print("[DEBUG SESSIONE (/fullName/compagnia/idVolo/resoconto)]: key = " + fullName + "   value = " + str(session.get(fullName)))
     return render_template("resoconto.html", fullName = fullName, idVolo = idVolo, arrivo = arrivo, partenza = partenza, compagnia = compagnia, orario = orario, data = data, prezzoTotale = prezzoTotale)
 
 
@@ -257,6 +263,8 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     #Ottengo i posti disponibili relativi al volo che è stato selezionato
     postiDisponibiliVolo = sendIdVoloPostiDisponibili(idVolo)
 
+    #TODO metti un controllo su quanti sono i posti disponibili
+
     #Ottengo il costo dei posti della compagnia aerea in questione
     seatsFlight = sendIdCompanySeatsPrice(compagnia)
     print("[1]: " + str(seatsFlight.primo))
@@ -283,14 +291,13 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
 #logout
 @app.route("/<string:fullName>/logout")
 def logoutUtentePrenotazione(fullName):
-    #print(session.get(fullName))
-    #if not session.get(fullName):
-    print("sono qua: ",session.get(fullName))
     if session.get(fullName) is None:
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
-    #session.pop(session.get(fullName))
+
+    # Termino la sessione relativa all'utente loggato
     session.pop(fullName)
+
     return redirect("/accedi")
 
 
@@ -334,30 +341,46 @@ def iscrizione():
     return render_template("Iscrizione.html")
 
 
+
+
 @app.route("/<string:fullName>/home", methods=('GET','POST'))
 def home(fullName):
-    print("[DEBUG SESSIONE (/fullName/home)]: key = " + fullName + "   value = " + str(session.get(fullName)))
-
-    if session.get(fullName) is None:
-        #Questo utente ancora non ha effettuato accesso con le credenziali...
-        return redirect("/accedi", 401)
-    
-    if session.get(fullName)!=fullName:
-        #Errore nella gestione della sessione...
+    """
+    Questa pop è necessaria poiché è possibile raggiungere la Home
+    da parti differenti dell'applicazione e di conseguenza posso
+    avere uno stato della sessione differente. Necessito di settare
+    il corretto stato della sessione.
+    """
+    try:
         session.pop(fullName)
-        return redirect("/accedi", 401)
+    except:
+        print("[LOG]: l'utente "+fullName + "si è loggato per la prima volta")
 
+    # Salvataggio dello stato della sessione
+    session[fullName] = fullName
+
+    print("[DEBUG SESSIONE (/fullName/home)]: key = " + fullName + "   value = " + str(session.get(fullName)))
     return render_template("Home.html", fullName=fullName)
+
 
 
 
 #here the airline specifies which information has to be managed
 @app.route("/<string:airline>/<string:fullName>/airlineHome", methods=('GET', 'POST'))
 def airlineHome(airline, fullName):
-    #if not session.get(session.get(airline + fullName)):
-    if session.get(airline + fullName) is None:
-        print("Dentro")
-        return redirect("/accedi", 302)
+    """
+    Questa pop è necessaria poiché è possibile raggiungere la Home
+    da parti differenti dell'applicazione e di conseguenza posso
+    avere uno stato della sessione differente. Necessito di settare
+    il corretto stato della sessione.
+    """
+    try:
+        session.pop(fullName)
+    except:
+        print("[LOG]: l'utente si è loggato per la prima volta")
+
+    session[fullName] = fullName
+
     return render_template("AirlineHome.html", airline=airline, fullName=fullName)
 
 

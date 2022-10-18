@@ -51,15 +51,19 @@ def sendBookingInfo(giorno, mese, anno, aereoporto_partenza, aereoporto_arrivo, 
 
 
 
+
+"""
+Questa funzione si interfaccia con il microservizio di Booking
+per ottenere i posti disponibili relativi al volo richiesto dall'utente
+"""
 def sendIdVoloPostiDisponibili(idVolo):
-
-    with grpc.insecure_channel(ADDR_PORT) as channel: #server_IP_addr:port_num
-
+    with grpc.insecure_channel(ADDR_PORT) as channel:
+        # Assumo che non ci sia alcun posto disponibile
         postiDisponibili = []
         stub = Booking_pb2_grpc.BookingServiceStub(channel)
         for entry in stub.getAllAvailableSeatsForFlight(Booking_pb2.AvailableSeatRequest(idVolo = idVolo)):
+            # Aggiungo il posto disponibile all'interno della lista dei posti disponibili
             postiDisponibili.append(entry.idPosto)
-
         return postiDisponibili
 
 

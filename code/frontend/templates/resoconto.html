@@ -22,8 +22,6 @@
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
               <a class="nav-link active" aria-current="page" href="/{{ fullName }}/home" style="color: #ffffff;">Home</a>
-              <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
-              <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
               <a class="nav-link" href="/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
@@ -31,6 +29,12 @@
     </nav>
 
     <div class="container mt-5" style="background-color: #ffffff;">
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="display: flex;justify-content: space-between;">
+        <form action="/{{ fullName }}/booking" method="GET">
+          <button type="submit" class="btn btn-primary my-3">Indietro</button>        
+        </form>
+      </div>
+      
       <div class="mb-3">
         <label for="compagnia" class="form-label">Compagnia aerea</label>
         <input type="text" class="form-control" name="compagnia" aria-describedby="partenzaHelp" value="{{ compagnia }}" readonly>

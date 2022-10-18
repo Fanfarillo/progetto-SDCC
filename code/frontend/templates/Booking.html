@@ -22,8 +22,6 @@
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
               <a class="nav-link active" aria-current="page" href="/{{ fullName }}/home" style="color: #ffffff;">Home</a>
-              <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
-              <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
               <a class="nav-link" href="/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
@@ -31,7 +29,11 @@
     </nav>
 
     <div class="container mt-5" style="background-color: #ffffff;">
-      
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group"">
+        <form action="/{{ fullName }}/home" method="GET">
+          <button type="submit" class="btn btn-primary my-3"">Indietro</button>        
+        </form>
+      </div>
       <p style="font-size: 30px;">Risultati della ricerca: sono stati trovati {{ num }} voli</p>
       {% for card in items %}
       <div class="card mt-5" style="border-style: double;">

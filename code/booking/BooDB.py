@@ -140,14 +140,12 @@ def retrieveAvailableSeats(idVolo, postiTotali):
     """
     for key in keys:
         if(row[key]==idVolo):
+            # Non considero la chiave relativa all'identificativo del volo poiché non è un posto disponibile
             continue
         try:
             postiTotali.remove(key)
         except:
             print("[ECCEZIONE]: " + key)
-        
-
-
     #Restituisco tutti e soli i posti attualmente disponibili
     return postiTotali
 
