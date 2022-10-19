@@ -28,6 +28,10 @@ message getAllFlightsRequest {
     
 }
 
+message postiDisponibili {
+    repeated string posti = 1;
+}
+
 message getAllFlightsReply {
 	string id = 1;
 	string compagnia = 2;
@@ -36,6 +40,8 @@ message getAllFlightsReply {
     string data = 5;
     string orario = 6;
     string prezzoBase = 7;
+    postiDisponibili posti = 8;
+    int32 numPosti = 9;
 }
 
 message IdMessage {

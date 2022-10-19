@@ -15,10 +15,12 @@ Session(app)
 
 
 
+
 #very first page
 @app.route("/")
 def menu():
     return render_template("Menu.html")
+
 
 
 
@@ -47,6 +49,7 @@ def accesso():
 
 
 
+
 @app.route("/<string:fullName>/booking", methods=('GET','POST'))
 def booking(fullName):
     """
@@ -55,7 +58,15 @@ def booking(fullName):
     if session.get(fullName) is None:
         return redirect("/accedi", 401)
 
-
+    """
+    E' possibile arrivare a questo punto anche premendo
+    il tasto indietro da pagine html differenti dopo aver
+    selezionato un volo. Di conseguenza, è necessario cambiare
+    lo stato della sessione cancellando l'informazione relativa
+    al volo che è stato selezionato in precedenza dall'utente.
+    In questo punto dell'applicazione, l'utente deve scegliere
+    nuovamente il volo.
+    """
     diz = session.get(fullName)
     if(isinstance(diz,dict)):
         keys = diz.keys()
@@ -70,11 +81,12 @@ def booking(fullName):
     """
     Controllo se i metadati di sessione sono corretti oppure sono alterati.
     Il valore di session.get(fullName) deve essere uguale a fullName della URL.
-    Anche se un attaccante scrivesse /fullName/home senza eseguire l'accesso,
-    il controllo precedente permette di bloccarlo.
+    Anche se un attaccante scrivesse la URL /fullName/home, senza eseguire l'accesso
+    il controllo precedente permetterebbe di bloccarlo.
     """
     if session.get(fullName) == fullName:
         if request.method == 'POST':
+
             #acquisisco i dati inseriti in input dall'utente
             giorno = request.form['giorno']
             mese = request.form['mese']
@@ -211,24 +223,23 @@ def resoconto(fullName, compagnia, idVolo):
 
 @app.route("/<string:fullName>/<string:compagnia>/<string:idVolo>/serviziAggiuntivi")
 def serviziAggiuntivi(fullName, compagnia, idVolo):
-    #TODO implementare i servizi aggiuntivi
-
     """
-    Arrivato a questo punto, devo avere uno stato differente da None
+    Arrivato a questo punto, devo avere uno stato differente da None.
     """
     if session.get(fullName) is None:
         return redirect("/accedi", 401)
 
     """
-    Non solo devo controllare se esiste la sessione ma devo anche verificare se 
-    il dizionario è configurato correttamente per la sessione corrente
+    Non solo devo controllare se esiste la sessione relativa a
+    tale utente, ma devo anche verificare se il dizionario è
+    configurato correttamente per la sessione corrente.
     """
     diz = session.get(fullName)
 
     if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['fullName']!=fullName):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
-        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
         session.pop(fullName)
         return redirect("/accedi", 401)
@@ -243,7 +254,8 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
             Mi registro il fatto che l'identificativo passato nella URL effettivamente
             corrisponde ad uno dei voli esistenti nello stato della sessione
             """
-            check = True 
+            check = True
+            postiDisponibiliVolo = card.posti.posti
 
     if(not check):
         """
@@ -259,9 +271,6 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     diz['idVolo'] = idVolo
     session.pop(fullName)
     session[fullName] = diz
-
-    #Ottengo i posti disponibili relativi al volo che è stato selezionato
-    postiDisponibiliVolo = sendIdVoloPostiDisponibili(idVolo)
 
     #TODO metti un controllo su quanti sono i posti disponibili
 
@@ -284,7 +293,7 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
 
 
     print("[DEBUG SESSION (/fullName/idVolo/servuzuAggiuntivi)]: key = " + fullName + "  value = " + str(session.get(fullName)))    
-    return render_template("serviziAggiuntivi.html", seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
+    return render_template("serviziAggiuntivi.html", fullName = fullName, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
 
 

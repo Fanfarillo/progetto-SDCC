@@ -6,6 +6,29 @@ from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 
 ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
+postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 'F2','A3', 'B3', 'C3', 'D3', 'E3', 'F3',
+'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5','A6', 'B6', 'C6', 'D6', 'E6', 'F6','A7', 'B7', 'C7', 'D7', 'E7', 'F7',
+'A8', 'B8', 'C8', 'D8', 'E8', 'F8','A9', 'B9', 'C9', 'D9', 'E9', 'F10','A10', 'B10', 'C10', 'D10', 'E10', 'F10','A11', 'B11', 'C11', 'D11', 'E11', 'F11',
+'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'A13', 'B13', 'C13', 'D13', 'E13', 'F13','A14', 'B14', 'C14', 'D14', 'E14', 'F14','A15', 'B15', 'C1', 'D15', 'E15', 'F15','A16', 'B16', 'C16', 'D16', 'E16', 'F16',
+'A17', 'B17', 'C17', 'D17', 'E17', 'F17','A18', 'B18', 'C18', 'D18', 'E18', 'F18','A19', 'B19', 'C19', 'D19', 'E19', 'F19','A20', 'B20', 'C20', 'D20', 'E20', 'F20',
+"A21", "B21", "C21", "D21", "E21", "F21","A22", "B22", "C22", "D22", "E22", "F22","A23", "B23", "C23", "D23", "E23", "F23","A24", "B24", "C24", "D24", "E24", "F24",
+"A25", "B25", "C25", "D25", "E25", "F25","A26", "B26", "C26", "D26", "E26", "F26"]
+
+
+
+class Flight:
+    def __init__(self, idKey, compagnia_aerea, arrivo, partenza, orario, data, prezzo, postiDisponibili):
+        self.idKey = idKey
+        self.compagnia_aerea = compagnia_aerea
+        self.arrivo = arrivo
+        self.partenza = partenza
+        self.orario = orario
+        self.data = data
+        self.prezzo = prezzo
+        self.postiDisponibili = postiDisponibili
+
+
+
 
 #this function returns true if there is no item with the specified id (i.e. the specified primary key); it returns false otherwise
 def isNewId(flightId):
@@ -23,6 +46,9 @@ def isNewId(flightId):
         return False
     else:
         return True
+
+
+
 
 def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime, arrivalTime, airline, price, seats):
     dynamodb = boto3.resource('dynamodb')
@@ -42,6 +68,9 @@ def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime,
             'Posti liberi': seats
         }
     )
+
+
+
 
 def storeUpdatedFlight(flightId, newPrice):
     dynamodb = boto3.resource('dynamodb')
@@ -79,20 +108,12 @@ def storeUpdatedFlight(flightId, newPrice):
 	    }
     )
 
-class Flight:
-    def __init__(self, idKey, compagnia_aerea, arrivo, partenza, orario, data, prezzo):
-        self.idKey = idKey
-        self.compagnia_aerea = compagnia_aerea
-        self.arrivo = arrivo
-        self.partenza = partenza
-        self.orario = orario
-        self.data = data
-        self.prezzo = prezzo
 
 
 
 
-def retrieveAvailableSeats(idVolo, postiTotali):
+
+def retrieveAvailableSeats(idVolo, postiDisponibili):
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('PostiOccupati')
@@ -143,20 +164,32 @@ def retrieveAvailableSeats(idVolo, postiTotali):
             # Non considero la chiave relativa all'identificativo del volo poiché non è un posto disponibile
             continue
         try:
-            postiTotali.remove(key)
+            postiDisponibili.remove(key)
         except:
             print("[ECCEZIONE]: " + key)
     #Restituisco tutti e soli i posti attualmente disponibili
-    return postiTotali
+    return postiDisponibili
 
 
 
+
+"""
+Interroga il database Dynamodb per ottenere tutti
+i voli che si hanno per la data GG/MM/AAAA con la partenza,
+l'arrivo che corrispondono ai dati passati in input
+e un numero di posti disponibili maggiore o uguale al valore
+del parametro persone.
+"""
 def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Volo')
 
     response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Aeroporto arrivo').eq(arrivo) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
     
+    """
+    La variabile items è una lista di dizionari fatta nel seguente modo:
+    [{}, {}, ..., {}]
+    """
     items = response['Items']
     
     idKey = ''
@@ -168,25 +201,41 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     flights = []
     append = True
     
-    #itero sui dizionari
+    #itero sui dizionari.
     for item in items:
+        # Itero su tutte le coppie (key, value) del dizionario fissato.
         for key, value in item.items():
             if(key=='Id'):
+                # Identificativo del volo
                 idKey = value
             if(key=='Compagnia aerea'):
+                # Compagnia aerea che offre il volo
                 compagnia_aerea = value  
             if(key=='Aeroporto arrivo'):
+                # Aereoporto di arrivo del volo
                 arrivo = value
             if(key=='Aeroporto partenza'):
+                # Aereoporto di partenza del volo
                 partenza = value
             if(key=='Data'):
+                # Data del volo
                 data = value
             if(key=='Orario arrivo'):
+                # Orario di arrivo del volo
                 orario = value
+
+            """
+            Controllo se tutti le informazioni relative al volo
+            su cui sto iterando sono state acquisite.
+            """
             if(idKey!= '' and compagnia_aerea!='' and append and arrivo!='' and partenza!='' and data!='' and orario!=''):
                 append = False
-                flights.append(Flight(idKey, compagnia_aerea, arrivo, partenza, orario, data, -1))
+                flights.append(Flight(idKey, compagnia_aerea, arrivo, partenza, orario, data, -1, None))
 
+        """
+        Ripristino il valore delle variabili per
+        poter iterare sul volo successivo.
+        """
         idKey = ''
         compagnia_aerea = ''
         arrivo = ''
@@ -195,19 +244,23 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
         orario = ''
         append = True
 
-    print(flights)
-    
-    #open gRPC channel
-    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
-
-    #create client stub
+    channel = grpc.insecure_channel(ADDR_PORT)
     stub = Managment_pb2_grpc.FlightsInfoStub(channel)
     
+    """
+    Itero sui voli che sono stati recuperati per
+    ottenere il prezzo base e i posti attulamente disponibil.
+    """
     for flight in flights:
-        #print("CICLOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         response = stub.GetPriceFlight(Managment_pb2.PriceRequest(idVolo=flight.idKey))
-        print(response.price)
         flight.prezzo = response.price
+        print("NUMERO POSTI TOTALI: " + str(len(postiTotali)))
+        print("POSTI TOTALI: " + str(postiTotali))
+        copiaPostiTotali = postiTotali.copy()
+        postiDisponibili = retrieveAvailableSeats(flight.idKey, copiaPostiTotali)
+        print("NUMERO POSTI DISPONIBILI: " + str(len(postiDisponibili)))
+        print("POSTI DISPONIBILI: " + str(postiDisponibili))
+        flight.postiDisponibili = postiDisponibili
 
     #forse qua bisogna implementare la SAGA per ottenere i posti ancora disponibili per il volo
     return flights
