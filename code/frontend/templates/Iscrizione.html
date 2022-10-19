@@ -56,17 +56,17 @@
           <input type="password" class="form-control" name="inputPassword" value="{{ request.form['inputPassword'] }}" required>
         </div>
 
-        <!--Input Carta di credito-->
-        <div class="mb-3">
-          <label for="inputCarta" class="form-label">Carta di credito</label>
-          <input inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" type="te1" class="form-control" name="inputCarta" value="{{ request.form['inputCarta'] }}" required>
-        </div>
-
         <!--Input password confirm-->
         <div class="mb-3">
           <label for="inputPasswordConfirm" class="form-label">Conferma password</label>
           <input type="password" class="form-control" name="inputPasswordConfirm" value="{{ request.form['inputPasswordConfirm'] }}" required>
           <div id="passwordHelp" class="form-text">Ricorda che il campo "Conferma password" deve corrispondere al campo "Password".</div>
+        </div>
+
+        <!--Input Carta di credito-->
+        <div class="mb-3">
+          <label for="inputCarta" class="form-label">Carta di credito</label>
+          <input inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" type="te1" class="form-control" name="inputCarta" value="{{ request.form['inputCarta'] }}" required>
         </div>
 
         <!--Radio button per indicare la tipologia di utente-->

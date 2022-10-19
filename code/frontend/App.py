@@ -291,7 +291,6 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     print("animaleDomestico: " + str(additionalServices.animaleDomestico))
     print("neonato: " + str(additionalServices.neonato))
 
-
     print("[DEBUG SESSION (/fullName/idVolo/servuzuAggiuntivi)]: key = " + fullName + "  value = " + str(session.get(fullName)))    
     return render_template("serviziAggiuntivi.html", fullName = fullName, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
@@ -335,11 +334,18 @@ def iscrizione():
         password = request.form['inputPassword']
         passwordConfirm = request.form['inputPasswordConfirm']
         userType = request.form['flexRadioDefault']
-        airline = request.form['airlineDropdown']
 
+        """
+        Verifico se l'utente che si sta iscrivendo è un
+        turista o meno. Se non è un turista, allora sono
+        interessato anche alla compagnia aerea.
+        """
+        if userType!="Turista":
+            airline = request.form['airlineDropdown']
+        else:
+            airline = None
         isOk = sendSignUpInfo(email, name, surname, password, passwordConfirm, userType, airline)
 
-        #if password==passwordConfirm then go ahead; else passwordConfirm has to be changed before going to the next page
         if isOk and userType == "Turista":
             return redirect('/accedi')
         elif isOk and userType != "Turista":
