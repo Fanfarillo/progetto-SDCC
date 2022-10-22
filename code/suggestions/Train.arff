@@ -1,0 +1,7 @@
+@relation Train
+@attribute REM_DAYS numeric
+@attribute AIRLINE {'Ryanair', 'EasyJet', 'ITA'}
+@attribute DEP_AIRPORT string
+@attribute ARR_AIRPORT string
+@attribute IS_CONVENIENT {'true', 'false'}
+@data

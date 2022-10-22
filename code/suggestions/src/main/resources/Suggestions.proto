@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package proto;
+
+option java_multiple_files = true;
+option java_package = "control.proto";
+
+service SuggestionsService {
+    rpc GetSelectedFlight(SelectedFlight) returns (SelectionResponse);
+}
+
+message SelectedFlight {
+    string bookingDate = 1;
+    string flightDate = 2;
+    string airline = 3;
+    string departureAirport = 4;
+    string arrivalAirport = 5;
+}
+
+message SelectionResponse {
+    int32 numDaysBeforeConvenient = 1;
+}
