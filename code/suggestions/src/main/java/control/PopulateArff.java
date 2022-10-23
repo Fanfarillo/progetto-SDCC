@@ -42,30 +42,6 @@ public class PopulateArff {
 
     }
 
-    public static void createTestingSet(String bookingDateStr, String flightDateStr, String airline, String departureAirport, String arrivalAirport) throws ParseException, IOExcpetion {
-
-        Date bookingDate = DateUtil.getDateObject(bookingDateStr);
-        Date flightDate = DateUtil.getDateObject(flightDateStr);
-        long remainingDays = (flightDate.getTime() - bookingDate.getTime()) / 86400000L;
-
-        try(FileWriter wr = new FileWriter("Test.arff")) {
-
-            //inseriremo un'istanza nel testing set per ogni giorno rimanente al volo
-            for(long i=remainingDays; i>0; i--) {       //stiamo andando dalla data più vicina a oggi alla data più lontana da oggi
-                wr.write(i.toString()+ "," + airline + "," + departureAirport + "," + arrivalAirport + ",?\n");
-            }
-
-        }
-
-        storeLabeledTestingSet();   //generazione del testing set etichettato ("labeled")
-
-        /* TODO: scandire il file Labeled.arff per ottenere la prima riga contenente ",true". 
-         * Di tale riga bisognerà recuperare il primo valore (che è il numero relativo ai giorni rimanenti al volo).
-         * Se non ci sarà alcun true, allora prendere remainingDays.
-         * Il valore considerato dovrà essere ritornato al chiamante. */
-
-    }
-
     public static void storeLabeledTestingSet() {
 
         BufferedReader bReader = null;
@@ -94,6 +70,64 @@ public class PopulateArff {
         bWriter.write(labeled.toString());
 
         bWriter.close();
+
+    }
+
+    public static int getNumDaysBeforeConv(long remainingDays) {
+
+        BufferedReader bReader = new BufferedReader(new FileReader("Labeled.arff"));
+        String line;
+        int numDaysBeforeConv = (int) remainingDays;    //valore di default per il numero di giorni in anticipo in cui conviene prenotare il volo
+
+        while(true) {
+            line = bReader.readLine();
+            if(line==null)      //se line==null vuol dire che il file è finito e non è stata trovata alcuna riga col valore true;
+                break;          //in tal caso si ricorre al valore di default per l numero di giorni in anticipo in cui conviene prenotare il volo
+
+            if(line.contains(",true")) {
+                //se esiste una riga col valore true, numDaysBeforeConv assume il valore del primo attributo proprio di quella riga
+                String[] attributes = line.split(",");
+                numDaysBeforeConv = Integer.parseInt(attributes[0]);
+                break;
+
+            }
+
+        }
+
+        return numDaysBeforeConv;
+
+    }
+
+    public static int createTestingSet(String bookingDateStr, String flightDateStr, String airline, String departureAirport, String arrivalAirport) throws ParseException, IOExcpetion {
+
+        Date bookingDate = DateUtil.getDateObject(bookingDateStr);
+        Date flightDate = DateUtil.getDateObject(flightDateStr);
+        long remainingDays = (flightDate.getTime() - bookingDate.getTime()) / 86400000L;
+
+        try(FileWriter wr = new FileWriter("Test.arff")) {
+
+            wr.write("@relation Test\n");
+            wr.write("@attribute REM_DAYS numeric\n");
+            wr.write("@attribute AIRLINE {'Ryanair', 'EasyJet', 'ITA'}\n");
+            wr.write("@attribute DEP_AIRPORT string\n");
+            wr.write("@attribute ARR_AIRPORT string\n");
+            wr.write("@attribute IS_CONVENIENT {'true', 'false'}\n");
+            wr.write("@data\n");
+
+            //inseriremo un'istanza nel testing set per ogni giorno rimanente al volo
+            for(long i=remainingDays; i>0; i--) {       //stiamo andando dalla data più vicina a oggi alla data più lontana da oggi
+                wr.write(i.toString()+ "," + airline + "," + departureAirport + "," + arrivalAirport + ",?\n");
+            }
+
+        }
+
+        storeLabeledTestingSet();   //generazione del testing set etichettato ("labeled")
+
+        /* A questo punto bisogna scandire il file Labeled.arff per ottenere la prima riga contenente ",true". 
+         * Di tale riga bisognerà recuperare il primo valore (che è il numero relativo ai giorni rimanenti al volo).
+         * Se non ci sarà alcun true, allora prendere remainingDays.
+         * Il valore considerato dovrà essere ritornato al chiamante. */
+        return getNumDaysBeforeConv(remainingDays);
 
     }
 
