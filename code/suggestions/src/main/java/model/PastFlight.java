@@ -63,7 +63,7 @@ public class PastFlight {
     }
 
     public void setArrivalAirport(String arrivalAirport) {
-        this.arrivalAirport = arrivalAirport
+        this.arrivalAirport = arrivalAirport;
     }
 
     public String getAirline() {

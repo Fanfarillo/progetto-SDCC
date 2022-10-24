@@ -7,7 +7,7 @@ import io.grpc.ServerBuilder;
 
 public class Suggestions {
 
-    private static final int PORT = 50051;
+    private static final int PORT = 50054;
     private Server server;
 
     public void start() throws IOException {
