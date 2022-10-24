@@ -3,29 +3,30 @@ from Crypto.Util.Padding import pad
 from Crypto.Util.Padding import unpad
 import sys
 import hashlib
+import logging
 
 """
 La dimensione del blocco è pari a 128 bits.
 """
 BLOCK_SIZE = 16
 
-class MyCipher:
+class Security:
     
 
 
-    def __init__(self, key):
+    def __init__(self, confidkey):
 
-        if(len(key)!=16):
+        if(len(confidkey)!=16):
             raise Exception("La dimensione della chiave deve essere  pari a BLOCK_SIZE bytes")
 
         """
         Trasformo la chiave in un array di bytes
         se già non lo fosse.
         """
-        if(isinstance(key, bytes)):
-            self.key = key
+        if(isinstance(confidkey, bytes)):
+            self.confidkey = confidkey
         else:
-            self.key = bytes(key, 'utf-8')
+            self.confidkey = bytes(confidkey, 'utf-8')
 
 
 
@@ -61,7 +62,7 @@ class MyCipher:
             padding_plaintext = plaintext
         print(padding_plaintext)
 
-        cipher = AES.new(self.key, AES.MODE_CBC)
+        cipher = AES.new(self.confidkey, AES.MODE_CBC)
         iv = cipher.iv
         ciphertext = cipher.encrypt(padding_plaintext)
 
@@ -70,9 +71,8 @@ class MyCipher:
 
 
     def decryptData(self, ciphertext, iv):
-        try:
-            
-            cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        try:            
+            cipher = AES.new(self.confidkey, AES.MODE_CBC, iv)
             plaintext = cipher.decrypt(ciphertext)
             padd_plaintext = unpad(plaintext,AES.block_size)
         except ValueError:
@@ -83,23 +83,56 @@ class MyCipher:
         return padd_plaintext
 
 
+    
+    def message_integrity(self, message):
+        """
+        Faccio un controllo sul tipo del parametro
+        di cui deve essere calcolato il digest.
+        """
+        if not isinstance(message, bytes):
+            raise Exception("Il messaggio deve essere una sequenza di bytes.")
+
+        """
+        Inserisco il messaggio di cui devo
+        calcolarmi il digest.
+        """
+        m = hashlib.sha256()
+        m.update(message)
+
+        """
+        Mi calcolo il valore del digest del messaggio.
+        """
+        digest = m.digest()
+
+        return digest
+
+
+logging.basicConfig(filename="log1.txt", level=logging.DEBUG, format="%(asctime)s %(message)s")
+logging.debug("Debug logging test...")
 m = hashlib.sha256()
 m.update(b"cias")
 print(m.digest())
 for line in sys.stdin:
     #print(type(line))
-    cipher = MyCipher(b"mysecretpassword")
-    if 'quit' == line.rstrip:
+    cipher = Security(b"mysecretpassword")
+    if 'quit\n' == line:
         break
+    logging.info("Stringa inserita dall'utente: " + line)
+    digest = cipher.message_integrity(bytes(line, 'utf-8'))
+    print("[ DIGEST ]: " + str(digest))
+    logging.debug("Digest: " + str(digest))
+    print("Lunghezza digest: " + str(len(digest)))
+    logging.critical("Lunghezza del digest: " + str(len(digest)))
     ciphertext, iv = cipher.encryptData(bytes(line, 'utf-8'))
+    logging.debug("Cifrato: " + str(ciphertext))
     print("[ CIFRATO ]: " + str(ciphertext))
-    newCipher = MyCipher(b"mysecretpassword")
+    newCipher = Security(b"mysecretpassword")
     plaintext = cipher.decryptData(ciphertext, iv)
     print("[ DECIFRATO ]: " + str(plaintext))
 
 """  
 cipher = MyCipher(b"mysecretpassword")
-ciphertext, iv = cipher.encryptData(b"ajcnjnvren qcni")
+ciphertext, iv = cipher.encryptData(b"Ciao a tutti ragazzi, come state? Sto cercando di trovare un nuovo ristorante... che mi consigliate?")
 print(ciphertext)
 newCipher = MyCipher(b"mysecretpassword")
 plaintext = cipher.decryptData(ciphertext, iv)
