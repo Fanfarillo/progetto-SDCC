@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend
+    user: root
+    ports:
+      - 5000:5000
+
+  registration:
+    build: ./registration
+    user: root
+    ports:
+      - 50051:50051
+
+  management:
+    build: ./management
+    user: root
+    ports:
+      - 50052:50052
+
+  booking:
+    build: ./booking
+    user: root
+    ports:
+      - 50053:50053
+
+  suggestions:
+    build: ./suggestions
+    user: root
+    ports:
+      - 50054:50054
