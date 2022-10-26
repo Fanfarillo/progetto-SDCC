@@ -21,17 +21,17 @@
             <div class="navbar-nav">
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
-              <a class="nav-link active" aria-current="page" href="/{{ airline }}/{{ fullName }}/Home" style="color: #ffffff;">Home</a>
+              <a class="nav-link active" aria-current="page" href="/{{ airline }}/{{ username }}/Home" style="color: #ffffff;">Home</a>
               <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
               <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
-              <a class="nav-link" href="/{{ airline }}/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
+              <a class="nav-link" href="/{{ airline }}/{{ username }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
         </div>
     </nav>
 
     <div class="container my-4 text-center" style="max-width: 1160px;">
-      	<form action="/{{airline}}/{{fullName}}/{{okMessage}}" method="POST">
+      	<form action="/{{airline}}/{{username}}/{{okMessage}}" method="POST">
       		<!--Messaggio di avvenuta aggiunta del volo-->
       		<h3 class="display-5" style="color: #646464;">{{okMessage}} correttamente.</h3>
       

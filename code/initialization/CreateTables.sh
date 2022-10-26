@@ -1,8 +1,8 @@
 #create all the tables
 aws dynamodb create-table \
 --table-name Utente \
---attribute-definitions AttributeName=Email,AttributeType=S \
---key-schema AttributeName=Email,KeyType=HASH \
+--attribute-definitions AttributeName=Username,AttributeType=S \
+--key-schema AttributeName=Username,KeyType=HASH \
 --billing-mode PAY_PER_REQUEST
 
 aws dynamodb create-table \

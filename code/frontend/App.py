@@ -16,31 +16,75 @@ Session(app)
 
 
 
-#very first page
+"""
+Pagina Root
+"""
 @app.route("/")
 def menu():
     return render_template("Menu.html")
 
 
 
+"""
+Gestione dell'iscrizione degli utenti.
+Un utente può essere un Turista o meno.
+"""
+@app.route("/iscriviti", methods=('GET','POST'))
+def iscrizione():
+    if request.method == 'POST':
+        #Ottengo i dati inseriti dall'utente
+        username = request.form['inputUsername']
+        password = request.form['inputPassword']
+        passwordConfirm = request.form['inputPasswordConfirm']
+        email = request.form['inputEmail']
+        userType = request.form['flexRadioDefault']
 
-#sign in page
+        """
+        Verifico se l'utente che si sta iscrivendo è un
+        turista o meno. Se non è un turista, allora sono
+        interessato anche alla compagnia aerea.
+        """
+        if userType!="Turista":
+            airline = request.form['airlineDropdown']
+        else:
+            """
+            Non ho alcun interesse per la compagnia aerea
+            """
+            airline = None
+
+        isOk = sendSignUpInfo(email, username, password, passwordConfirm, userType, airline)
+
+        if isOk and userType == "Turista":
+            return redirect('/accedi')
+        elif isOk and userType != "Turista":
+            return redirect('/accedi')
+        else:
+            return render_template("Iscrizione.html")
+
+    return render_template("Iscrizione.html")
+
+
+
+
+"""
+Gestione dell'accesso degli utenti
+all'applicazione.
+"""
 @app.route("/accedi", methods=('GET','POST'))
 def accesso():
     if request.method == 'POST':
         #Acquisisco i dati inseriti dall'utente
-        email = request.form['inputEmail']
+        username = request.form['inputUsername']
         password = request.form['inputPassword']
 
         #Verifico le credenziali inserite dall'utente
-        response = sendCredentials(email, password)
-        fullName = response.name+" "+response.surname
+        response = sendCredentials(username, password)
 
         #Se le credenziali sono corrette allora si va avanti
         if response.isCorrect == True and response.storedType == "Turista":
-            return redirect("/"+response.name+" "+response.surname+"/home")
+            return redirect("/"+username+"/home")
         elif response.isCorrect == True and response.storedType != "Turista":
-            return redirect("/"+response.storedType+"/"+response.name+" "+response.surname+"/airlineHome")
+            return redirect("/"+response.storedType+"/"+username+"/airlineHome")
         else:
             return render_template("Accesso.html")
         
@@ -50,12 +94,56 @@ def accesso():
 
 
 
-@app.route("/<string:fullName>/booking", methods=('GET','POST'))
-def booking(fullName):
+@app.route("/<string:username>/home", methods=('GET','POST'))
+def home(username):
+    """
+    Questa pop è necessaria poiché è possibile raggiungere la Home
+    da parti differenti dell'applicazione e di conseguenza posso
+    avere uno stato della sessione differente. Necessito di settare
+    il corretto stato della sessione.
+    """
+    try:
+        session.pop(username)
+    except Exception as e:
+        print(e.args)
+        print("[LOG]: l'utente "+username + "si è loggato per la prima volta")
+
+    # Salvataggio dello stato della sessione
+    session[username] = username
+
+    print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
+    return render_template("Home.html", username=username)
+
+
+
+
+#here the airline specifies which information has to be managed
+@app.route("/<string:airline>/<string:username>/airlineHome", methods=('GET', 'POST'))
+def airlineHome(airline, username):
+    """
+    Questa pop è necessaria poiché è possibile raggiungere la Home
+    da parti differenti dell'applicazione e di conseguenza posso
+    avere uno stato della sessione differente. Necessito di settare
+    il corretto stato della sessione.
+    """
+    try:
+        session.pop(username)
+    except:
+        print("[LOG]: l'utente si è loggato per la prima volta")
+
+    session[username] = username
+
+    return render_template("AirlineHome.html", airline=airline, username=username)
+
+
+
+
+@app.route("/<string:username>/booking", methods=('GET','POST'))
+def booking(username):
     """
     Arrivato a questo punto, devo avere uno stato differente da None
     """
-    if session.get(fullName) is None:
+    if session.get(username) is None:
         return redirect("/accedi", 401)
 
     """
@@ -67,24 +155,24 @@ def booking(fullName):
     In questo punto dell'applicazione, l'utente deve scegliere
     nuovamente il volo.
     """
-    diz = session.get(fullName)
+    diz = session.get(username)
     if(isinstance(diz,dict)):
         keys = diz.keys()
         if 'idVolo' in keys:
             diz.pop('idVolo')
-            session.pop(fullName)
-            session[fullName] = diz
-            print("[DEBUG SESSIONE (/fullName/booking)]: key = " + fullName + "   value = " + str(session.get(fullName)))
-            return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), fullName = fullName)
+            session.pop(username)
+            session[username] = diz
+            print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
+            return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), username = username)
 
 
     """
     Controllo se i metadati di sessione sono corretti oppure sono alterati.
-    Il valore di session.get(fullName) deve essere uguale a fullName della URL.
-    Anche se un attaccante scrivesse la URL /fullName/home, senza eseguire l'accesso
+    Il valore di session.get(username) deve essere uguale a username della URL.
+    Anche se un attaccante scrivesse la URL /username/home, senza eseguire l'accesso
     il controllo precedente permetterebbe di bloccarlo.
     """
-    if session.get(fullName) == fullName:
+    if session.get(username) == username:
         if request.method == 'POST':
 
             #acquisisco i dati inseriti in input dall'utente
@@ -111,14 +199,14 @@ def booking(fullName):
                 card.prezzoTotale = float(card.prezzoTotale) * float(persone)
 
             #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
-            session.pop(fullName)
+            session.pop(username)
             #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
-            session[fullName] = {'fullName':fullName, 'persone':persone, 'cards':result.cards}
+            session[username] = {'username':username, 'persone':persone, 'cards':result.cards}
 
-            print("[DEBUG SESSIONE (/fullName/booking)]: key = " + fullName + "   value = " + str(session.get(fullName)))
+            print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
 
-            #E'necessario portarmi appresso l'informazione relativa al fullName che mi permette di gestire completamente la sessione
-            return render_template("Booking.html", items = result.cards, num = result.num, fullName = fullName)
+            #E'necessario portarmi appresso l'informazione relativa al username che mi permette di gestire completamente la sessione
+            return render_template("Booking.html", items = result.cards, num = result.num, username = username)
     
         return redirect("/accedi")
     else:
@@ -126,62 +214,62 @@ def booking(fullName):
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione
         """
-        session.pop(fullName)
+        session.pop(username)
         return redirect("/accedi", 401)
 
 
 
-#@app.route("/<string:fullName>/<string:idVolo/pagamento", methods=('GET','POST'))
-@app.route("/<string:fullName>/<string:idVolo>/pagamento", methods=('GET','POST'))
-def confermaRiepilogo(fullName, idVolo):
-    print("[DEBUG SESSIONE (/fullName/idVolo/pagamento)]: key = " + fullName + "   value = " + str(session.get(fullName)))
+
+@app.route("/<string:username>/<string:idVolo>/pagamento", methods=('GET','POST'))
+def confermaRiepilogo(username, idVolo):
+    print("[DEBUG SESSIONE (/username/idVolo/pagamento)]: key = " + username + "   value = " + str(session.get(username)))
     
     """
     Arrivato a questo punto, devo avere uno stato differente da None
     """
-    if session.get(fullName) is None:
+    if session.get(username) is None:
         return redirect("/accedi", 401)
 
-    diz = session.get(fullName)
+    diz = session.get(username)
 
-    if(not isinstance(diz, dict) or len(diz.keys())!=4 or diz['fullName']!=fullName or diz['idVolo']!=idVolo):
+    if(not isinstance(diz, dict) or len(diz.keys())!=4 or diz['username']!=username or diz['idVolo']!=idVolo):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione
         """
-        session.pop(fullName)
+        session.pop(username)
         return redirect("/accedi", 401)    
 
     if request.method == 'POST':
-        return render_template("pagamento.html", fullName = fullName)
+        return render_template("pagamento.html", username = username)
     
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
 
 
 
-@app.route("/<string:fullName>/<string:compagnia>/<string:idVolo>/resoconto")
-def resoconto(fullName, compagnia, idVolo):
+@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto")
+def resoconto(username, compagnia, idVolo):
     #TODO implementare il resoconto
     """
     Arrivato a questo punto, devo avere uno stato differente da None
     """
-    if session.get(fullName) is None:
+    if session.get(username) is None:
         return redirect("/accedi", 401)
 
     """
     Non solo devo controllare se esiste la chiave ma devo anche verificare se 
     il dizionario è configurato correttamente per la sessione:
-    {'fullName':value1, 'persone':value2, 'cards':value3}
+    {'username':value1, 'persone':value2, 'cards':value3}
     """
-    diz = session.get(fullName)
+    diz = session.get(username)
 
-    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['fullName']!=fullName):
+    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['username']!=username):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
-        session.pop(fullName)
+        session.pop(username)
         return redirect("/accedi", 401)
 
     cards = diz['cards']
@@ -209,24 +297,25 @@ def resoconto(fullName, compagnia, idVolo):
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
-        session.pop(fullName)
+        session.pop(username)
         return redirect("/accedi", 401)
 
     #Mi porto appresso anche le informazioni relative al volo che è stato selezionato dall'utente
     diz['idVolo'] = idVolo
-    session.pop(fullName)
-    session[fullName] = diz
-    print("[DEBUG SESSIONE (/fullName/compagnia/idVolo/resoconto)]: key = " + fullName + "   value = " + str(session.get(fullName)))
-    return render_template("resoconto.html", fullName = fullName, idVolo = idVolo, arrivo = arrivo, partenza = partenza, compagnia = compagnia, orario = orario, data = data, prezzoTotale = prezzoTotale)
+    session.pop(username)
+    session[username] = diz
+    print("[DEBUG SESSIONE (/username/compagnia/idVolo/resoconto)]: key = " + username + "   value = " + str(session.get(username)))
+    return render_template("resoconto.html", username = username, idVolo = idVolo, arrivo = arrivo, partenza = partenza, compagnia = compagnia, orario = orario, data = data, prezzoTotale = prezzoTotale)
 
 
 
-@app.route("/<string:fullName>/<string:compagnia>/<string:idVolo>/serviziAggiuntivi")
-def serviziAggiuntivi(fullName, compagnia, idVolo):
+
+@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/serviziAggiuntivi")
+def serviziAggiuntivi(username, compagnia, idVolo):
     """
     Arrivato a questo punto, devo avere uno stato differente da None.
     """
-    if session.get(fullName) is None:
+    if session.get(username) is None:
         return redirect("/accedi", 401)
 
     """
@@ -234,14 +323,14 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     tale utente, ma devo anche verificare se il dizionario è
     configurato correttamente per la sessione corrente.
     """
-    diz = session.get(fullName)
+    diz = session.get(username)
 
-    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['fullName']!=fullName):
+    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['username']!=username):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
-        session.pop(fullName)
+        session.pop(username)
         return redirect("/accedi", 401)
 
     cards = diz['cards']
@@ -264,13 +353,13 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione
         """
-        session.pop(fullName)
+        session.pop(username)
         return redirect("/accedi", 401)
 
     #Mi porto appresso anche le informazioni relative al volo che è stato selezionato dall'utente
     diz['idVolo'] = idVolo
-    session.pop(fullName)
-    session[fullName] = diz
+    session.pop(username)
+    session[username] = diz
 
     #TODO metti un controllo su quanti sono i posti disponibili
 
@@ -291,120 +380,44 @@ def serviziAggiuntivi(fullName, compagnia, idVolo):
     print("animaleDomestico: " + str(additionalServices.animaleDomestico))
     print("neonato: " + str(additionalServices.neonato))
 
-    print("[DEBUG SESSION (/fullName/idVolo/servuzuAggiuntivi)]: key = " + fullName + "  value = " + str(session.get(fullName)))    
-    return render_template("serviziAggiuntivi.html", fullName = fullName, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
+    print("[DEBUG SESSION (/username/idVolo/servuzuAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
+    return render_template("serviziAggiuntivi.html", username = username, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
 
 
 #logout
-@app.route("/<string:fullName>/logout")
-def logoutUtentePrenotazione(fullName):
-    if session.get(fullName) is None:
+@app.route("/<string:username>/logout")
+def logoutUtentePrenotazione(username):
+    if session.get(username) is None:
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
 
     # Termino la sessione relativa all'utente loggato
-    session.pop(fullName)
+    session.pop(username)
 
     return redirect("/accedi")
 
 
 
-@app.route("/<string:airline>/<string:fullName>/logout")
-def logoutUtenteAirline(airline, fullName):
-    print(session.get(airline+fullName))
-    #if not session.get(airline+fullName):
-    if session.get(airline+fullName) is None:
+@app.route("/<string:airline>/<string:username>/logout")
+def logoutUtenteAirline(airline, username):
+    print(session.get(airline+username))
+    #if not session.get(airline+username):
+    if session.get(airline+username) is None:
         stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
         return render_template("errore.html", errore = stringa)
-    #session.pop(session.get(airline+fullName))
-    session.pop(airline+fullName)
+    #session.pop(session.get(airline+username))
+    session.pop(airline+username)
     return redirect("/accedi")
 
-
-
-#sign up page
-@app.route("/iscriviti", methods=('GET','POST'))
-def iscrizione():
-    if request.method == 'POST':
-        #Ottengo i dati inseriti dall'utente
-        email = request.form['inputEmail']
-        name = request.form['inputName']
-        surname = request.form['inputSurname']
-        password = request.form['inputPassword']
-        passwordConfirm = request.form['inputPasswordConfirm']
-        userType = request.form['flexRadioDefault']
-
-        """
-        Verifico se l'utente che si sta iscrivendo è un
-        turista o meno. Se non è un turista, allora sono
-        interessato anche alla compagnia aerea.
-        """
-        if userType!="Turista":
-            airline = request.form['airlineDropdown']
-        else:
-            airline = None
-        isOk = sendSignUpInfo(email, name, surname, password, passwordConfirm, userType, airline)
-
-        if isOk and userType == "Turista":
-            return redirect('/accedi')
-        elif isOk and userType != "Turista":
-            return redirect('/accedi')
-        else:
-            return render_template("Iscrizione.html")
-
-    return render_template("Iscrizione.html")
-
-
-
-
-@app.route("/<string:fullName>/home", methods=('GET','POST'))
-def home(fullName):
-    """
-    Questa pop è necessaria poiché è possibile raggiungere la Home
-    da parti differenti dell'applicazione e di conseguenza posso
-    avere uno stato della sessione differente. Necessito di settare
-    il corretto stato della sessione.
-    """
-    try:
-        session.pop(fullName)
-    except:
-        print("[LOG]: l'utente "+fullName + "si è loggato per la prima volta")
-
-    # Salvataggio dello stato della sessione
-    session[fullName] = fullName
-
-    print("[DEBUG SESSIONE (/fullName/home)]: key = " + fullName + "   value = " + str(session.get(fullName)))
-    return render_template("Home.html", fullName=fullName)
-
-
-
-
-#here the airline specifies which information has to be managed
-@app.route("/<string:airline>/<string:fullName>/airlineHome", methods=('GET', 'POST'))
-def airlineHome(airline, fullName):
-    """
-    Questa pop è necessaria poiché è possibile raggiungere la Home
-    da parti differenti dell'applicazione e di conseguenza posso
-    avere uno stato della sessione differente. Necessito di settare
-    il corretto stato della sessione.
-    """
-    try:
-        session.pop(fullName)
-    except:
-        print("[LOG]: l'utente si è loggato per la prima volta")
-
-    session[fullName] = fullName
-
-    return render_template("AirlineHome.html", airline=airline, fullName=fullName)
 
 
 
 #here the airline adds a new flight
-@app.route("/<string:airline>/<string:fullName>/addFlight", methods=('GET', 'POST'))
-def addFlight(airline, fullName):
-    #if not session.get(session.get(airline + fullName)):
-    if session.get(airline + fullName) is None:
+@app.route("/<string:airline>/<string:username>/addFlight", methods=('GET', 'POST'))
+def addFlight(airline, username):
+    #if not session.get(session.get(airline + username)):
+    if session.get(airline + username) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -425,19 +438,19 @@ def addFlight(airline, fullName):
 
         #if new flight info is ok, then notify the user; else go back to addFlight page because the user has to change something
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/Volo aggiunto")
+            return redirect("/"+airline+"/"+username+"/Volo aggiunto")
         else:
-            return render_template("AddFlight.html", airline=airline, fullName=fullName)
+            return render_template("AddFlight.html", airline=airline, username=username)
 
-    return render_template("AddFlight.html", airline=airline, fullName=fullName)
+    return render_template("AddFlight.html", airline=airline, username=username)
 
 
 
 #here the airline modifies the price of an existing flight
-@app.route("/<string:airline>/<string:fullName>/modifyFlight", methods=('GET', 'POST'))
-def modifyFlight(airline, fullName):
-    #if not session.get(session.get(airline + fullName)):
-    if session.get(airline + fullName) is None:
+@app.route("/<string:airline>/<string:username>/modifyFlight", methods=('GET', 'POST'))
+def modifyFlight(airline, username):
+    #if not session.get(session.get(airline + username)):
+    if session.get(airline + username) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -448,19 +461,19 @@ def modifyFlight(airline, fullName):
         isOk = sendNewPrice(flightId, newPrice)
 
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/Prezzi modificati")
+            return redirect("/"+airline+"/"+username+"/Prezzi modificati")
         else:
-            return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
+            return render_template("ModifyFlight.html", airline=airline, username=username)
 
-    return render_template("ModifyFlight.html", airline=airline, fullName=fullName)
+    return render_template("ModifyFlight.html", airline=airline, username=username)
 
 
 
 #here the airline modifies the price for seat selection
-@app.route("/<string:airline>/<string:fullName>/modifySeatsPrices", methods=('GET', 'POST'))
-def modifySeatsPrices(airline, fullName):
-    #if not session.get(session.get(airline + fullName)):
-    if session.get(airline + fullName) is None:
+@app.route("/<string:airline>/<string:username>/modifySeatsPrices", methods=('GET', 'POST'))
+def modifySeatsPrices(airline, username):
+    #if not session.get(session.get(airline + username)):
+    if session.get(airline + username) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -474,19 +487,19 @@ def modifySeatsPrices(airline, fullName):
         isOk = sendSeatsPrices(airline, price1, price2, price6, price16, price18)
 
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/Prezzi modificati")
+            return redirect("/"+airline+"/"+username+"/Prezzi modificati")
         else:
-            return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
+            return render_template("ModifySeatsPrices.html", airline=airline, username=username)
 
-    return render_template("ModifySeatsPrices.html", airline=airline, fullName=fullName)
+    return render_template("ModifySeatsPrices.html", airline=airline, username=username)
 
 
 
 #here the airline modifies the price of extra-services
-@app.route("/<string:airline>/<string:fullName>/modifyServicesPrices", methods=('GET', 'POST'))
-def modifyServicesPrices(airline, fullName):
-    #if not session.get(session.get(airline + fullName)):
-    if session.get(airline + fullName) is None:
+@app.route("/<string:airline>/<string:username>/modifyServicesPrices", methods=('GET', 'POST'))
+def modifyServicesPrices(airline, username):
+    #if not session.get(session.get(airline + username)):
+    if session.get(airline + username) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
@@ -501,25 +514,25 @@ def modifyServicesPrices(airline, fullName):
         isOk = sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN)
 
         if isOk:
-            return redirect("/"+airline+"/"+fullName+"/Prezzi modificati")
+            return redirect("/"+airline+"/"+username+"/Prezzi modificati")
         else:
-            return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
+            return render_template("ModifyServicesPrices.html", airline=airline, username=username)
 
-    return render_template("ModifyServicesPrices.html", airline=airline, fullName=fullName)
+    return render_template("ModifyServicesPrices.html", airline=airline, username=username)
 
 
 
 #here an ok message is shown
-@app.route("/<string:airline>/<string:fullName>/<string:okMessage>", methods=('GET', 'POST'))
-def showOkMessage(airline, fullName, okMessage):
-    #if not session.get(session.get(airline + fullName)):
-    if session.get(airline + fullName) is None:
+@app.route("/<string:airline>/<string:username>/<string:okMessage>", methods=('GET', 'POST'))
+def showOkMessage(airline, username, okMessage):
+    #if not session.get(session.get(airline + username)):
+    if session.get(airline + username) is None:
         print("Dentro")
         return redirect("/accedi", 302)
     if request.method == 'POST':
-        return redirect("/"+airline+"/"+fullName+"/airlineHome")
+        return redirect("/"+airline+"/"+username+"/airlineHome")
 
-    return render_template("ManagementOk.html", airline=airline, fullName=fullName, okMessage=okMessage)
+    return render_template("ManagementOk.html", airline=airline, username=username, okMessage=okMessage)
 
 
 

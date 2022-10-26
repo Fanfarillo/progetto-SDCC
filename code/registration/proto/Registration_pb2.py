@@ -13,21 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18proto/Registration.proto\x12\x05proto\"\x88\x01\n\nSignUpInfo\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07surname\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\x12\x17\n\x0fpasswordConfirm\x18\x05 \x01(\t\x12\x10\n\x08userType\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\"\x1e\n\x0eSignUpResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\".\n\x0b\x43redentials\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"V\n\x0eSignInResponse\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12\x12\n\nstoredType\x18\x03 \x01(\t\x12\x11\n\tisCorrect\x18\x04 \x01(\x08\x32t\n\tUsersInfo\x12\x32\n\x06SignUp\x12\x11.proto.SignUpInfo\x1a\x15.proto.SignUpResponse\x12\x33\n\x06SignIn\x12\x12.proto.Credentials\x1a\x15.proto.SignInResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18proto/Registration.proto\x12\x05proto\"{\n\nSignUpInfo\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x10\n\x08password\x18\x03 \x01(\t\x12\x17\n\x0fpasswordConfirm\x18\x04 \x01(\t\x12\x10\n\x08userType\x18\x05 \x01(\t\x12\x0f\n\x07\x61irline\x18\x06 \x01(\t\"\x1e\n\x0eSignUpResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"1\n\x0b\x43redentials\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"7\n\x0eSignInResponse\x12\x12\n\nstoredType\x18\x01 \x01(\t\x12\x11\n\tisCorrect\x18\x02 \x01(\x08\x32t\n\tUsersInfo\x12\x32\n\x06SignUp\x12\x11.proto.SignUpInfo\x1a\x15.proto.SignUpResponse\x12\x33\n\x06SignIn\x12\x12.proto.Credentials\x1a\x15.proto.SignInResponseb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.Registration_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _SIGNUPINFO._serialized_start=36
-  _SIGNUPINFO._serialized_end=172
-  _SIGNUPRESPONSE._serialized_start=174
-  _SIGNUPRESPONSE._serialized_end=204
-  _CREDENTIALS._serialized_start=206
-  _CREDENTIALS._serialized_end=252
-  _SIGNINRESPONSE._serialized_start=254
-  _SIGNINRESPONSE._serialized_end=340
-  _USERSINFO._serialized_start=342
-  _USERSINFO._serialized_end=458
+  _SIGNUPINFO._serialized_start=35
+  _SIGNUPINFO._serialized_end=158
+  _SIGNUPRESPONSE._serialized_start=160
+  _SIGNUPRESPONSE._serialized_end=190
+  _CREDENTIALS._serialized_start=192
+  _CREDENTIALS._serialized_end=241
+  _SIGNINRESPONSE._serialized_start=243
+  _SIGNINRESPONSE._serialized_end=298
+  _USERSINFO._serialized_start=300
+  _USERSINFO._serialized_end=416
 # @@protoc_insertion_point(module_scope)

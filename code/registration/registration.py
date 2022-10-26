@@ -10,20 +10,20 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
     def SignUp(self, SignUpInfo, context):
         #check if 'password' and 'conferma password' fields were filled with the same password; check also if the email was not used by someone else
-        isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.email)
+        isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.username)
 
         #if the two fields correspond, then save user info into remote database (DynamoDB)
         if isOk:
-            storeUser(SignUpInfo.email, SignUpInfo.name, SignUpInfo.surname, SignUpInfo.password, SignUpInfo.userType, SignUpInfo.airline)
+            storeUser(SignUpInfo.email, SignUpInfo.username, SignUpInfo.password, SignUpInfo.userType, SignUpInfo.airline)
 
         output = Registration_pb2.SignUpResponse(isOk=isOk)
         return output
 
     def SignIn(self, Credentials, context):
         #read the database (DynamoDB) and check if the log in is successful
-        user = retrieveUser(Credentials.email, Credentials.password)
+        user = retrieveUser(Credentials.username, Credentials.password)
 
-        output = Registration_pb2.SignInResponse(name=user.name, surname=user.surname, storedType=user.storedType, isCorrect=user.isCorrect)
+        output = Registration_pb2.SignInResponse(storedType=user.storedType, isCorrect=user.isCorrect)
         return output
 
 #create gRPC server

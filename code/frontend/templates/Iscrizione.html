@@ -31,16 +31,10 @@
 
     <div class="accordion m-5" id="accordion-example">
       <form action="/iscriviti" method="POST">
-        <!--Input first name-->
-        <div class="mb-3">
-          <label for="inputName" class="form-label">Nome</label>
-          <textarea class="form-control" type="text" name="inputName" rows="1" required>{{ request.form['inputName'] }}</textarea>
-        </div>
-
         <!--Input surname-->
         <div class="mb-3">
-          <label for="inputSurname" class="form-label">Cognome</label>
-          <textarea class="form-control" type="text" name="inputSurname" rows="1" required>{{ request.form['inputSurname'] }}</textarea>
+          <label for="inputUsername" class="form-label">Username</label>
+          <textarea class="form-control" type="text" name="inputUsername" rows="1" required>{{ request.form['inputUsername'] }}</textarea>
         </div>
 
         <!--Input email-->

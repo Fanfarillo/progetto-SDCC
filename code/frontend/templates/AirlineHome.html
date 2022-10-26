@@ -21,10 +21,10 @@
             <div class="navbar-nav">
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
-              <a class="nav-link active" aria-current="page" href="/{{ airline }}/{{ fullName }}/Home" style="color: #ffffff;">Home</a>
+              <a class="nav-link active" aria-current="page" href="/{{ airline }}/{{ username }}/Home" style="color: #ffffff;">Home</a>
               <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
               <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
-              <a class="nav-link" href="/{{ airline }}/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
+              <a class="nav-link" href="/{{ airline }}/{{ username }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
         </div>
@@ -33,7 +33,7 @@
     <div class="container my-4 text-center" style="max-width: 1160px;">
 
       <!--Messaggio di saluto-->
-      <h3 class="display-5" style="color: #646464;"><em>Ciao {{fullName}}!</em>
+      <h3 class="display-5" style="color: #646464;"><em>Ciao {{username}}!</em>
       <br>Seleziona le informazioni da modificare.</h3>
 
       <!--Bottoni per selezionare l'azione da eseguire-->
@@ -41,25 +41,25 @@
         <tr>
 
           <td>
-            <form action="/{{airline}}/{{fullName}}/addFlight" method="GET">
+            <form action="/{{airline}}/{{username}}/addFlight" method="GET">
               <button type="submit" class="btn btn-primary my-5">Aggiungi volo</button>
             </form>
           </td>
 
           <td>
-            <form action="/{{airline}}/{{fullName}}/modifyFlight" method="GET">
+            <form action="/{{airline}}/{{username}}/modifyFlight" method="GET">
               <button type="submit" class="btn btn-primary my-5">Modifica volo</button>
             </form>
           </td>
 
           <td>
-            <form action="/{{airline}}/{{fullName}}/modifySeatsPrices" method="GET">
+            <form action="/{{airline}}/{{username}}/modifySeatsPrices" method="GET">
               <button type="submit" class="btn btn-primary my-5">Modifica prezzo dei posti a sedere</button>
             </form>
           </td>
 
           <td>
-            <form action="/{{airline}}/{{fullName}}/modifyServicesPrices" method="GET">
+            <form action="/{{airline}}/{{username}}/modifyServicesPrices" method="GET">
               <button type="submit" class="btn btn-primary my-5">Modifica prezzo dei servizi aggiuntivi</button>
             </form>
           </td>

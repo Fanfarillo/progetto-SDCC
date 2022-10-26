@@ -21,19 +21,19 @@
             <div class="navbar-nav">
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
-              <a class="nav-link active" aria-current="page" href="/{{ fullName }}/home" style="color: #ffffff;">Home</a>
-			  <a class="nav-link" href="/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
+              <a class="nav-link active" aria-current="page" href="/{{ username }}/home" style="color: #ffffff;">Home</a>
+			  <a class="nav-link" href="/{{ username }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
         </div>
     </nav>
 
     <div class="container my-4 text-center" style="max-width: 1160px;">
-      	<form action="/{{ fullName }}/booking" method="POST">
+      	<form action="/{{ username }}/booking" method="POST">
       		<!--Messaggio di saluto-->
-      		<h3 class="display-5" style="color: #646464;"><em>Ciao {{fullName}}!</em>
+      		<h3 class="display-5" style="color: #646464;"><em>Ciao {{username}}!</em>
       		<br>Prenota subito un volo con Fly on the Cloud.</h3>
-			<input type="hidden" id="fname" name="fullName" value="{{ fullName }}"><br><br>
+			<input type="hidden" id="fname" name="username" value="{{ username }}"><br><br>
       		<!--Dropdown per la selezione di data, aeroporto di partenza, aeroporto di destinazione e numero di biglietti da acquistare-->
       		<table align="center">
         		<tr>

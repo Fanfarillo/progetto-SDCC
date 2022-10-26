@@ -9,12 +9,11 @@ service UsersInfo {
 
 message SignUpInfo {
     string email = 1;
-    string name = 2;
-    string surname = 3;
-    string password = 4;
-    string passwordConfirm = 5;
-    string userType = 6;
-    string airline = 7;
+    string username = 2;
+    string password = 3;
+    string passwordConfirm = 4;
+    string userType = 5;
+    string airline = 6;
 }
 
 message SignUpResponse {
@@ -22,13 +21,11 @@ message SignUpResponse {
 }
 
 message Credentials {
-    string email = 1;
+    string username = 1;
     string password = 2;
 }
 
 message SignInResponse {
-    string name = 1;
-    string surname = 2;
-    string storedType = 3;
-    bool isCorrect = 4;
+    string storedType = 1;
+    bool isCorrect = 2;
 }

@@ -21,10 +21,10 @@
             <div class="navbar-nav">
               <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
               <a class="nav-link disabled">    </a>
-              <a class="nav-link active" aria-current="page" href="/{{ airline }}/{{ fullName }}/Home" style="color: #ffffff;">Home</a>
+              <a class="nav-link active" aria-current="page" href="/{{ airline }}/{{ username }}/Home" style="color: #ffffff;">Home</a>
               <a class="nav-link" href="/accedi" style="color: #ffffff;">Accedi</a>
               <a class="nav-link" href="/iscriviti" style="color: #ffffff;">Iscriviti</a>
-              <a class="nav-link" href="/{{ airline }}/{{ fullName }}/logout" style="color: #ffffff;">Logout</a>
+              <a class="nav-link" href="/{{ airline }}/{{ username }}/logout" style="color: #ffffff;">Logout</a>
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
 
       <h3 class="display-5" style="color: #646464;">Modifica i prezzi dei servizi aggiuntivi.</h3>
 
-      <form action="/{{airline}}/{{fullName}}/modifyServicesPrices" method="POST">
+      <form action="/{{airline}}/{{username}}/modifyServicesPrices" method="POST">
         <!--Input prezzo del bagaglio in stiva aggiuntivo medio (max 20 kg)-->
         <div class="my-5">
             <label for="inputPrice1" class="form-label">Nuovo prezzo del bagaglio in stiva aggiuntivo medio (max 20 kg)</label>
