@@ -1,16 +1,22 @@
 import grpc
 import time
+import logging
 
 from concurrent import futures
 from datetime import datetime
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
-
 from ManRpcBoo import *
 from ManUtils import *
 from ManDB import *
 
+
+
+
 class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
+
+
+
 
     def AddFlight(self, NewFlight, context):
         #sanity checks are the following:
@@ -21,6 +27,8 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         #   5) Airline should be either EasyJet or ITA or Ryanair
         #   6) Price should be a number and it should be greater than zero
         #   7) Seats should be greater than zero
+
+        logger.info("Messaggio Matteo...")
 
         isNewFlightId = checkFlightId(NewFlight.id)                 #condition 1)
         isExistentDate = checkDateExistance(NewFlight.date)         #condition 2)
@@ -38,10 +46,15 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         output = Managment_pb2.AddResponse(isOk=isOk)
         return output
 
+
+
+
     def ModifyFlight(self, UpdatedFlight, context):
         #sanity checks are the following:
         #   1) Flight id should already exist
         #   2) Price should be a number and it should be greater than zero
+
+        logger.info("Messaggio Matteo...")
 
         isExistentFlightId = not checkFlightId(UpdatedFlight.flightId)      #condition 1)
         isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()   #condition 2)
@@ -55,7 +68,13 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         output = Managment_pb2.ModFlightResponse(isOk=isOk)
         return output
 
+
+
+
     def ModifySeats(self, UpdatedSeats, context):
+
+        logger.info("Messaggio Matteo...")
+
         #all the prices should be numbers and should be greater than zero
         isOk = (UpdatedSeats.price1.replace('.','',1).isdigit() and UpdatedSeats.price2.replace('.','',1).isdigit() and UpdatedSeats.price6.replace('.','',1).isdigit() and UpdatedSeats.price16.replace('.','',1).isdigit() and UpdatedSeats.price18.replace('.','',1).isdigit())
 
@@ -66,7 +85,13 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         output = Managment_pb2.ModSeatsResponse(isOk=isOk)
         return output
 
+
+
+
     def ModifyServices(self, UpdatedServices, context):
+
+        logger.info("Messaggio Matteo...")
+
         #all the prices should be numbers and should be greater than zero
         isOk = (UpdatedServices.priceBM.replace('.','',1).isdigit() and UpdatedServices.priceBG.replace('.','',1).isdigit() and UpdatedServices.priceBS.replace('.','',1).isdigit() and UpdatedServices.priceAD.replace('.','',1).isdigit() and UpdatedServices.priceAB.replace('.','',1).isdigit() and UpdatedServices.priceTN.replace('.','',1).isdigit())
 
@@ -76,13 +101,26 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         output = Managment_pb2.ModServicesResponse(isOk=isOk)
         return output
 
+
+
+
     def GetPriceFlight(self, request, context):
+
+        logger.info("Messaggio Matteo...")
+
         response = getPrice(request.idVolo)
         return Managment_pb2.PriceReply(price=str(response))
 
-    def GetAllSeatsFlight(self, request, context):
-        prezzi = getAllSeatsFlight(request.compagnia)
 
+
+
+    """
+    Recupera il prezzo dei posti relativi alla
+    compagnia area passata come parametro. Il
+    prezzo di tali posti viene inserito all'interno
+    della struttura dati seguendo un ordine predefinito.
+    """
+    def GetAllSeatsFlight(self, request, context):
         """
         1. 1
         2. 2-5
@@ -90,14 +128,24 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         4. 16-17
         5. 18-26
         """
+        logger.info("Richiesta del prezzo dei posti per la compagnia area " + request.compagnia + "...")
+        prezzi = getAllSeatsFlight(request.compagnia)
 
         for item in prezzi:
             ret = Managment_pb2.SeatCostReply(prezzo=int(item))            
             yield ret
 
+
+
+
+    """
+    Recupera il prezzo dei servizi aggiuntivi
+    che vengono offerti dalla compagnia area
+    passata come parametro. Il prezzo di tali
+    servizi viene inserito all'interno della
+    struttura dati seguendo un ordine predefinito.
+    """
     def GetAlladditionalServicesFlight(self, request, context):
-        prezzi = getAlladditionalServicesFlight(request.compagnia)
-        
         """
         1. bagaglioSpeciale
         2. bagaglioStivaMedio
@@ -106,18 +154,43 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         5. animaleDomestico
         6. neonato
         """
+        logger.info("Richiesta del prezzo dei servizi aggiuntivi offerti dalla compagnia area " + request.compagnia + "...")
+        prezzi = getAlladditionalServicesFlight(request.compagnia)
 
         for item in prezzi:
             ret = Managment_pb2.AdditionalServiceCostReply(prezzo=int(item))
             yield ret
 
+
+
+
+"""
+Costruisco un file di LOG in cui andare ad
+inserire le richieste che giungono dagli altri
+microservizi. Inoltre, inserisco delle informazioni
+di warnings nel momento in cui le richieste falliscono.
+"""
+logging.basicConfig(filename="managment.log", format=f'%(levelname)s - %(asctime)s - %(message)s')
+logger = logging.getLogger("managmentInfo")
+logger.setLevel(logging.INFO)
+
+
+
+
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Managment_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)
 
-print('Starting server. Listening on port 50052.')
+
+
+
+logger.info('Avvio del server in ascolto sulla porta 50051...')
 server.add_insecure_port('[::]:50052')
 server.start()
+logger.info('Server avviato con successo...')
+
+
+
 
 try:
     while True:

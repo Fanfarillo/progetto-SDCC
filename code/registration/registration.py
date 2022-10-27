@@ -27,7 +27,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
     def SignIn(self, Credentials, context):
         #read the database (DynamoDB) and check if the log in is successful
-        logging.info("Richiesta procedura di accesso: [" + Credentials.username + "," + Credentials.password + "]")
+        logger.info("Richiesta procedura di accesso: [" + Credentials.username + "," + Credentials.password + "]")
         user = retrieveUser(Credentials.username, Credentials.password)
         if user.isCorrect:
             logger.info("Procedura di accesso conclusa con successo: [" + Credentials.username + "," + Credentials.password + "]")

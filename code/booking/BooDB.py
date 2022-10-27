@@ -5,7 +5,14 @@ from decimal import *
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 
+
+
 ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
+
+
+
+
+# Per struttura dell'aereo questi sono i posti disponibili
 postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 'F2','A3', 'B3', 'C3', 'D3', 'E3', 'F3',
 'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5','A6', 'B6', 'C6', 'D6', 'E6', 'F6','A7', 'B7', 'C7', 'D7', 'E7', 'F7',
 'A8', 'B8', 'C8', 'D8', 'E8', 'F8','A9', 'B9', 'C9', 'D9', 'E9', 'F10','A10', 'B10', 'C10', 'D10', 'E10', 'F10','A11', 'B11', 'C11', 'D11', 'E11', 'F11',
@@ -16,15 +23,24 @@ postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 
 
 
 
+
 class Flight:
     def __init__(self, idKey, compagnia_aerea, arrivo, partenza, orario, data, prezzo, postiDisponibili):
+        # Identificativo del volo
         self.idKey = idKey
+        # Compagnia aerea
         self.compagnia_aerea = compagnia_aerea
+        # Aereoporto di arrivo
         self.arrivo = arrivo
+        # Aereoporto di partenza
         self.partenza = partenza
+        # Orario del volo
         self.orario = orario
+        # Data del volo
         self.data = data
+        # Prezzo del volo per singolo posto
         self.prezzo = prezzo
+        # Identificativi dei posti disponibili
         self.postiDisponibili = postiDisponibili
 
 
@@ -111,8 +127,6 @@ def storeUpdatedFlight(flightId, newPrice):
 
 
 
-
-
 def retrieveAvailableSeats(idVolo, postiDisponibili):
 
     dynamodb = boto3.resource('dynamodb')
@@ -175,12 +189,10 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
 
 """
 Interroga il database Dynamodb per ottenere tutti
-i voli che si hanno per la data GG/MM/AAAA con la partenza,
-l'arrivo che corrispondono ai dati passati in input
-e un numero di posti disponibili maggiore o uguale al valore
-del parametro persone.
+i voli disponibili per la data GG/MM/AAAA con la partenza e
+l'arrivo che corrispondono ai dati passati in input.
 """
-def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
+def retrieveFlights(giorno, mese, anno, partenza, arrivo):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Volo')
 
@@ -249,18 +261,13 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, persone):
     
     """
     Itero sui voli che sono stati recuperati per
-    ottenere il prezzo base e i posti attulamente disponibil.
+    ottenere il prezzo base e i posti attulamente disponibili.
     """
     for flight in flights:
         response = stub.GetPriceFlight(Managment_pb2.PriceRequest(idVolo=flight.idKey))
         flight.prezzo = response.price
-        print("NUMERO POSTI TOTALI: " + str(len(postiTotali)))
-        print("POSTI TOTALI: " + str(postiTotali))
         copiaPostiTotali = postiTotali.copy()
         postiDisponibili = retrieveAvailableSeats(flight.idKey, copiaPostiTotali)
-        print("NUMERO POSTI DISPONIBILI: " + str(len(postiDisponibili)))
-        print("POSTI DISPONIBILI: " + str(postiDisponibili))
         flight.postiDisponibili = postiDisponibili
 
-    #forse qua bisogna implementare la SAGA per ottenere i posti ancora disponibili per il volo
     return flights

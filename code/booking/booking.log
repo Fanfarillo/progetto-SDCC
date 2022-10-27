@@ -1,0 +1,61 @@
+INFO - 2022-10-27 16:21:30,773 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 16:21:30,775 - Server avviato con successo...
+ERROR - 2022-10-27 16:27:03,383 - Exception iterating responses: 'Logger' object has no attribute 'INFO'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/grpc/_server.py", line 461, in _take_response_from_response_iterator
+    return next(response_iterator), True
+  File "/home/cap/progetto/progetto-SDCC/code/booking/booking.py", line 35, in getAllFlights
+    logger.INFO("Richiesta dei voli disponibili: [" + request.giorno + "," + Sequest.mese + "," + request.anno + "," + request.aereoporto_arrivo + "," + request.aereoporto_partenza + "," + request.persone + "]")
+AttributeError: 'Logger' object has no attribute 'INFO'
+INFO - 2022-10-27 16:28:33,338 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 16:28:33,339 - Server avviato con successo...
+ERROR - 2022-10-27 16:28:38,262 - Exception iterating responses: can only concatenate str (not "int") to str
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/grpc/_server.py", line 461, in _take_response_from_response_iterator
+    return next(response_iterator), True
+  File "/home/cap/progetto/progetto-SDCC/code/booking/booking.py", line 35, in getAllFlights
+    logger.info("Richiesta dei voli disponibili: [" + request.giorno + "," + Sequest.mese + "," + request.anno + "," + request.aereoporto_arrivo + "," + request.aereoporto_partenza + "," + request.persone + "]")
+TypeError: can only concatenate str (not "int") to str
+INFO - 2022-10-27 16:31:19,157 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 16:31:19,159 - Server avviato con successo...
+INFO - 2022-10-27 16:31:40,837 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 16:31:40,839 - Server avviato con successo...
+INFO - 2022-10-27 16:32:14,756 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),2]
+INFO - 2022-10-27 16:35:29,969 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),1]
+INFO - 2022-10-27 17:11:40,053 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:14:25,709 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:15:51,669 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:23:59,391 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:28:42,810 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:29:00,782 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:31:16,708 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:34:41,178 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Schiphol (Amsterdam),0]
+INFO - 2022-10-27 17:35:05,409 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra),0]
+INFO - 2022-10-27 17:36:19,637 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 17:36:19,638 - Server avviato con successo...
+INFO - 2022-10-27 17:36:46,739 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:37:41,158 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:40:19,196 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:40:59,372 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:48:11,682 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:51:29,239 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:53:06,068 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:54:12,589 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 17:58:28,368 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:00:09,493 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:10:22,311 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:16:04,590 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 18:16:04,592 - Server avviato con successo...
+INFO - 2022-10-27 18:16:35,357 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:35:59,633 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 18:35:59,635 - Server avviato con successo...
+INFO - 2022-10-27 18:36:47,833 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:38:23,590 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:41:30,842 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:47:38,501 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:51:45,047 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:52:49,555 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 18:55:47,818 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-10-27 19:03:16,156 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-27 19:03:16,157 - Server avviato con successo...
+INFO - 2022-10-27 19:03:47,612 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]

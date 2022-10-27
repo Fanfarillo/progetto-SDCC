@@ -1,5 +1,6 @@
 import grpc
 import time
+import logging
 
 from concurrent import futures
 from proto import Booking_pb2
@@ -21,52 +22,100 @@ postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 
 
 
 class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
+
+
+
+
+    """
+    Recupera tutti i voli attualmente disponibili
+    che rispettano i criteri di selezione passati
+    come parametri.
+    """
     def getAllFlights(self, request, context):
-        logger.INFO("Richiesta dei voli disponibili: [" + request.giorno + "," + Sequest.mese + "," + request.anno + "," + request.aereoporto_arrivo + "," + request.aereoporto_partenza + "," + request.persone + "]"")
-        flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
+        logger.info("Richiesta dei voli disponibili: [" + str(request.giorno) + "," + str(request.mese) + "," + str(request.anno) + "," + request.aereoporto_arrivo + "," + request.aereoporto_partenza + "]")
+        
+        """
+        Recupero tutti i voli relativi ai parametri
+        della richiesta ricevuta.
+        """
+        flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza)
+        
         for flight in flights:
             postiDisp = Booking_pb2.postiDisponibili()
+
+            """
+            Tengo traccia del numero totale posti
+            """
             count = 0
+
+            """
+            Fissato un volo, itero su tutti i posti
+            disponibili per tale volo andandoli ad
+            aggiungere all'interno della struttura
+            dati che contiene la lista dei posti
+            disponibili per tale volo.
+            """
             for posto in flight.postiDisponibili:
                 count = count + 1
                 postiDisp.posti.append(posto)
-            if len(postiDisp.posti) >= request.persone:
+            
+            """
+            Tra tutti i voli disponibili che corrispondono
+            ai parametri richiesti, si scartano tutti quelli
+            che hanno un numero di posti disponibili pari a zero
+            o inferiore. Questo controllo può essere visto come
+            un ulteriore controllo di sicurezza.
+            """
+            if len(postiDisp.posti) > 0:
                 ret = Booking_pb2.getAllFlightsReply(id = flight.idKey, compagnia = flight.compagnia_aerea, arrivo = flight.arrivo, partenza = flight.partenza, data = flight.data, orario = flight.orario, prezzoBase = flight.prezzo, posti = postiDisp, numPosti = count)
                 yield ret
-    
+
+
 
 
     def SendId(self, IdMessage, context):
         #check if the id was not used for an other available flight
         isNew = isNewId(IdMessage.id)
         if isNew:
-            logger.INFO("Richiesta nuovo ID " + IdMessage.id + " volo avvenuta con successo...")
+            logger.info("Messaggio Matteo...")
         else:
-            logger.INFO("Richiesta nuovo ID volo avvenuta senza successo...")
+            logger.info("Messaggio Matteo...")
         output = Booking_pb2.IdResponse(isOk=isNew)
         return output
 
 
 
+
     def RegisterFlight(self, NewFlight2, context):
+        logger.info("Messaggio Matteo...")
         storeFlight(NewFlight2.id, NewFlight2.date, NewFlight2.departureAirport, NewFlight2.arrivalAirport, NewFlight2.departureTime, NewFlight2.arrivalTime, NewFlight2.airline, NewFlight2.price, NewFlight2.seats)
         output = Booking_pb2.RegisterResponse(isOk=True)
         return output
 
 
 
+
     def UpdateFlightPrice(self, UpdatedFlight2, context):
+        logger.info("Messaggio Matteo...")
         storeUpdatedFlight(UpdatedFlight2.flightId, UpdatedFlight2.newPrice)
         output = Booking_pb2.UpdateResponse(isOk=True)
         return output
     
 
 
+
+    """
+    Recupera tutti i posti che sono attualmente
+    disponibili per il volo il cui identificativo
+    è passato al metodo.
+    """
     def getAllAvailableSeatsForFlight(self, request, context):
+        logger.info("Richiesta dei posti disponibili per il volo " + request.idVolo)
         postiDisponibili = retrieveAvailableSeats(request.idVolo, postiTotali)
         for posto in postiDisponibili:
             ret = Booking_pb2.AvailableSeatReply(idPosto = posto)
             yield ret
+
 
 
 

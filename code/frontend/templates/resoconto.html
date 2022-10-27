@@ -34,40 +34,56 @@
           <button type="submit" class="btn btn-primary my-3">Indietro</button>        
         </form>
       </div>
-      
+      <h1 class="display-6" style="color: #646464;">Le informazioni relative al volo selezionato sono mostrate di seguito.</h1>
       <div class="mb-3">
         <label for="compagnia" class="form-label">Compagnia aerea</label>
-        <input type="text" class="form-control" name="compagnia" aria-describedby="partenzaHelp" value="{{ compagnia }}" readonly>
+        <input type="text" class="form-control" name="compagnia" aria-describedby="partenzaHelp" value="{{ card.compagnia }}" readonly>
       </div>
 
       <!--Aereoporto di Partenza-->
       <div class="mb-3">
         <label for="partenza" class="form-label">Aereoporto di partenza</label>
-        <input type="text" class="form-control" name="partenza" aria-describedby="partenzaHelp" value="{{ partenza }}" readonly>
+        <input type="text" class="form-control" name="partenza" aria-describedby="partenzaHelp" value="{{ card.partenza }}" readonly>
       </div>
 
       <!--Aereoporto di Arrivo-->
       <div class="mb-3">
         <label for="arrivo" class="form-label">Aereoporto di arrivo</label>
-        <input type="text" class="form-control" name="arrivo" value="{{ arrivo }}" readonly>
+        <input type="text" class="form-control" name="arrivo" value="{{ card.arrivo }}" readonly>
       </div>
 
       <!--Aereoporto di Partenza-->
       <div class="mb-3">
         <label for="data" class="form-label">Data</label>
-        <input type="text" class="form-control" name="data" aria-describedby="partenzaHelp" value="{{ data }}" readonly>
+        <input type="text" class="form-control" name="data" aria-describedby="partenzaHelp" value="{{ card.data }}" readonly>
       </div>
 
       <div class="mb-3">
         <label for="orario" class="form-label">Orario</label>
-        <input type="text" class="form-control" name="orario" aria-describedby="partenzaHelp" value="{{ orario }}" readonly>
+        <input type="text" class="form-control" name="orario" aria-describedby="partenzaHelp" value="{{ card.orario }}" readonly>
       </div>
 
       <div class="mb-3">
-        <label for="prezzo" class="form-label">Prezzo totale</label>
-        <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="{{ prezzoTotale }}" readonly>
+        <label for="prezzo" class="form-label">Prezzo per posto</label>
+        <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="€ {{ card.prezzoTotale }}" readonly>
       </div>
-      <form action="/{{ username }}/{{ idVolo }}/pagamento" method="POST">
+
+      <div class="mb-3">
+        <label for="prezzo" class="form-label">Numero di posti disponibili</label>
+        <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="{{ card.numPosti }}" readonly>
+      </div>
+
+      <h1 class="display-6" style="color: #646464;">Selezionare il numero di biglietti da acquistare.</h1>
+
+      <form action="/{{ username }}/{{ card.idVolo }}/pagamento" method="POST">
+        <div class="dropdown my-5">
+          <select name="numPosti" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+            <option disabled selected>Numbero di biglietti</option>
+            {% for i in range(1,card.numPosti + 1) %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+          </select>
+        </div>
         <button type="submit" class="btn btn-primary my-3">Conferma</button>
       </form>
     </div>

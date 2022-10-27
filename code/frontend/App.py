@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, render_template, redirect, request, session
 from FroRpcReg import *
 from FroRpcMan import *
@@ -5,7 +7,6 @@ from FroRpcBoo import *
 from FroUtils import *
 from flask_session import Session
 
-import logging
 
 
 
@@ -180,10 +181,12 @@ def booking(username):
         keys = diz.keys()
         if 'idVolo' in keys:
             diz.pop('idVolo')
-            session.pop(username)
-            session[username] = diz
-            print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
-            return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), username = username)
+        if 'cardSelezionata' in keys:
+            diz.pop('cardSelezionata')
+        session.pop(username)
+        session[username] = diz
+        print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
+        return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), username = username)
 
 
     """
@@ -201,27 +204,30 @@ def booking(username):
             anno = request.form['anno']
             partenza = request.form['aereoporto_partenza']
             arrivo = request.form['aereoporto_arrivo']
-            persone = request.form['persone']
+            #persone = request.form['persone']
 
             #Non è possibile avere i due aereoporti uguali
             if(partenza == arrivo):
                 stringa = "L'AREOPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO\nPROVA AD INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE"
                 return render_template("errore.html", errore = stringa)
 
-            result = sendBookingInfo(giorno, mese, anno, arrivo, partenza, persone)
+            """
+            Ricavo tutte le informazioni che dovranno essere
+            inserite all'interno delle Card da mostrare 
+            all'utente che ha richiesto i voli.
+            """
+            result = sendBookingInfo(giorno, mese, anno, arrivo, partenza)
 
+            """
+            Questo pezzo di codice si dovrebbe levare poiché il numero di persone
+            viene scelto successivamente...
             for card in result.cards:
-                """
-                Dal microservizio ottengo il prezzo a persona per il biglietto.
-                Di conseguenza, necessito di eseguire questa moltiplicazione per
-                ottenere il PREZZO TOTALE.
-                """
                 card.prezzoTotale = float(card.prezzoTotale) * float(persone)
-
+            """
             #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
             session.pop(username)
             #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
-            session[username] = {'username':username, 'persone':persone, 'cards':result.cards}
+            session[username] = {'username':username, 'cards':result.cards}
 
             print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
 
@@ -236,6 +242,87 @@ def booking(username):
         """
         session.pop(username)
         return redirect("/accedi", 401)
+
+
+
+
+
+
+
+
+@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto")
+def resoconto(username, compagnia, idVolo):
+    #TODO implementare il resoconto
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None
+    """
+    if session.get(username) is None:
+        print("ERRORE 0")
+        return redirect("/accedi", 401)
+
+    """
+    Non solo devo controllare se esiste la chiave ma devo anche verificare se 
+    il dizionario è configurato correttamente per la sessione:
+    {'username':value1, 'cards':value3}
+    """
+    diz = session.get(username)
+
+    if(not isinstance(diz, dict) or (len(diz.keys())!=2 and len(diz.keys())!=4) or diz['username']!=username):
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
+        """
+        print("ERRORE 1")
+        session.pop(username)
+        return redirect("/accedi", 401)
+
+
+    cardSelezionata = None
+
+    if(len(diz.keys()) == 4):
+        print("SONO TORNATO INDIETRO DA PAGAMENTO!")
+        cardSelezionata = diz['cardSelezionata']
+    else:
+        cards = diz['cards']
+        check = False
+        for card in cards:
+            if card.idVolo == idVolo:
+                """
+                Mi registro il fatto che l'identificativo passato nella URL effettivamente
+                corrisponde ad uno dei voli esistenti nello stato della sessione
+                """
+                check = True
+                cardSelezionata = card
+                """
+                partenza = card.partenza
+                arrivo = card.arrivo
+                compagnia = card.compagnia
+                orario = card.orario
+                data = card.data
+                prezzoTotale = card.prezzoTotale
+                numPosti = card.numPosti
+                """
+
+        if(not check):
+            """
+            Nella URL è stato inserito l'identificativo di un volo insesistente,
+            magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
+            Faccio la pop per eliminare lo stato della sessione poiché vengo
+            reindirizzato all'accesso in cui non ho alcuno stato della sessione.
+            """
+            print("ERRORE 2")
+            session.pop(username)
+            return redirect("/accedi", 401)
+
+    #Mi porto appresso anche le informazioni relative al volo e alla card che sono stati selezionati dall'utente
+    diz['idVolo'] = idVolo
+    diz['cardSelezionata'] = cardSelezionata
+
+    session.pop(username)
+    session[username] = diz
+
+    print("[DEBUG SESSIONE (/username/compagnia/idVolo/resoconto)]: key = " + username + "   value = " + str(session.get(username)))
+    return render_template("resoconto.html", username = username, card = cardSelezionata)
 
 
 
@@ -261,71 +348,11 @@ def confermaRiepilogo(username, idVolo):
         return redirect("/accedi", 401)    
 
     if request.method == 'POST':
-        return render_template("pagamento.html", username = username)
+        cardSelezionata = session.get('cardSelezionata')
+        return render_template("pagamento.html", username = username, card = cardSelezionata)
     
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
-
-
-
-@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto")
-def resoconto(username, compagnia, idVolo):
-    #TODO implementare il resoconto
-    """
-    Arrivato a questo punto, devo avere uno stato differente da None
-    """
-    if session.get(username) is None:
-        return redirect("/accedi", 401)
-
-    """
-    Non solo devo controllare se esiste la chiave ma devo anche verificare se 
-    il dizionario è configurato correttamente per la sessione:
-    {'username':value1, 'persone':value2, 'cards':value3}
-    """
-    diz = session.get(username)
-
-    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['username']!=username):
-        """
-        Faccio la pop per eliminare lo stato della sessione poiché vengo
-        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
-        """
-        session.pop(username)
-        return redirect("/accedi", 401)
-
-    cards = diz['cards']
-    check = False
-
-    for card in cards:
-        if card.idVolo == idVolo:
-            """
-            Mi registro il fatto che l'identificativo passato nella URL effettivamente
-            corrisponde ad uno dei voli esistenti nello stato della sessione
-            """
-            check = True
-
-            partenza = card.partenza
-            arrivo = card.arrivo
-            compagnia = card.compagnia
-            orario = card.orario
-            data = card.data
-            prezzoTotale = card.prezzoTotale
-
-    if(not check):
-        """
-        Nella URL è stato inserito l'identificativo di un volo insesistente,
-        magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
-        Faccio la pop per eliminare lo stato della sessione poiché vengo
-        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
-        """
-        session.pop(username)
-        return redirect("/accedi", 401)
-
-    #Mi porto appresso anche le informazioni relative al volo che è stato selezionato dall'utente
-    diz['idVolo'] = idVolo
-    session.pop(username)
-    session[username] = diz
-    print("[DEBUG SESSIONE (/username/compagnia/idVolo/resoconto)]: key = " + username + "   value = " + str(session.get(username)))
-    return render_template("resoconto.html", username = username, idVolo = idVolo, arrivo = arrivo, partenza = partenza, compagnia = compagnia, orario = orario, data = data, prezzoTotale = prezzoTotale)
 
 
 
@@ -345,7 +372,7 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     """
     diz = session.get(username)
 
-    if(not isinstance(diz, dict) or len(diz.keys())!=3 or diz['username']!=username):
+    if(not isinstance(diz, dict) or len(diz.keys())!=2 or diz['username']!=username):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.

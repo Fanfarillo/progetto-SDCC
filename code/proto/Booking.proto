@@ -23,9 +23,7 @@ message getAllFlightsRequest {
     int32 mese = 2;
     int32 anno = 3;
     string aereoporto_arrivo = 4;
-    string aereoporto_partenza = 5;
-    int32 persone = 6;
-    
+    string aereoporto_partenza = 5;    
 }
 
 message postiDisponibili {
