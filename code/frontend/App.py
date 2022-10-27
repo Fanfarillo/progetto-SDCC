@@ -5,6 +5,8 @@ from FroRpcBoo import *
 from FroUtils import *
 from flask_session import Session
 
+import logging
+
 
 
 NUM_SEATS = 156
@@ -12,6 +14,7 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+#logging.basicConfig(filename="application_server.log", format=f'%(asctime)s %(message)s')
 
 
 
@@ -21,6 +24,7 @@ Pagina Root
 """
 @app.route("/")
 def menu():
+    #app.logger.info("Rchiesta pagina root...")
     return render_template("Menu.html")
 
 
@@ -31,6 +35,7 @@ Un utente può essere un Turista o meno.
 """
 @app.route("/iscriviti", methods=('GET','POST'))
 def iscrizione():
+    
     if request.method == 'POST':
         #Ottengo i dati inseriti dall'utente
         username = request.form['inputUsername']
@@ -38,7 +43,7 @@ def iscrizione():
         passwordConfirm = request.form['inputPasswordConfirm']
         email = request.form['inputEmail']
         userType = request.form['flexRadioDefault']
-
+        #app.logger.info("Richiesta procedura di iscrizione: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
         """
         Verifico se l'utente che si sta iscrivendo è un
         turista o meno. Se non è un turista, allora sono
@@ -55,12 +60,15 @@ def iscrizione():
         isOk = sendSignUpInfo(email, username, password, passwordConfirm, userType, airline)
 
         if isOk and userType == "Turista":
+            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
             return redirect('/accedi')
         elif isOk and userType != "Turista":
+            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "," + request.form['airlineDropdown'] + "]")
             return redirect('/accedi')
         else:
             return render_template("Iscrizione.html")
 
+    #app.logger.warning("Richiesta GET per la procedura di iscrizione...")
     return render_template("Iscrizione.html")
 
 
@@ -76,18 +84,25 @@ def accesso():
         #Acquisisco i dati inseriti dall'utente
         username = request.form['inputUsername']
         password = request.form['inputPassword']
-
+        #app.logger.info("Richiesta procedura di accesso: [" + username + ","+ password + "]")
         #Verifico le credenziali inserite dall'utente
         response = sendCredentials(username, password)
 
         #Se le credenziali sono corrette allora si va avanti
         if response.isCorrect == True and response.storedType == "Turista":
+            # Salvataggio dello stato della sessione
+            session[username] = username
+            #app.logger.info("Procedura di accesso completata con successo per l'utente: [" + username + ","+ password + "]")
             return redirect("/"+username+"/home")
         elif response.isCorrect == True and response.storedType != "Turista":
+            # Salvataggio dello stato della sessione
+            session[response.storedType + username] = response.storedType + username
+            #app.logger.info("Procedura di accesso completata con successo per l'utente: [" + username + ","+ password + "," + response.storedType + "]")
             return redirect("/"+response.storedType+"/"+username+"/airlineHome")
         else:
             return render_template("Accesso.html")
-        
+    
+    #app.logger.warning("Richiesta GET per la procedura di accesso...")
     # Utile nel momento in cui viene eseguita una richiesta GET
     return render_template("Accesso.html")
 
@@ -103,13 +118,14 @@ def home(username):
     il corretto stato della sessione.
     """
     try:
-        session.pop(username)
+        diz = session.pop(username)
+        session[username] = username
     except Exception as e:
-        print(e.args)
-        print("[LOG]: l'utente "+username + "si è loggato per la prima volta")
-
-    # Salvataggio dello stato della sessione
-    session[username] = username
+        """
+        Si sta tentando di accedere alla home di un utente
+        senza prima aver effettuato correttamente l'accesso.
+        """
+        return redirect("/accedi", 401)
 
     print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
     return render_template("Home.html", username=username)
@@ -127,11 +143,15 @@ def airlineHome(airline, username):
     il corretto stato della sessione.
     """
     try:
-        session.pop(username)
+        session.pop(airline + username)
     except:
-        print("[LOG]: l'utente si è loggato per la prima volta")
-
-    session[username] = username
+        """
+        Si sta tentando di accedere alla home di un utente
+        senza prima aver effettuato correttamente l'accesso.
+        """
+        return redirect("/accedi", 401)
+    
+    session[airline + username] = airline + username
 
     return render_template("AirlineHome.html", airline=airline, username=username)
 

@@ -6,6 +6,9 @@ from proto import Booking_pb2
 from proto import Booking_pb2_grpc
 from BooDB import *
 
+
+
+
 postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 'F2','A3', 'B3', 'C3', 'D3', 'E3', 'F3',
 'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5','A6', 'B6', 'C6', 'D6', 'E6', 'F6','A7', 'B7', 'C7', 'D7', 'E7', 'F7',
 'A8', 'B8', 'C8', 'D8', 'E8', 'F8','A9', 'B9', 'C9', 'D9', 'E9', 'F10','A10', 'B10', 'C10', 'D10', 'E10', 'F10','A11', 'B11', 'C11', 'D11', 'E11', 'F11',
@@ -19,6 +22,7 @@ postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 
 
 class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
     def getAllFlights(self, request, context):
+        logger.INFO("Richiesta dei voli disponibili: [" + request.giorno + "," + Sequest.mese + "," + request.anno + "," + request.aereoporto_arrivo + "," + request.aereoporto_partenza + "," + request.persone + "]"")
         flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aereoporto_arrivo, request.aereoporto_partenza, request.persone)
         for flight in flights:
             postiDisp = Booking_pb2.postiDisponibili()
@@ -35,7 +39,10 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
     def SendId(self, IdMessage, context):
         #check if the id was not used for an other available flight
         isNew = isNewId(IdMessage.id)
-        print("ci")
+        if isNew:
+            logger.INFO("Richiesta nuovo ID " + IdMessage.id + " volo avvenuta con successo...")
+        else:
+            logger.INFO("Richiesta nuovo ID volo avvenuta senza successo...")
         output = Booking_pb2.IdResponse(isOk=isNew)
         return output
 
@@ -63,16 +70,35 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
 
 
+"""
+Costruisco un file di LOG in cui andare ad
+inserire le richieste che giungono dagli altri
+microservizi. Inoltre, inserisco delle informazioni
+di warnings nel momento in cui le richieste falliscono.
+"""
+logging.basicConfig(filename="booking.log", format=f'%(levelname)s - %(asctime)s - %(message)s')
+logger = logging.getLogger("bookingInfo")
+logger_warnings = logging.getLogger("bookingWarnings")
+logger.setLevel(logging.INFO)
+logger_warnings.setLevel(logging.WARNING)
+
+
+
 
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Booking_pb2_grpc.add_BookingServiceServicer_to_server(BookingInfoServicer(), server)
 
-print('Starting server. Listening on port 50053.')
+
+
+
+logger.info('Avvio del server in ascolto sulla porta 50051...')
 server.add_insecure_port('[::]:50053')
 server.start()
+logger.info('Server avviato con successo...')
 
-#server.wait_for_termination()
+
+
 
 try:
     while True:
