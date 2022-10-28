@@ -34,7 +34,7 @@
           <button type="submit" class="btn btn-primary my-3">Indietro</button>        
         </form>
       </div>
-      <form action="/">
+      <form action="/{{ username }}/{{ card.idVolo }}/personalizzato" method="POST">
       <div class="container my-4 text-center" style="max-width: 1160px;">
         <div style="padding-bottom: 100px;">
         <h3 class="display-3" style="color: #646464;">Selezionare i posti che si desidera prenotare</h3>
@@ -71,7 +71,7 @@
             </td>
             <td>
               <h1 class="display-6" style="color: #646464;">Seleziona i posti</h1>
-              <select width=300 style="width: 350px"
+              <select name="postiSelezionati" width=300 style="width: 350px"
               size="8" multiple>
             {% for posto in postiDisponibiliVolo %}
               <option value='{{ posto }}'>{{ posto }}</option>
@@ -92,6 +92,7 @@
               <th style="border:1px solid black;">Bagaglio stiva grande</th>
               <th style="border:1px solid black;">Assicurazione bagagli</th>
               <th style="border:1px solid black;">Animale domestico</th>
+              <th style="border:1px solid black;">Neonato</th>
             </tr>
             <tr>
               <td style="border:1px solid black;">${{ additionalServices.bagaglioSpeciale }}</td>
@@ -99,6 +100,7 @@
               <td style="border:1px solid black;">${{ additionalServices.bagaglioStivaGrande }}</td>
               <td style="border:1px solid black;">${{ additionalServices.assicurazioneBagagli }}</td>
               <td style="border:1px solid black;">${{ additionalServices.animaleDomestico }}</td> 
+              <td style="border:1px solid black;">${{ additionalServices.neonato }}</td> 
             </tr>
           </table>
           <div style="padding-top: 50px;">
@@ -125,6 +127,10 @@
                   <label for="Animale domestico" class="form-label">Animale domestico</label>
                   <input id = "animaleDomestico" type="number" value="0" min="0" class="form-control" name="Animale domestico" aria-describedby="animaleDomesticoHelp">
                 </div>
+                <div class="mb-3">
+                  <label for="Neonato" class="form-label">Neonato</label>
+                  <input id="neonato" type="number" value="0" min="0" class="form-control" name="Neonato" aria-describedby="neonatoHelp">
+                </div>
               </td>
             </tr>
           </table>
@@ -136,13 +142,14 @@
 
       <script>
         function myFunction() {
-          document.getElementById("animaleDomestico").defaultValue = "0";
-          document.getElementById("assicurazioneBagagli").defaultValue = "0";
-          document.getElementById("bagaglioStivaGrande").defaultValue = "0";
-          document.getElementById("bagaglioStivaMedio").defaultValue = "0";
-          document.getElementById("bagaglioSpeciale").defaultValue = "0";
+          document.getElementById("animaleDomestico").defaultValue = 0;
+          document.getElementById("assicurazioneBagagli").defaultValue = 0;
+          document.getElementById("bagaglioStivaGrande").defaultValue = 0;
+          document.getElementById("bagaglioStivaMedio").defaultValue = 0;
+          document.getElementById("bagaglioSpeciale").defaultValue = 0;
+          document.getElementById("neonato").defaultValue = 0;
         }
-        </script>
+      </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 

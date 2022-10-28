@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fly on the Cloud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  </head>
+
+  <body style="background-color: #d9eeff;">
+
+    <!--Barra di navigazione-->
+    <nav class="navbar navbar-expand-lg bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" style="color: #ffffff;">Fly on the Cloud</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <img src="{{url_for('static', filename='Logo.png')}}" alt="Bootstrap" width="58" height="40">
+              <a class="nav-link disabled">    </a>
+              <a class="nav-link active" aria-current="page" href="/{{ username }}/home" style="color: #ffffff;">Home</a>
+              <a class="nav-link" href="/{{ username }}/logout" style="color: #ffffff;">Logout</a>
+            </div>
+          </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5" style="background-color: #ffffff;">
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="display: flex;justify-content: space-between;">
+        <form action="/{{ username }}/{{ card.compagnia }}/{{ card.idVolo }}/serviziAggiuntivi" method="GET">
+          <button type="submit" class="btn btn-primary my-3">Indietro</button>        
+        </form>
+      </div>
+      <form action="/{{ username }}/personalizzato" method="POST">
+
+        <h1 class="display-6" style="color: #646464;">Si prega di leggere con attenzione il resoconto finale della prenotazione.</h1>
+        <div class="mb-3">
+          <label for="compagnia" class="form-label">Compagnia aerea</label>
+          <input type="text" class="form-control" name="compagnia" aria-describedby="partenzaHelp" value="{{ card.compagnia }}" readonly>
+        </div>
+  
+        <!--Aereoporto di Partenza-->
+        <div class="mb-3">
+          <label for="partenza" class="form-label">Aereoporto di partenza</label>
+          <input type="text" class="form-control" name="partenza" aria-describedby="partenzaHelp" value="{{ card.partenza }}" readonly>
+        </div>
+  
+        <!--Aereoporto di Arrivo-->
+        <div class="mb-3">
+          <label for="arrivo" class="form-label">Aereoporto di arrivo</label>
+          <input type="text" class="form-control" name="arrivo" value="{{ card.arrivo }}" readonly>
+        </div>
+  
+        <!--Aereoporto di Partenza-->
+        <div class="mb-3">
+          <label for="data" class="form-label">Data</label>
+          <input type="text" class="form-control" name="data" aria-describedby="partenzaHelp" value="{{ card.data }}" readonly>
+        </div>
+  
+        <div class="mb-3">
+          <label for="orario" class="form-label">Orario</label>
+          <input type="text" class="form-control" name="orario" aria-describedby="partenzaHelp" value="{{ card.orario }}" readonly>
+        </div>
+  
+        <div class="mb-3">
+          <label for="prezzo" class="form-label">Prezzo totale</label>
+          <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="€ {{ prezzoTotale }}" readonly>
+        </div>
+
+        <h1 class="display-6" style="color: #646464;">Inserire l'indirizzo email per ricevere la conferma del pagamento.</h1>
+
+        <div class="mb-3">
+            <label for="user-email" class="form-label">Questo campo non è obbligatorio.</label>
+            <input type="email" class="form-control" name="user-email" aria-describedby="emailHelp" value="{{ request.form['user-email'] }}">
+        </div>
+        <h1 class="display-6" style="color: #646464;">Premere il bottone 'Conferma' per completare l'acquisto dei biglietti.</h1>
+        <button type="submit" class="btn btn-primary my-3">Conferma</button>
+      </form>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>

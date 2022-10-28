@@ -9,7 +9,8 @@ from flask_session import Session
 
 
 
-
+PAGAMENTO_BACK = 5
+PAGAMENTO_PERSONALIZZATO_BACK = 17
 NUM_SEATS = 156
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -183,6 +184,18 @@ def booking(username):
             diz.pop('idVolo')
         if 'cardSelezionata' in keys:
             diz.pop('cardSelezionata')
+        if 'bagaglioSpecialePrezzo' in keys:
+            diz.pop('bagaglioSpecialePrezzo')
+        if 'bagaglioStivaMedioPrezzo' in keys:
+            diz.pop('bagaglioStivaMedioPrezzo')
+        if 'bagaglioStivaGrandePrezzo' in keys:
+            diz.pop('bagaglioStivaGrandePrezzo')
+        if 'assicurazioneBagagliPrezzo' in keys:
+            diz.pop('assicurazioneBagagliPrezzo')
+        if 'animaleDomesticoPrezzo' in keys:
+            diz.pop('animaleDomesticoPrezzo')
+        if 'neonatoPrezzo' in keys:
+            diz.pop('neonatoPrezzo')
         session.pop(username)
         session[username] = diz
         print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
@@ -246,11 +259,7 @@ def booking(username):
 
 
 
-
-
-
-
-@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto")
+@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto", methods=('GET','POST'))
 def resoconto(username, compagnia, idVolo):
     #TODO implementare il resoconto
     """
@@ -267,7 +276,7 @@ def resoconto(username, compagnia, idVolo):
     """
     diz = session.get(username)
 
-    if(not isinstance(diz, dict) or (len(diz.keys())!=2 and len(diz.keys())!=4) or diz['username']!=username):
+    if(not isinstance(diz, dict) or (len(diz.keys())!=2 and len(diz.keys())!=5) or diz['username']!=username):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.
@@ -279,9 +288,10 @@ def resoconto(username, compagnia, idVolo):
 
     cardSelezionata = None
 
-    if(len(diz.keys()) == 4):
+    if(len(diz.keys()) == PAGAMENTO_BACK):
         print("SONO TORNATO INDIETRO DA PAGAMENTO!")
         cardSelezionata = diz['cardSelezionata']
+        diz.pop('numBigliettiSelezionato')
     else:
         cards = diz['cards']
         check = False
@@ -327,9 +337,8 @@ def resoconto(username, compagnia, idVolo):
 
 
 
-@app.route("/<string:username>/<string:idVolo>/pagamento", methods=('GET','POST'))
+@app.route("/<string:username>/<string:idVolo>/conferma", methods=('GET','POST'))
 def confermaRiepilogo(username, idVolo):
-    print("[DEBUG SESSIONE (/username/idVolo/pagamento)]: key = " + username + "   value = " + str(session.get(username)))
     
     """
     Arrivato a questo punto, devo avere uno stato differente da None
@@ -348,8 +357,15 @@ def confermaRiepilogo(username, idVolo):
         return redirect("/accedi", 401)    
 
     if request.method == 'POST':
-        cardSelezionata = session.get('cardSelezionata')
-        return render_template("pagamento.html", username = username, card = cardSelezionata)
+        numBigliettiSelezionato = request.form['numPosti']
+        diz = session.get(username)
+        session.pop(username)
+        cardSelezionata = diz["cardSelezionata"]
+        diz['numBigliettiSelezionato'] = numBigliettiSelezionato
+        session[username] = diz
+        prezzo_totale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoTotale)
+        print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
+        return render_template("normale.html", username = username, card = cardSelezionata, numBigliettiSelezionato = numBigliettiSelezionato, prezzo_totale=prezzo_totale)
     
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
@@ -372,7 +388,12 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     """
     diz = session.get(username)
 
-    if(not isinstance(diz, dict) or len(diz.keys())!=2 or diz['username']!=username):
+    """
+    Ho un numero di chiavi pari a due nel momento in cui provengo
+    da booking. Tuttavia, ho un numero di chiavi pari a PAGAMENTO_PERSONALIZZATO_BACK
+    se provengo da pagamento personalizzato.
+    """
+    if(not isinstance(diz, dict) or (len(diz.keys())!=2 and len(diz.keys())!=PAGAMENTO_PERSONALIZZATO_BACK) or diz['username']!=username):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.
@@ -380,35 +401,65 @@ def serviziAggiuntivi(username, compagnia, idVolo):
         session.pop(username)
         return redirect("/accedi", 401)
 
-    cards = diz['cards']
+    """
+    Mi porto l'informazione relativa alla card che è stata selezionata dall'utente.
+    """
+    cardSelezionata = None
+    postiDisponibiliVolo = None
 
-    #Per vedere se l'identificativo del volo selezionato sta tra le possibili scelte dell'utente
-    check = False
-    for card in cards:
-        if card.idVolo == idVolo:
+    if(len(diz.keys()) == PAGAMENTO_PERSONALIZZATO_BACK):
+        print("SONO TORNATO INDIETRO DA PAGAMENTO PERSONALIZZATO!")
+        cardSelezionata = diz['cardSelezionata']
+        postiDisponibiliVolo = cardSelezionata.posti.posti
+        diz.pop('bagaglioSpecialePrezzo')
+        diz.pop('bagaglioStivaMedioPrezzo')
+        diz.pop('bagaglioStivaGrandePrezzo')
+        diz.pop('assicurazioneBagagliPrezzo')
+        diz.pop('animaleDomesticoPrezzo')
+        diz.pop('neonatoPrezzo')
+        diz.pop('bagaglioSpeciale')
+        diz.pop('bagaglioStivaMedio')
+        diz.pop('bagaglioStivaGrande')
+        diz.pop('assicurazioneBagagli')
+        diz.pop('animaleDomestico')
+        diz.pop('neonato')
+        diz.pop('postiSelezionati')
+    else:
+        cards = diz['cards']
+        check = False
+        for card in cards:
+            if card.idVolo == idVolo:
+                """
+                Mi registro il fatto che l'identificativo passato nella URL effettivamente
+                corrisponde ad uno dei voli esistenti nello stato della sessione
+                """
+                check = True
+                cardSelezionata = card
+                postiDisponibiliVolo = card.posti.posti
+                """
+                partenza = card.partenza
+                arrivo = card.arrivo
+                compagnia = card.compagnia
+                orario = card.orario
+                data = card.data
+                prezzoTotale = card.prezzoTotale
+                numPosti = card.numPosti
+                """
+
+        if(not check):
             """
-            Mi registro il fatto che l'identificativo passato nella URL effettivamente
-            corrisponde ad uno dei voli esistenti nello stato della sessione
+            Nella URL è stato inserito l'identificativo di un volo insesistente,
+            magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
+            Faccio la pop per eliminare lo stato della sessione poiché vengo
+            reindirizzato all'accesso in cui non ho alcuno stato della sessione.
             """
-            check = True
-            postiDisponibiliVolo = card.posti.posti
+            print("ERRORE 2")
+            session.pop(username)
+            return redirect("/accedi", 401)
 
-    if(not check):
-        """
-        Nella URL è stato inserito l'identificativo di un volo insesistente,
-        magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
-        Faccio la pop per eliminare lo stato della sessione poiché vengo
-        reindirizzato all'accesso in cui non ho alcuno stato della sessione
-        """
-        session.pop(username)
-        return redirect("/accedi", 401)
-
-    #Mi porto appresso anche le informazioni relative al volo che è stato selezionato dall'utente
+    #Mi porto appresso anche le informazioni relative al volo e alla card che sono stati selezionati dall'utente
     diz['idVolo'] = idVolo
-    session.pop(username)
-    session[username] = diz
-
-    #TODO metti un controllo su quanti sono i posti disponibili
+    diz['cardSelezionata'] = cardSelezionata
 
     #Ottengo il costo dei posti della compagnia aerea in questione
     seatsFlight = sendIdCompanySeatsPrice(compagnia)
@@ -427,8 +478,125 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     print("animaleDomestico: " + str(additionalServices.animaleDomestico))
     print("neonato: " + str(additionalServices.neonato))
 
+    diz['bagaglioSpecialePrezzo'] = additionalServices.bagaglioSpeciale
+    diz['bagaglioStivaMedioPrezzo'] = additionalServices.bagaglioStivaMedio
+    diz['bagaglioStivaGrandePrezzo'] = additionalServices.bagaglioStivaGrande
+    diz['assicurazioneBagagliPrezzo'] = additionalServices.assicurazioneBagagli
+    diz['animaleDomesticoPrezzo'] = additionalServices.animaleDomestico
+    diz['neonatoPrezzo'] = additionalServices.neonato
+    
+    session.pop(username)
+    session[username] = diz
+
     print("[DEBUG SESSION (/username/idVolo/servuzuAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
-    return render_template("serviziAggiuntivi.html", username = username, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
+    return render_template("serviziAggiuntivi.html", username = username, card=cardSelezionata, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
+
+
+@app.route("/<string:username>/pagamento", methods=('GET','POST'))
+def pagamentoNormale(username):
+
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None.
+    """
+    if session.get(username) is None:
+        return redirect("/accedi", 401)
+
+    """
+    Non solo devo controllare se esiste la sessione relativa a
+    tale utente, ma devo anche verificare se il dizionario è
+    configurato correttamente per la sessione corrente.
+    """
+    diz = session.get(username)
+
+    """
+    A questo punto del flusso di esecuzione ci posso arrivare
+    SOLAMENTE da normale.html.
+    """
+    if(not isinstance(diz, dict) or len(diz.keys())!= 5):
+        session.pop(username)
+        return redirect("/accedi",401)
+
+    return render_template("Menu.html")
+
+@app.route("/<string:username>/personalizzato", methods=('GET','POST'))
+def pagamentoPersonalizzato(username):
+
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None.
+    """
+    if session.get(username) is None:
+        return redirect("/accedi", 401)
+
+    """
+    Non solo devo controllare se esiste la sessione relativa a
+    tale utente, ma devo anche verificare se il dizionario è
+    configurato correttamente per la sessione corrente.
+    """
+    diz = session.get(username)
+
+    """
+    A questo punto del flusso di esecuzione ci posso arrivare
+    SOLAMENTE da personalizzato.html.
+    """
+    if(not isinstance(diz, dict) or len(diz.keys())!= 17):
+        session.pop(username)
+        return redirect("/accedi",401)
+
+    return render_template("Menu.html")
+
+
+@app.route("/<string:username>/<string:idVolo>/personalizzato", methods=('GET','POST'))
+def personalizzato(username, idVolo):
+    
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None
+    """
+    if session.get(username) is None:
+        return redirect("/accedi", 401)
+
+    diz = session.get(username)
+
+    if(not isinstance(diz, dict) or len(diz.keys())!=10 or diz['username']!=username or diz['idVolo']!=idVolo):
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione
+        """
+        session.pop(username)
+        return redirect("/accedi", 401)
+
+    if request.method == 'POST':
+        postiSelezionati = request.form.getlist('postiSelezionati')
+        bagaglioSpeciale = request.form['Bagaglio speciale']
+        bagaglioStivaMedio = request.form['Bagaglio stiva medio']
+        bagaglioStivaGrande = request.form['Bagaglio stiva grande']
+        assicurazioneBagagli = request.form['assicurazioneBagagli']
+        animaleDomestico = request.form['Animale domestico']
+        neonato = request.form['Neonato']
+
+        print(postiSelezionati)
+
+        diz = session.get(username)
+        session.pop(username)
+
+        diz['postiSelezionati'] = postiSelezionati
+        diz['bagaglioSpeciale'] = bagaglioSpeciale
+        diz['bagaglioStivaMedio'] = bagaglioStivaMedio
+        diz['bagaglioStivaGrande'] = bagaglioStivaGrande
+        diz['assicurazioneBagagli'] = assicurazioneBagagli
+        diz['animaleDomestico'] = animaleDomestico
+        diz['neonato'] = neonato
+
+        session[username] = diz
+
+        prezzo_totale = int(diz['bagaglioSpecialePrezzo'])*int(bagaglioSpeciale) + int(diz['bagaglioStivaMedioPrezzo'])*int(bagaglioStivaMedio) + int(diz['bagaglioStivaGrandePrezzo'])*int(bagaglioStivaGrande) + int(diz['assicurazioneBagagliPrezzo'])*int(assicurazioneBagagli) + int(diz['animaleDomesticoPrezzo'])*int(animaleDomestico) + int(diz['neonatoPrezzo'])*int(neonato)
+
+        print("[DEBUG SESSIONE (/username/idVolo/personalizzato)]: key = " + username + "   value = " + str(session.get(username)))
+        
+        return render_template("personalizzato.html", prezzoTotale = prezzo_totale, username = username, card = diz['cardSelezionata'])
+
+    #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
+    return redirect("/accedi", 302)
+
 
 
 

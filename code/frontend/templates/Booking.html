@@ -42,7 +42,7 @@
         <div class="card-body">
           <h5 class="card-title">Orario del volo: {{ card.orario }}</h5>
           <p class="card-text">{{ card.data }}.</p>
-          <p class="card-text">PREZZO TOTALE DA PAGARE: € {{ card.prezzoTotale }}</p>
+          <p class="card-text">PREZZO PER POSTO: € {{ card.prezzoTotale }}</p>
           <p class="card-text">NUMERO DI POSTI ATTUALMENTE DISPONIBILI: {{ card.numPosti }}</p>
           <div style="display:flex;">
             <a href="/{{ username }}/{{ card.compagnia }}/{{ card.idVolo }}/resoconto" class="btn btn-primary" style="margin-right:100px;">PRENOTA</a>

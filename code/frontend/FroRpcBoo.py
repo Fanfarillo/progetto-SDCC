@@ -30,7 +30,9 @@ class Card:
         self.data = data
         # Prezzo totale
         self.prezzoTotale = prezzoTotale
+        # Lista dei posti disponibili
         self.posti = posti
+        # Numero dei posti disponibili
         self.numPosti = numPosti
 
 

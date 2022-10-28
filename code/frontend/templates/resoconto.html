@@ -75,18 +75,28 @@
 
       <h1 class="display-6" style="color: #646464;">Selezionare il numero di biglietti da acquistare.</h1>
 
-      <form action="/{{ username }}/{{ card.idVolo }}/pagamento" method="POST">
+      <form action="/{{ username }}/{{ card.idVolo }}/conferma" method="POST">
         <div class="dropdown my-5">
-          <select name="numPosti" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
+          <select name="numPosti" id="numPosti" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
             <option disabled selected>Numbero di biglietti</option>
             {% for i in range(1,card.numPosti + 1) %}
-            <option value="{{ i }}">{{ i }}</option>
+              {% if i == 1 %}
+                <option value="{{ i }}" selected>{{ i }}</option>
+              {% else %}
+                <option value="{{ i }}">{{ i }}</option>
+              {% endif %}              
             {% endfor %}
           </select>
         </div>
-        <button type="submit" class="btn btn-primary my-3">Conferma</button>
+        <button type="submit" onclick="myFunction()" class="btn btn-primary my-3">Conferma</button>
       </form>
     </div>
+
+    <script>
+      function myFunction() {
+        document.getElementById("numPosti").defaultValue = "0";
+      }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 
