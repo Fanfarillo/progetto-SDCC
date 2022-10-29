@@ -8,12 +8,25 @@ service UsersInfo {
 }
 
 message SignUpInfo {
-    string email = 1;
-    string username = 2;
-    string password = 3;
-    string passwordConfirm = 4;
-    string userType = 5;
-    string airline = 6;
+    bytes email = 1;
+    bytes username = 2;
+    bytes password = 3;
+    bytes passwordConfirm = 4;
+    bytes userType = 5;
+    bytes airline = 6;
+    bytes cartaDiCredito = 7;
+    bytes iv = 8;
+    digestSignUpInfo dig = 9;
+}
+
+message digestSignUpInfo {
+    bytes email = 1;
+    bytes username = 2;
+    bytes password = 3;
+    bytes passwordConfirm = 4;
+    bytes userType = 5;
+    bytes airline = 6;
+    bytes cartaDiCredito = 7;
 }
 
 message SignUpResponse {

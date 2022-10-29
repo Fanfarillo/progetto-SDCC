@@ -33,33 +33,44 @@ def menu():
 
 """
 Gestione dell'iscrizione degli utenti.
-Un utente può essere un Turista o meno.
 """
 @app.route("/iscriviti", methods=('GET','POST'))
 def iscrizione():
     
     if request.method == 'POST':
-        #Ottengo i dati inseriti dall'utente
+        """
+        Estraggo i dati inseriti dall'utente per
+        avviare la procedura di iscrizione.
+        """
         username = request.form['inputUsername']
         password = request.form['inputPassword']
         passwordConfirm = request.form['inputPasswordConfirm']
         email = request.form['inputEmail']
         userType = request.form['flexRadioDefault']
+        cartaDiCredito = request.form['inputCarta']
+
         #app.logger.info("Richiesta procedura di iscrizione: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
+        
         """
         Verifico se l'utente che si sta iscrivendo è un
         turista o meno. Se non è un turista, allora sono
-        interessato anche alla compagnia aerea.
+        interessato alla compagnia aerea.
         """
         if userType!="Turista":
             airline = request.form['airlineDropdown']
         else:
             """
-            Non ho alcun interesse per la compagnia aerea
+            Non ho alcun interesse per la compagnia aerea.
             """
             airline = None
 
-        isOk = sendSignUpInfo(email, username, password, passwordConfirm, userType, airline)
+        """
+        Interazione con il microservizio che gestisce
+        le iscrizioni per l'applicazione passandogli
+        tutte le informazioni necessarie per completare
+        l'iscrizione dell'utente.
+        """
+        isOk = sendSignUpInfo(email, username, password, passwordConfirm, userType, airline, cartaDiCredito)
 
         if isOk and userType == "Turista":
             #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
@@ -70,7 +81,6 @@ def iscrizione():
         else:
             return render_template("Iscrizione.html")
 
-    #app.logger.warning("Richiesta GET per la procedura di iscrizione...")
     return render_template("Iscrizione.html")
 
 

@@ -30,7 +30,7 @@ class Security:
 
 
 
-    def encryptData(self, plaintext):
+    def encryptData(self, plaintext, iv_param):
 
         """
         Eseguo un check per verificare il
@@ -46,23 +46,24 @@ class Security:
         Nel caso in cui la dimensione non fosse un
         multiplo intero di BLOCK_SIZE, vengono
         aggiunti dei bytes di padding.
-        """
-        
+        """        
         length = len(plaintext)
-
         if length % 16 != 0:
-            #print("IF")
             """
             Suddivido il messaggio in blocchi di
             sottomessaggi composti da BLOCK_SIZE
             bytes.
             """
-            padding_plaintext = pad(plaintext, AES.block_size)
+            padding_plaintext = pad(plaintext, AES.block_size, style='pkcs7')
         else:
             padding_plaintext = plaintext
-        print(padding_plaintext)
 
-        cipher = AES.new(self.confidkey, AES.MODE_CBC)
+        if iv_param is None:
+            cipher = AES.new(self.confidkey, AES.MODE_CBC, bytes([0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]))
+            
+        else:
+            cipher = AES.new(self.confidkey, AES.MODE_CBC, iv_param)
+
         iv = cipher.iv
         ciphertext = cipher.encrypt(padding_plaintext)
 
@@ -74,7 +75,7 @@ class Security:
         try:            
             cipher = AES.new(self.confidkey, AES.MODE_CBC, iv)
             plaintext = cipher.decrypt(ciphertext)
-            padd_plaintext = unpad(plaintext,AES.block_size)
+            padd_plaintext = unpad(plaintext,AES.block_size, style='pkcs7')
         except ValueError:
             return plaintext
         except Exception:
@@ -107,6 +108,7 @@ class Security:
         return digest
 
 
+"""
 logging.basicConfig(filename="log1.txt", level=logging.DEBUG, format="%(asctime)s %(message)s")
 logging.debug("Debug logging test...")
 m = hashlib.sha256()
@@ -130,7 +132,7 @@ for line in sys.stdin:
     plaintext = cipher.decryptData(ciphertext, iv)
     print("[ DECIFRATO ]: " + str(plaintext))
 
-"""  
+
 cipher = MyCipher(b"mysecretpassword")
 ciphertext, iv = cipher.encryptData(b"Ciao a tutti ragazzi, come state? Sto cercando di trovare un nuovo ristorante... che mi consigliate?")
 print(ciphertext)

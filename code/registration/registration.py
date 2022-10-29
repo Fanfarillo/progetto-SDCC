@@ -1,7 +1,10 @@
 import grpc
 import time
 import logging
+import sys
+sys.path.append("..")
 
+from cipher.security import Security
 from concurrent import futures
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
@@ -12,19 +15,74 @@ from RegDB import *
 
 class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
+
+
+
+    """
+    Implementa le procedura di iscrizione.
+    """
     def SignUp(self, SignUpInfo, context):
-        #check if 'password' and 'conferma password' fields were filled with the same password; check also if the email was not used by someone else
-        isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.username)
-        logger.info("Richiesta procedura di iscrizione: [" + SignUpInfo.email + "," + SignUpInfo.username + "," + SignUpInfo.password + "," + SignUpInfo.passwordConfirm + "," + SignUpInfo.userType + "]")
-        #if the two fields correspond, then save user info into remote database (DynamoDB)
+
+        airline = None
+        cipher = Security(b"mysecretpassword")
+        
+        """
+        Ottengo una rappresentazione a stringa
+        dei dati binari per poterla scrivere
+        all'interno del Database. In questo modo
+        evito che i dati siano comprensibili nel
+        caso in cui venissero rubati.
+        """
+        username = str(SignUpInfo.username)
+        password = str(SignUpInfo.password)
+        passwordConfirm = str(SignUpInfo.passwordConfirm)
+        email = str(SignUpInfo.email)
+        userType = str(SignUpInfo.userType)
+        if SignUpInfo.airline is not None:
+            airline = str(SignUpInfo.airline)
+        cartaDiCredito = str(SignUpInfo.cartaDiCredito)
+
+        """
+        Ottengo una rappresentazione a stringa dei dati
+        decifrati.
+        """
+        username_d = (cipher.decryptData(SignUpInfo.username, SignUpInfo.iv)).decode()
+        password_d = (cipher.decryptData(SignUpInfo.password, SignUpInfo.iv)).decode()
+        passwordConfirm_d = (cipher.decryptData(SignUpInfo.passwordConfirm, SignUpInfo.iv)).decode()
+        email_d = (cipher.decryptData(SignUpInfo.email, SignUpInfo.iv)).decode()
+        userType_d = (cipher.decryptData(SignUpInfo.userType, SignUpInfo.iv)).decode()
+        airline_d = (cipher.decryptData(SignUpInfo.airline, SignUpInfo.iv)).decode()
+        cartaDiCredito_d = (cipher.decryptData(SignUpInfo.cartaDiCredito, SignUpInfo.iv)).decode()
+
+        """
+        Verifica se la password e la conferma della password
+        sono lo stesso valore. Inoltre, verifica un utente
+        con lo stesso username è gà iscritto all'applicazione.
+        """
+        isOk = (password == passwordConfirm) and isNewUser(username)
+
+        logger.info("Richiesta procedura di iscrizione: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "," + cartaDiCredito_d + "]")
+        
         if isOk:
-            storeUser(SignUpInfo.email, SignUpInfo.username, SignUpInfo.password, SignUpInfo.userType, SignUpInfo.airline)
-            logger.info("Procedura di iscrizione conclusa con successo: [" + SignUpInfo.email + "," + SignUpInfo.username + "," + SignUpInfo.password + "," + SignUpInfo.passwordConfirm + "," + SignUpInfo.userType + "]")
+            """
+            Poiché le informazioni di iscrizione sono valide
+            e non esiste alcun utente che ha già quello
+            username, allora è possibile completare l'iscrizione.
+            """
+            ret = storeUser(email, username, password, userType_d, airline, cartaDiCredito, userType)
+
+            logger.info("Procedura di iscrizione conclusa con successo: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
         else:
-            logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + SignUpInfo.email + "," + SignUpInfo.username + "," + SignUpInfo.password + "," + SignUpInfo.passwordConfirm + "," + SignUpInfo.userType + "]")
-        output = Registration_pb2.SignUpResponse(isOk=isOk)
+            ret = isOk
+            logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
+        output = Registration_pb2.SignUpResponse(isOk=ret)
         return output
 
+
+
+    """
+
+    """
     def SignIn(self, Credentials, context):
         #read the database (DynamoDB) and check if the log in is successful
         logger.info("Richiesta procedura di accesso: [" + Credentials.username + "," + Credentials.password + "]")
