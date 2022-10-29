@@ -15,6 +15,14 @@ ADDR_PORT = 'localhost:50051'   #server_IP_addr:port_num
 
 
 
+class Output:
+    def __init__(self, storedType, isCorrect):
+        self.isCorrect = isCorrect
+        self.storedType = storedType
+
+
+
+
 """
 Instanzia un canale di comunicazione con il
 microservizio che gestisce le iscrizioni per
@@ -50,14 +58,14 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
     ciphertextPasswordConf, iv = cipher.encryptData(bytes(passwordConfirm, 'utf-8'))
 
     # Email
-    digest = cipher.message_integrity(bytes(email, 'utf-8'))
+    digest = cipher.message_integrity(bytes(email,'utf-8'))
     dig.email = digest
     ciphertextEmail, iv = cipher.encryptData(bytes(email, 'utf-8'))
 
     # Username
     digest = cipher.message_integrity(bytes(username, 'utf-8'))
     dig.username = digest
-    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8'))    
+    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8'))
 
     # Carta di credito
     digest = cipher.message_integrity(bytes(cartaDiCredito, 'utf-8'))
@@ -75,7 +83,7 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
         aerea. Ossia, non sarà un utente di tipo
         Turista.
         """
-        digest = cipher.message_integrity(bytes(airline, 'utf-8'))
+        digest = cipher.message_integrity(bytes(airline, 'utf-16'))
         dig.airline = digest
         ciphertextAirline, iv = cipher.encryptData(bytes(airline, 'utf-8'))
     else:
@@ -85,7 +93,13 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
     Invio della richiesta di iscrizione dell'utente.
     Il valore di output sarà TRUE se è andata a buon
     fine; altrimenti, sarà FALSE.
+
+    I parametri di input sono dati cifrati. Poiché
+    queste informazioni sono sensibili, esse viaggiano
+    cifrate tra i microservizi. Inoltre, abbiamo anche
+    i vari digest per controllare l'integrità dei messaggi.
     """
+
     output = stub.SignUp(Registration_pb2.SignUpInfo(email=ciphertextEmail, username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, dig = dig))
 
     return output.isOk
@@ -107,6 +121,16 @@ def sendCredentials(username, password):
 
     dig = Registration_pb2.digestCredentials()
 
+    """
+    Implemento meccanismi di sicurezza:
+    - Integrità del messaggio
+    - Cifratura
+    
+    1. Calcolo del digest del messaggio utilizando SHA-256
+    2. Cifratura dei dati utilizzando AES-128
+    """
+    cipher = Security(b"mysecretpassword")
+
     # Username
     digest = cipher.message_integrity(bytes(username, 'utf-8'))
     dig.username = digest
@@ -117,6 +141,11 @@ def sendCredentials(username, password):
     dig.password = digest
     ciphertextPassword, iv = cipher.encryptData(bytes(password, 'utf-8'))
     
-    output = stub.SignIn(Registration_pb2.Credentials(username=username, password=password, dig=dig))
+    output = stub.SignIn(Registration_pb2.Credentials(username=ciphertextUsername, password=ciphertextPassword, dig=dig))
 
-    return output
+
+    storedTypeString = cipher.decryptData(output.storedType).decode()
+
+    out = Output(storedTypeString, output.isCorrect)
+    
+    return out

@@ -54,7 +54,9 @@ class Security:
             sottomessaggi composti da BLOCK_SIZE
             bytes.
             """
+            print(str(plaintext))
             padding_plaintext = pad(plaintext, AES.block_size, style='pkcs7')
+            print(len(padding_plaintext))
         else:
             padding_plaintext = plaintext
 
@@ -102,37 +104,3 @@ class Security:
         digest = m.digest()
 
         return digest
-
-
-"""
-logging.basicConfig(filename="log1.txt", level=logging.DEBUG, format="%(asctime)s %(message)s")
-logging.debug("Debug logging test...")
-m = hashlib.sha256()
-m.update(b"cias")
-print(m.digest())
-for line in sys.stdin:
-    #print(type(line))
-    cipher = Security(b"mysecretpassword")
-    if 'quit\n' == line:
-        break
-    logging.info("Stringa inserita dall'utente: " + line)
-    digest = cipher.message_integrity(bytes(line, 'utf-8'))
-    print("[ DIGEST ]: " + str(digest))
-    logging.debug("Digest: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    logging.critical("Lunghezza del digest: " + str(len(digest)))
-    ciphertext, iv = cipher.encryptData(bytes(line, 'utf-8'))
-    logging.debug("Cifrato: " + str(ciphertext))
-    print("[ CIFRATO ]: " + str(ciphertext))
-    newCipher = Security(b"mysecretpassword")
-    plaintext = cipher.decryptData(ciphertext, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
-
-
-cipher = MyCipher(b"mysecretpassword")
-ciphertext, iv = cipher.encryptData(b"Ciao a tutti ragazzi, come state? Sto cercando di trovare un nuovo ristorante... che mi consigliate?")
-print(ciphertext)
-newCipher = MyCipher(b"mysecretpassword")
-plaintext = cipher.decryptData(ciphertext, iv)
-print(plaintext)
-"""

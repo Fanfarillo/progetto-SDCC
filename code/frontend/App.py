@@ -16,13 +16,12 @@ PAGAMENTO_BACK = 5
 Stato del dizionario personalizzato quando ritorno dal pagamento
 """
 PAGAMENTO_PERSONALIZZATO_BACK = 17
-
 NUM_SEATS = 156
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-#logging.basicConfig(filename="application_server.log", format=f'%(asctime)s %(message)s')
+#logging.basicConfig(filename="application_server.log", level=logging.DEBUG, format=f'%(asctime)s %(message)s')
 
 
 
@@ -32,7 +31,7 @@ Pagina Root
 """
 @app.route("/")
 def menu():
-    #app.logger.info("Rchiesta pagina root...")
+    app.logger.info("Rchiesta pagina root...")
     return render_template("Menu.html")
 
 
@@ -121,7 +120,8 @@ def accesso():
         Verifico le credenziali inserite dall'utente.
         Il campo isCorrect vale TRUE nel momento in
         cui il login ha avuto successo; altrimenri, vale
-        FALSE.
+        FALSE. Il campo storedType contiene il valore
+        'Turista' oppure una specifica compagnia aerea.
         """
         response = sendCredentials(username, password)
 

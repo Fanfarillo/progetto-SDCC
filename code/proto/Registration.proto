@@ -33,8 +33,8 @@ message SignUpResponse {
 }
 
 message Credentials {
-    string username = 1;
-    string password = 2;
+    bytes username = 1;
+    bytes password = 2;
     digestCredentials dig = 3;
 }
 
@@ -44,6 +44,6 @@ message digestCredentials {
 }
 
 message SignInResponse {
-    string storedType = 1;
+    bytes storedType = 1;
     bool isCorrect = 2;
 }

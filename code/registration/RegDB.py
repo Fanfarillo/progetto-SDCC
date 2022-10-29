@@ -1,4 +1,5 @@
 import boto3
+from boto3.dynamodb.types import Binary
 import sys
 sys.path.append("..")
 
@@ -12,11 +13,12 @@ TABELLA_UTENTE = 'Utente'
 
 
 
+
 class LoggedUser:
     def __init__(self, username, storedType, isCorrect):
-        # Username dell'utente
+        # Username dell'utente (cifrato)
         self.username = username
-        # Tipologia dell'utente
+        # Tipologia dell'utente (cifrato)
         self.storedType = storedType
         # Esito del processo di iscrizione
         self.isCorrect = isCorrect
@@ -35,6 +37,7 @@ def storeUser(email, username, password, userType_d, airline, cartaDiCredito, us
         Il check viene fatto sul valore decodficato
         mentre la scrittura nel DB è codificata.
         """
+        print("SONO UN TURISTA")
         typeToStore = userType
     else:
         """
@@ -42,6 +45,7 @@ def storeUser(email, username, password, userType_d, airline, cartaDiCredito, us
         non è un Turista, allora il suo tipo
         corrisponde alla compagnia aerea.
         """
+        print("SONO UNA COMPAGNIA")
         typeToStore = airline
     
     try:
@@ -49,11 +53,11 @@ def storeUser(email, username, password, userType_d, airline, cartaDiCredito, us
         table = dynamodb.Table(TABELLA_UTENTE)
         table.put_item(
             Item = {
-                'Username': username,
-                'Email': email,
-                'Password': password,
-                'Tipo': typeToStore,
-                'cartaDiCredito': cartaDiCredito
+                'Username': Binary(username),
+                'Email': Binary(email),
+                'Password': Binary(password),
+                'Tipo': Binary(typeToStore),
+                'cartaDiCredito': Binary(cartaDiCredito)
             }
         )
     except Exception:
@@ -109,21 +113,43 @@ def retrieveUser(username, password):
         }
     )
 
-    #if the specified email does not exist, the log in must fail
     if not ('Item' in response):
+        """
+        Se lo username inserito dall'utente non esiste,
+        allora la procedura di Login termina senza successo.
+        """
         user = LoggedUser(None, None, False)
         return user
     
-    #if the specified password is incorrect, the log in must fail
     item = response['Item']
     actualPassword = item['Password']
+
+    """
+    Verifco se la password inserita dall'utente
+    insieme allo username coincide con la password
+    memorizzata nel Database. Viene fatto un confronto
+    tra valori cifrati.
+    """
     if actualPassword != password:
+        """
+        Se la password inserita dall'utente non corrisponde
+        con quella memorizzata all'interno del Database, 
+        allora la procedura di Login termina senza successo.
+        """
         user = LoggedUser(None, None, False)
         return user
 
-    #else the log in is successful
-    usernameField = item['Username']
-    userType = item['Tipo']
-
+    """
+    Le credenziali inserite corrispondono
+    effettivamente ad un utente che in passato
+    si è registrato al sistema. Di ocnseguenza,
+    la procedura di Login termina con successo.
+    """
+    usernameField = item['Username']            # Valore cifrato.
+    userType = item['Tipo']                     # Valore cifrato.
+    print(userType.__eq__(bytes(0)))
+    #print(type(userType))
+    #print(len(userType))
     user = LoggedUser(usernameField, userType, True)
+
     return user
