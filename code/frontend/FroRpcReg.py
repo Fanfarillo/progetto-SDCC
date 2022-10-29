@@ -29,78 +29,55 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
 
     dig = Registration_pb2.digestSignUpInfo()
 
+    """
+    Implemento meccanismi di sicurezza:
+    - Integrità del messaggio
+    - Cifratura
+    
+    1. Calcolo del digest del messaggio utilizando SHA-256
+    2. Cifratura dei dati utilizzando AES-128
+    """
     cipher = Security(b"mysecretpassword")
 
+    # Password
     digest = cipher.message_integrity(bytes(password, 'utf-8'))
     dig.password = digest
-    print("[ DIGEST ]: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    ciphertextPassword, iv = cipher.encryptData(bytes(password, 'utf-8'), None)
-    print("[ CIFRATO ]: " + str(ciphertextPassword))
-    plaintext = cipher.decryptData(ciphertextPassword, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
+    ciphertextPassword, iv = cipher.encryptData(bytes(password, 'utf-8'))
 
-    iv_dec = iv
-
-
+    # Password conferma
     digest = cipher.message_integrity(bytes(passwordConfirm, 'utf-8'))
     dig.passwordConfirm = digest
-    print("[ DIGEST ]: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    ciphertextPasswordConf, iv = cipher.encryptData(bytes(passwordConfirm, 'utf-8'),iv_dec)
-    print("[ CIFRATO ]: " + str(ciphertextPasswordConf))    
-    plaintext = cipher.decryptData(ciphertextPasswordConf, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
+    ciphertextPasswordConf, iv = cipher.encryptData(bytes(passwordConfirm, 'utf-8'))
 
-
+    # Email
     digest = cipher.message_integrity(bytes(email, 'utf-8'))
     dig.email = digest
-    print("[ DIGEST ]: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    ciphertextEmail, iv = cipher.encryptData(bytes(email, 'utf-8'),iv_dec)
-    print("[ CIFRATO ]: " + str(ciphertextEmail))    
-    plaintext = cipher.decryptData(ciphertextEmail, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
+    ciphertextEmail, iv = cipher.encryptData(bytes(email, 'utf-8'))
 
-
+    # Username
     digest = cipher.message_integrity(bytes(username, 'utf-8'))
     dig.username = digest
-    print("[ DIGEST ]: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8'),iv_dec)
-    print("[ CIFRATO ]: " + str(ciphertextUsername))    
-    plaintext = cipher.decryptData(ciphertextUsername, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
-    
+    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8'))    
 
+    # Carta di credito
     digest = cipher.message_integrity(bytes(cartaDiCredito, 'utf-8'))
     dig.cartaDiCredito = digest
-    print("[ DIGEST ]: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    ciphertextCartaDiCredito, iv = cipher.encryptData(bytes(cartaDiCredito, 'utf-8'),iv_dec)
-    print("[ CIFRATO ]: " + str(ciphertextCartaDiCredito))    
-    plaintext = cipher.decryptData(ciphertextCartaDiCredito, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
+    ciphertextCartaDiCredito, iv = cipher.encryptData(bytes(cartaDiCredito, 'utf-8'))
 
-
+    # Tipologia utente
     digest = cipher.message_integrity(bytes(userType, 'utf-8'))
     dig.userType = digest
-    print("[ DIGEST ]: " + str(digest))
-    print("Lunghezza digest: " + str(len(digest)))
-    ciphertextUserType, iv = cipher.encryptData(bytes(userType, 'utf-8'),iv_dec)
-    print("[ CIFRATO ]: " + str(ciphertextUserType))    
-    plaintext = cipher.decryptData(ciphertextUserType, iv)
-    print("[ DECIFRATO ]: " + str(plaintext))
+    ciphertextUserType, iv = cipher.encryptData(bytes(userType, 'utf-8'))
 
     if airline is not None:
+        """
+        L'utente ha specificato una compagnia
+        aerea. Ossia, non sarà un utente di tipo
+        Turista.
+        """
         digest = cipher.message_integrity(bytes(airline, 'utf-8'))
         dig.airline = digest
-        print("[ DIGEST ]: " + str(digest))
-        print("Lunghezza digest: " + str(len(digest)))
-        ciphertextAirline, iv = cipher.encryptData(bytes(airline, 'utf-8'),iv_dec)
-        print("[ CIFRATO ]: " + str(ciphertextAirline))    
-        plaintext = cipher.decryptData(ciphertextAirline, iv)
-        print("[ DECIFRATO ]: " + str(plaintext))
+        ciphertextAirline, iv = cipher.encryptData(bytes(airline, 'utf-8'))
     else:
         ciphertextAirline = None
 
@@ -109,18 +86,37 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
     Il valore di output sarà TRUE se è andata a buon
     fine; altrimenti, sarà FALSE.
     """
-    output = stub.SignUp(Registration_pb2.SignUpInfo(email=ciphertextEmail, username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, iv=iv_dec, dig = dig))
+    output = stub.SignUp(Registration_pb2.SignUpInfo(email=ciphertextEmail, username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, dig = dig))
 
     return output.isOk
 
-def sendCredentials(username, password):
-    #open gRPC channel
-    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
-    #create client stub
+
+
+"""
+Instanzia un canale di comunicazione con il
+microservizio che gestisce il login per
+l'applicazione. Viene passato in input un
+messaggio contenente tutte le informazioni
+necessarie per effettuare il login.
+"""
+def sendCredentials(username, password):
+
+    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
-    #get response from Registration service
-    output = stub.SignIn(Registration_pb2.Credentials(username=username, password=password))
-    #here we need to return the entire output (i.e. the entire received message)
+    dig = Registration_pb2.digestCredentials()
+
+    # Username
+    digest = cipher.message_integrity(bytes(username, 'utf-8'))
+    dig.username = digest
+    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8')) 
+
+    # Password
+    digest = cipher.message_integrity(bytes(password, 'utf-8'))
+    dig.password = digest
+    ciphertextPassword, iv = cipher.encryptData(bytes(password, 'utf-8'))
+    
+    output = stub.SignIn(Registration_pb2.Credentials(username=username, password=password, dig=dig))
+
     return output

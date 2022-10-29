@@ -8,9 +8,15 @@ from FroUtils import *
 from flask_session import Session
 
 
-
+"""
+Stato del dizionario quando ritorno dal pagamento
+"""
 PAGAMENTO_BACK = 5
+"""
+Stato del dizionario personalizzato quando ritorno dal pagamento
+"""
 PAGAMENTO_PERSONALIZZATO_BACK = 17
+
 NUM_SEATS = 156
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -42,11 +48,17 @@ def iscrizione():
         Estraggo i dati inseriti dall'utente per
         avviare la procedura di iscrizione.
         """
+        # Username
         username = request.form['inputUsername']
+        # Password
         password = request.form['inputPassword']
+        # Conferma password
         passwordConfirm = request.form['inputPasswordConfirm']
+        # Email
         email = request.form['inputEmail']
+        # Tipologia utente
         userType = request.form['flexRadioDefault']
+        # Carta di credito
         cartaDiCredito = request.form['inputCarta']
 
         #app.logger.info("Richiesta procedura di iscrizione: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
@@ -57,6 +69,10 @@ def iscrizione():
         interessato alla compagnia aerea.
         """
         if userType!="Turista":
+            """
+            Estraggo l'informazine relativa alla
+            compagnia aerea inserita.
+            """
             airline = request.form['airlineDropdown']
         else:
             """
@@ -92,12 +108,21 @@ all'applicazione.
 """
 @app.route("/accedi", methods=('GET','POST'))
 def accesso():
+
     if request.method == 'POST':
-        #Acquisisco i dati inseriti dall'utente
+        # Username
         username = request.form['inputUsername']
+        # Password
         password = request.form['inputPassword']
+
         #app.logger.info("Richiesta procedura di accesso: [" + username + ","+ password + "]")
-        #Verifico le credenziali inserite dall'utente
+
+        """
+        Verifico le credenziali inserite dall'utente.
+        Il campo isCorrect vale TRUE nel momento in
+        cui il login ha avuto successo; altrimenri, vale
+        FALSE.
+        """
         response = sendCredentials(username, password)
 
         #Se le credenziali sono corrette allora si va avanti

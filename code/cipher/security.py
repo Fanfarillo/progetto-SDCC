@@ -30,7 +30,7 @@ class Security:
 
 
 
-    def encryptData(self, plaintext, iv_param):
+    def encryptData(self, plaintext):
 
         """
         Eseguo un check per verificare il
@@ -58,11 +58,7 @@ class Security:
         else:
             padding_plaintext = plaintext
 
-        if iv_param is None:
-            cipher = AES.new(self.confidkey, AES.MODE_CBC, bytes([0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]))
-            
-        else:
-            cipher = AES.new(self.confidkey, AES.MODE_CBC, iv_param)
+        cipher = AES.new(self.confidkey, AES.MODE_CBC, bytes([0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]))
 
         iv = cipher.iv
         ciphertext = cipher.encrypt(padding_plaintext)
@@ -71,9 +67,9 @@ class Security:
     
 
 
-    def decryptData(self, ciphertext, iv):
+    def decryptData(self, ciphertext):
         try:            
-            cipher = AES.new(self.confidkey, AES.MODE_CBC, iv)
+            cipher = AES.new(self.confidkey, AES.MODE_CBC, bytes([0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]))
             plaintext = cipher.decrypt(ciphertext)
             padd_plaintext = unpad(plaintext,AES.block_size, style='pkcs7')
         except ValueError:

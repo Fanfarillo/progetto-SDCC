@@ -15,8 +15,7 @@ message SignUpInfo {
     bytes userType = 5;
     bytes airline = 6;
     bytes cartaDiCredito = 7;
-    bytes iv = 8;
-    digestSignUpInfo dig = 9;
+    digestSignUpInfo dig = 8;
 }
 
 message digestSignUpInfo {
@@ -36,6 +35,12 @@ message SignUpResponse {
 message Credentials {
     string username = 1;
     string password = 2;
+    digestCredentials dig = 3;
+}
+
+message digestCredentials {
+    bytes username = 1;
+    bytes password = 2;
 }
 
 message SignInResponse {

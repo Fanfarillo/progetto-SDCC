@@ -29,7 +29,7 @@ Registra il nuovo utente con le informazioni passate
 come parametri.
 """
 def storeUser(email, username, password, userType_d, airline, cartaDiCredito, userType):
-    print(userType)
+
     if userType_d == 'Turista':
         """
         Il check viene fatto sul valore decodficato
@@ -66,16 +66,14 @@ def storeUser(email, username, password, userType_d, airline, cartaDiCredito, us
 #this function returns true if there is no item with the specified email (i.e. the specified primary key); it returns false otherwise
 """
 Verifica se esiste già un utente iscritto nel
-sistema che ha lo username inserito per il
-processo di iscrizione.
+sistema che ha lo username inserito come parametro
+per il processo di iscrizione.
 
 Ritorna TRUE se non c'è già alcun utente
-che ha lo username richiest; altrimenti,
+che ha lo username richiesto; altrimenti,
 ritorna FALSE.
 """
 def isNewUser(username):
-    cipher = Security(b"mysecretpassword")
-    print("VALORE DA CONFRONTARE: " + username)
     try:
         dynamodb = boto3.resource(DYNAMODB)
         table = dynamodb.Table(TABELLA_UTENTE)
@@ -96,7 +94,9 @@ def isNewUser(username):
 
 
 """
-
+Verifica se esiste nel sistema un
+utente che corrisponde alle credenziali
+inserite.
 """
 def retrieveUser(username, password):
     dynamodb = boto3.resource(DYNAMODB)

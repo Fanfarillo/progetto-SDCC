@@ -23,40 +23,45 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
     """
     def SignUp(self, SignUpInfo, context):
 
-        airline = None
+        
         cipher = Security(b"mysecretpassword")
         
         """
         Ottengo una rappresentazione a stringa
         dei dati binari per poterla scrivere
-        all'interno del Database. In questo modo
-        evito che i dati siano comprensibili nel
-        caso in cui venissero rubati.
+        all'interno del Database. In questo modo,
+        fornisco una maggiore sicurezza per i dati.
         """
         username = str(SignUpInfo.username)
         password = str(SignUpInfo.password)
         passwordConfirm = str(SignUpInfo.passwordConfirm)
         email = str(SignUpInfo.email)
         userType = str(SignUpInfo.userType)
-        if SignUpInfo.airline is not None:
-            airline = str(SignUpInfo.airline)
         cartaDiCredito = str(SignUpInfo.cartaDiCredito)
+
+        airline = None
+        if SignUpInfo.airline is not None:
+            airline = str(SignUpInfo.airline)        
 
         """
         Ottengo una rappresentazione a stringa dei dati
         decifrati.
         """
-        username_d = (cipher.decryptData(SignUpInfo.username, SignUpInfo.iv)).decode()
-        password_d = (cipher.decryptData(SignUpInfo.password, SignUpInfo.iv)).decode()
-        passwordConfirm_d = (cipher.decryptData(SignUpInfo.passwordConfirm, SignUpInfo.iv)).decode()
-        email_d = (cipher.decryptData(SignUpInfo.email, SignUpInfo.iv)).decode()
-        userType_d = (cipher.decryptData(SignUpInfo.userType, SignUpInfo.iv)).decode()
-        airline_d = (cipher.decryptData(SignUpInfo.airline, SignUpInfo.iv)).decode()
-        cartaDiCredito_d = (cipher.decryptData(SignUpInfo.cartaDiCredito, SignUpInfo.iv)).decode()
+        username_d = (cipher.decryptData(SignUpInfo.username)).decode()
+        password_d = (cipher.decryptData(SignUpInfo.password)).decode()
+        passwordConfirm_d = (cipher.decryptData(SignUpInfo.passwordConfirm)).decode()
+        email_d = (cipher.decryptData(SignUpInfo.email)).decode()
+        userType_d = (cipher.decryptData(SignUpInfo.userType)).decode()
+        cartaDiCredito_d = (cipher.decryptData(SignUpInfo.cartaDiCredito)).decode()
+
+        if airline is not None:
+            airline_d = (cipher.decryptData(SignUpInfo.airline)).decode()
+        else:
+            airline_d = 'Non abbiamo nessuna compagnia aerea'
 
         """
         Verifica se la password e la conferma della password
-        sono lo stesso valore. Inoltre, verifica un utente
+        sono lo stesso valore. Inoltre, verifica se un utente
         con lo stesso username è gà iscritto all'applicazione.
         """
         isOk = (password == passwordConfirm) and isNewUser(username)
@@ -80,18 +85,43 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
 
 
-    """
 
     """
+    Implementa la procedura di Login.
+    """
     def SignIn(self, Credentials, context):
-        #read the database (DynamoDB) and check if the log in is successful
-        logger.info("Richiesta procedura di accesso: [" + Credentials.username + "," + Credentials.password + "]")
-        user = retrieveUser(Credentials.username, Credentials.password)
+        """
+        Ottengo una rappresentazione a stringa
+        dei dati binari per poterla confrontare
+        con i dati all'interno del Database. I dati
+        all'interno del database sono cifrati.
+        """
+        username = str(Credentials.username)
+        password = str(Credentials.password)
+
+        """
+        Ottengo una rappresentazione a stringa dei dati
+        decifrati.
+        """
+        username_d = (cipher.decryptData(Credentials.username)).decode()
+        password_d = (cipher.decryptData(Credentials.password)).decode()
+
+        logger.info("Richiesta procedura di accesso: [" + username_d + "," + password_d + "]")
+
+        """
+        Verifico se l'utente che sta tentando di eseguire
+        il Login effettivamente è presente all'interno del
+        sistema.
+        """
+        user = retrieveUser(username, password)
+
         if user.isCorrect:
             logger.info("Procedura di accesso conclusa con successo: [" + Credentials.username + "," + Credentials.password + "]")
         else:
             logger_warnings.warning("Procedura di accesso conclusa senza successo: [" + Credentials.username + "," + Credentials.password + "]")
+
         output = Registration_pb2.SignInResponse(storedType=user.storedType, isCorrect=user.isCorrect)
+        
         return output
 
 

@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18proto/Registration.proto\x12\x05proto\"\xc5\x01\n\nSignUpInfo\x12\r\n\x05\x65mail\x18\x01 \x01(\x0c\x12\x10\n\x08username\x18\x02 \x01(\x0c\x12\x10\n\x08password\x18\x03 \x01(\x0c\x12\x17\n\x0fpasswordConfirm\x18\x04 \x01(\x0c\x12\x10\n\x08userType\x18\x05 \x01(\x0c\x12\x0f\n\x07\x61irline\x18\x06 \x01(\x0c\x12\x16\n\x0e\x63\x61rtaDiCredito\x18\x07 \x01(\x0c\x12\n\n\x02iv\x18\x08 \x01(\x0c\x12$\n\x03\x64ig\x18\t \x01(\x0b\x32\x17.proto.digestSignUpInfo\"\x99\x01\n\x10\x64igestSignUpInfo\x12\r\n\x05\x65mail\x18\x01 \x01(\x0c\x12\x10\n\x08username\x18\x02 \x01(\x0c\x12\x10\n\x08password\x18\x03 \x01(\x0c\x12\x17\n\x0fpasswordConfirm\x18\x04 \x01(\x0c\x12\x10\n\x08userType\x18\x05 \x01(\x0c\x12\x0f\n\x07\x61irline\x18\x06 \x01(\x0c\x12\x16\n\x0e\x63\x61rtaDiCredito\x18\x07 \x01(\x0c\"\x1e\n\x0eSignUpResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"1\n\x0b\x43redentials\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"7\n\x0eSignInResponse\x12\x12\n\nstoredType\x18\x01 \x01(\t\x12\x11\n\tisCorrect\x18\x02 \x01(\x08\x32t\n\tUsersInfo\x12\x32\n\x06SignUp\x12\x11.proto.SignUpInfo\x1a\x15.proto.SignUpResponse\x12\x33\n\x06SignIn\x12\x12.proto.Credentials\x1a\x15.proto.SignInResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18proto/Registration.proto\x12\x05proto\"\xb9\x01\n\nSignUpInfo\x12\r\n\x05\x65mail\x18\x01 \x01(\x0c\x12\x10\n\x08username\x18\x02 \x01(\x0c\x12\x10\n\x08password\x18\x03 \x01(\x0c\x12\x17\n\x0fpasswordConfirm\x18\x04 \x01(\x0c\x12\x10\n\x08userType\x18\x05 \x01(\x0c\x12\x0f\n\x07\x61irline\x18\x06 \x01(\x0c\x12\x16\n\x0e\x63\x61rtaDiCredito\x18\x07 \x01(\x0c\x12$\n\x03\x64ig\x18\x08 \x01(\x0b\x32\x17.proto.digestSignUpInfo\"\x99\x01\n\x10\x64igestSignUpInfo\x12\r\n\x05\x65mail\x18\x01 \x01(\x0c\x12\x10\n\x08username\x18\x02 \x01(\x0c\x12\x10\n\x08password\x18\x03 \x01(\x0c\x12\x17\n\x0fpasswordConfirm\x18\x04 \x01(\x0c\x12\x10\n\x08userType\x18\x05 \x01(\x0c\x12\x0f\n\x07\x61irline\x18\x06 \x01(\x0c\x12\x16\n\x0e\x63\x61rtaDiCredito\x18\x07 \x01(\x0c\"\x1e\n\x0eSignUpResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\"1\n\x0b\x43redentials\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"7\n\x0eSignInResponse\x12\x12\n\nstoredType\x18\x01 \x01(\t\x12\x11\n\tisCorrect\x18\x02 \x01(\x08\x32t\n\tUsersInfo\x12\x32\n\x06SignUp\x12\x11.proto.SignUpInfo\x1a\x15.proto.SignUpResponse\x12\x33\n\x06SignIn\x12\x12.proto.Credentials\x1a\x15.proto.SignInResponseb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.Registration_pb2', globals())
@@ -21,15 +21,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _SIGNUPINFO._serialized_start=36
-  _SIGNUPINFO._serialized_end=233
-  _DIGESTSIGNUPINFO._serialized_start=236
-  _DIGESTSIGNUPINFO._serialized_end=389
-  _SIGNUPRESPONSE._serialized_start=391
-  _SIGNUPRESPONSE._serialized_end=421
-  _CREDENTIALS._serialized_start=423
-  _CREDENTIALS._serialized_end=472
-  _SIGNINRESPONSE._serialized_start=474
-  _SIGNINRESPONSE._serialized_end=529
-  _USERSINFO._serialized_start=531
-  _USERSINFO._serialized_end=647
+  _SIGNUPINFO._serialized_end=221
+  _DIGESTSIGNUPINFO._serialized_start=224
+  _DIGESTSIGNUPINFO._serialized_end=377
+  _SIGNUPRESPONSE._serialized_start=379
+  _SIGNUPRESPONSE._serialized_end=409
+  _CREDENTIALS._serialized_start=411
+  _CREDENTIALS._serialized_end=460
+  _SIGNINRESPONSE._serialized_start=462
+  _SIGNINRESPONSE._serialized_end=517
+  _USERSINFO._serialized_start=519
+  _USERSINFO._serialized_end=635
 # @@protoc_insertion_point(module_scope)
