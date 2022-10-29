@@ -147,9 +147,6 @@ def retrieveUser(username, password):
     """
     usernameField = item['Username']            # Valore cifrato.
     userType = item['Tipo']                     # Valore cifrato.
-    print(userType.__eq__(bytes(0)))
-    #print(type(userType))
-    #print(len(userType))
     user = LoggedUser(usernameField, userType, True)
 
     return user
