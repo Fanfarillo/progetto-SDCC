@@ -252,3 +252,11 @@ INFO - 2022-10-29 20:05:24,399 - Richiesta procedura di iscrizione: [i@kk,user1,
 WARNING - 2022-10-29 20:05:24,400 - Procedura di iscrizione conclusa senza successo: [i@kk,user1,k,k,Turista]
 INFO - 2022-10-29 20:05:29,041 - Richiesta procedura di iscrizione: [i@kk,user2,k,k,Turista,1111 1111 1111]
 INFO - 2022-10-29 20:05:29,631 - Procedura di iscrizione conclusa con successo: [i@kk,user2,k,k,Turista]
+INFO - 2022-10-31 16:16:40,615 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-10-31 16:16:40,623 - Server avviato con successo...
+INFO - 2022-10-31 16:17:44,125 - Richiesta procedura di accesso: [o,o]
+WARNING - 2022-10-31 16:17:45,283 - Procedura di accesso conclusa senza successo: [o,o]
+INFO - 2022-10-31 16:18:20,134 - Richiesta procedura di iscrizione: [user0@gmail.com,user0,user0,user0,Turista,1111 2222 3333 4444]
+INFO - 2022-10-31 16:18:20,764 - Procedura di iscrizione conclusa con successo: [user0@gmail.com,user0,user0,user0,Turista]
+INFO - 2022-10-31 16:20:01,327 - Richiesta procedura di accesso: [user0,user0]
+INFO - 2022-10-31 16:20:01,977 - Procedura di accesso conclusa con successo: [user0,user0]
