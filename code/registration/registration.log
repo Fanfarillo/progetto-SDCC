@@ -260,3 +260,61 @@ INFO - 2022-10-31 16:18:20,134 - Richiesta procedura di iscrizione: [user0@gmail
 INFO - 2022-10-31 16:18:20,764 - Procedura di iscrizione conclusa con successo: [user0@gmail.com,user0,user0,user0,Turista]
 INFO - 2022-10-31 16:20:01,327 - Richiesta procedura di accesso: [user0,user0]
 INFO - 2022-10-31 16:20:01,977 - Procedura di accesso conclusa con successo: [user0,user0]
+INFO - 2022-11-01 11:25:03,503 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-11-01 11:25:03,504 - Server avviato con successo...
+INFO - 2022-11-01 11:54:44,488 - Richiesta procedura di iscrizione: [architetta@gmail.com,Architetta,architetta,architetta,Turista,1111 1111 1111 1111]
+INFO - 2022-11-01 11:54:45,044 - Procedura di iscrizione conclusa con successo: [architetta@gmail.com,Architetta,architetta,architetta,Turista]
+INFO - 2022-11-01 11:55:02,741 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 11:55:03,359 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+ERROR - 2022-11-01 11:55:03,365 - Exception calling application: 'Binary' object has no attribute '__bytes__'
+Traceback (most recent call last):
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_server.py", line 443, in _call_behavior
+    response_or_iterator = behavior(argument, context)
+  File "registration.py", line 143, in SignIn
+    value = user.storedType.__bytes__()
+AttributeError: 'Binary' object has no attribute '__bytes__'
+INFO - 2022-11-01 11:56:42,187 - Richiesta procedura di accesso: [architetta,architetta]
+WARNING - 2022-11-01 11:56:42,791 - Procedura di accesso conclusa senza successo: [architetta,architetta]
+INFO - 2022-11-01 11:56:56,526 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 11:56:57,190 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+ERROR - 2022-11-01 11:56:57,190 - Exception calling application: 'Binary' object has no attribute '__bytes__'
+Traceback (most recent call last):
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_server.py", line 443, in _call_behavior
+    response_or_iterator = behavior(argument, context)
+  File "registration.py", line 143, in SignIn
+    value = user.storedType.__bytes__()
+AttributeError: 'Binary' object has no attribute '__bytes__'
+INFO - 2022-11-01 12:15:11,106 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 12:15:12,068 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+ERROR - 2022-11-01 12:15:12,070 - Exception calling application: 'Binary' object has no attribute '__bytes__'
+Traceback (most recent call last):
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_server.py", line 443, in _call_behavior
+    response_or_iterator = behavior(argument, context)
+  File "registration.py", line 143, in SignIn
+    #value = user.storedType.__bytes__()
+AttributeError: 'Binary' object has no attribute '__bytes__'
+INFO - 2022-11-01 12:25:30,193 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 12:25:31,056 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+ERROR - 2022-11-01 12:25:31,057 - Exception calling application: 'Binary' object has no attribute '__bytes__'
+Traceback (most recent call last):
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_server.py", line 443, in _call_behavior
+    response_or_iterator = behavior(argument, context)
+  File "registration.py", line 143, in SignIn
+    value = user.storedType.__bytes__()
+AttributeError: 'Binary' object has no attribute '__bytes__'
+INFO - 2022-11-01 12:26:29,407 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-11-01 12:26:29,420 - Server avviato con successo...
+INFO - 2022-11-01 12:26:51,565 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 12:26:52,502 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+INFO - 2022-11-01 12:32:22,982 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 12:32:23,888 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+INFO - 2022-11-01 12:37:44,074 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 12:37:44,769 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+INFO - 2022-11-01 16:08:08,350 - Avvio del server in ascolto sulla porta 50051...
+INFO - 2022-11-01 16:08:08,352 - Server avviato con successo...
+INFO - 2022-11-01 16:08:35,468 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 16:08:36,351 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+INFO - 2022-11-01 16:21:41,453 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 16:21:42,063 - Procedura di accesso conclusa con successo: [Architetta,architetta]
+INFO - 2022-11-01 17:01:55,322 - Richiesta procedura di accesso: [Architetta,architetta]
+INFO - 2022-11-01 17:01:55,952 - Procedura di accesso conclusa con successo: [Architetta,architetta]
