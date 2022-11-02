@@ -260,7 +260,7 @@ def booking(username):
             Questo pezzo di codice si dovrebbe levare poiché il numero di persone
             viene scelto successivamente...
             for card in result.cards:
-                card.prezzoTotale = float(card.prezzoTotale) * float(persone)
+                card.prezzoBase = float(card.prezzoBase) * float(persone)
             """
             #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
             session.pop(username)
@@ -332,7 +332,7 @@ def resoconto(username, compagnia, idVolo):
                 compagnia = card.compagnia
                 orario = card.orario
                 data = card.data
-                prezzoTotale = card.prezzoTotale
+                prezzoBase = card.prezzoBase
                 numPosti = card.numPosti
                 """
 
@@ -427,7 +427,7 @@ def serviziAggiuntivi(username, compagnia, idVolo):
                 compagnia = card.compagnia
                 orario = card.orario
                 data = card.data
-                prezzoTotale = card.prezzoTotale
+                prezzoBase = card.prezzoBase
                 numPosti = card.numPosti
                 """
 
@@ -454,6 +454,12 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     print("[16-17]: " + str(seatsFlight.quarto))
     print("[18-26]: " + str(seatsFlight.quinto))
 
+    diz['prezzoFila1'] = str(seatsFlight.primo)
+    diz['prezzoFile2-5'] = str(seatsFlight.secondo)
+    diz['prezzoFile6-15'] = str(seatsFlight.terzo)
+    diz['prezzoFile16-17'] = str(seatsFlight.quarto)
+    diz['prezzoFile18-26'] = str(seatsFlight.quinto)
+
     #Ottengo il costo dei servizi aggiuntivi della compagnia aerea in questione
     additionalServices = sendIdCompanydditionalService(compagnia)
     print("bagaglioSpeciale: " + str(additionalServices.bagaglioSpeciale))
@@ -463,12 +469,12 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     print("animaleDomestico: " + str(additionalServices.animaleDomestico))
     print("neonato: " + str(additionalServices.neonato))
 
-    diz['bagaglioSpecialePrezzo'] = additionalServices.bagaglioSpeciale
-    diz['bagaglioStivaMedioPrezzo'] = additionalServices.bagaglioStivaMedio
-    diz['bagaglioStivaGrandePrezzo'] = additionalServices.bagaglioStivaGrande
-    diz['assicurazioneBagagliPrezzo'] = additionalServices.assicurazioneBagagli
-    diz['animaleDomesticoPrezzo'] = additionalServices.animaleDomestico
-    diz['neonatoPrezzo'] = additionalServices.neonato
+    diz['bagaglioSpecialePrezzo'] = str(additionalServices.bagaglioSpeciale)
+    diz['bagaglioStivaMedioPrezzo'] = str(additionalServices.bagaglioStivaMedio)
+    diz['bagaglioStivaGrandePrezzo'] = str(additionalServices.bagaglioStivaGrande)
+    diz['assicurazioneBagagliPrezzo'] = str(additionalServices.assicurazioneBagagli)
+    diz['animaleDomesticoPrezzo'] = str(additionalServices.animaleDomestico)
+    diz['neonatoPrezzo'] = str(additionalServices.neonato)
     
     session.pop(username)
     session[username] = diz
@@ -517,7 +523,7 @@ def pagamentoNormale(username):
             postiPresi = postiLiberi[0:numBigliettiSelezionato]     #i posti che verranno occupati dalla prenotazione
             idVolo = cardSelezionata.idVolo                         #ID del volo prenotato
             dataPagamento = getCurrentDateStr()                     #data del pagamento
-            prezzoTotale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoTotale)    #TODO: cercare di capire 'sta storia dei prezzi
+            prezzoTotale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoBase)    #TODO: cercare di capire 'sta storia dei prezzi
             
             airline = cardSelezionata.compagnia                     #compagnia aerea del volo
             aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
@@ -583,7 +589,7 @@ def confermaRiepilogo(username, idVolo):
         cardSelezionata = diz["cardSelezionata"]
         diz['numBigliettiSelezionato'] = numBigliettiSelezionato
         session[username] = diz
-        prezzo_totale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoTotale)
+        prezzo_totale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoBase)
         print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("normale.html", username = username, card = cardSelezionata, numBigliettiSelezionato = numBigliettiSelezionato, prezzo_totale=prezzo_totale)
     
@@ -625,20 +631,22 @@ def personalizzato(username, idVolo):
         session.pop(username)
 
         diz['postiSelezionati'] = postiSelezionati
-        diz['bagaglioSpeciale'] = bagaglioSpeciale
-        diz['bagaglioStivaMedio'] = bagaglioStivaMedio
-        diz['bagaglioStivaGrande'] = bagaglioStivaGrande
-        diz['assicurazioneBagagli'] = assicurazioneBagagli
-        diz['animaleDomestico'] = animaleDomestico
-        diz['neonato'] = neonato
+        diz['bagaglioSpeciale'] = Integer.parseInt(bagaglioSpeciale)
+        diz['bagaglioStivaMedio'] = Integer.parseInt(bagaglioStivaMedio)
+        diz['bagaglioStivaGrande'] = Integer.parseInt(bagaglioStivaGrande)
+        diz['assicurazioneBagagli'] = Integer.parseInt(assicurazioneBagagli)
+        diz['animaleDomestico'] = Integer.parseInt(animaleDomestico)
+        diz['neonato'] = Integer.parseInt(neonato)
 
         session[username] = diz
 
-        prezzo_totale = int(diz['bagaglioSpecialePrezzo'])*int(bagaglioSpeciale) + int(diz['bagaglioStivaMedioPrezzo'])*int(bagaglioStivaMedio) + int(diz['bagaglioStivaGrandePrezzo'])*int(bagaglioStivaGrande) + int(diz['assicurazioneBagagliPrezzo'])*int(assicurazioneBagagli) + int(diz['animaleDomesticoPrezzo'])*int(animaleDomestico) + int(diz['neonatoPrezzo'])*int(neonato)
+        #TODO: scrivere una funzione che restituisca il numero di posti selezionati per ogni classe (gruppo) di posti
+        prezzoSelezionePosti = int(diz['prezzoFila1']) + int(diz['prezzoFile2-5']) + int(diz['prezzoFile6-15']) + int(diz['prezzoFile16-17']) + int(diz['prezzoFile18-26'])
+        prezzoServiziAggiuntivi = int(diz['bagaglioSpecialePrezzo'])*(bagaglioSpeciale) + int(diz['bagaglioStivaMedioPrezzo'])*(bagaglioStivaMedio) + int(diz['bagaglioStivaGrandePrezzo'])*(bagaglioStivaGrande) + int(diz['assicurazioneBagagliPrezzo'])*(assicurazioneBagagli) + int(diz['animaleDomesticoPrezzo'])*(animaleDomestico) + int(diz['neonatoPrezzo'])*(neonato)
 
         print("[DEBUG SESSIONE (/username/idVolo/personalizzato)]: key = " + username + "   value = " + str(session.get(username)))
         
-        return render_template("personalizzato.html", prezzoTotale = prezzo_totale, username = username, card = diz['cardSelezionata'])
+        return render_template("personalizzato.html", prezzoServiziAggiuntivi = prezzoServiziAggiuntivi, username = username, card = diz['cardSelezionata'])
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)

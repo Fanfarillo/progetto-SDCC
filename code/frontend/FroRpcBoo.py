@@ -15,7 +15,7 @@ class Result:
 
 
 class Card:
-    def __init__(self, idVolo, compagnia, arrivo, partenza, orario, data, prezzoTotale, posti, numPosti):
+    def __init__(self, idVolo, compagnia, arrivo, partenza, orario, data, prezzoBase, posti, numPosti):
         # Identificativo del volo
         self.idVolo = idVolo
         # Compagnia aerea
@@ -29,7 +29,7 @@ class Card:
         # Data del volo
         self.data = data
         # Prezzo totale
-        self.prezzoTotale = prezzoTotale
+        self.prezzoBase = prezzoBase
         # Lista dei posti disponibili
         self.posti = posti
         # Numero dei posti disponibili
