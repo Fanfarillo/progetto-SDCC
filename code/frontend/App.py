@@ -509,11 +509,25 @@ def pagamentoNormale(username):
         cardSelezionata = diz["cardSelezionata"]
         numBigliettiSelezionato = diz["numBigliettiSelezionato"]
 
-        #La prenotazione può andare a buon fine solo se il volo ha un numero di posti disponibili sufficiente per portare a termine la prenotazione
+        #la prenotazione può andare a buon fine solo se il volo ha un numero di posti disponibili sufficiente per portare a termine la prenotazione
         if cardSelezionata.numPosti >= numBigliettiSelezionato:
             postiLiberi = cardSelezionata.posti.posti
-            postiPresi = postiLiberi[0:numBigliettiSelezionato]
-            #TO BE CONTINUED
+
+            #tra le informazioni che ci servono abbiamo già lo username dell'utente racchiuso nella variabile username
+            postiPresi = postiLiberi[0:numBigliettiSelezionato]     #i posti che verranno occupati dalla prenotazione
+            idVolo = cardSelezionata.idVolo                         #ID del volo prenotato
+            dataPagamento = getCurrentDateStr()                     #data del pagamento
+            prezzoTotale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoTotale)    #TODO: cercare di capire 'sta storia dei prezzi
+            
+            airline = cardSelezionata.compagnia                     #compagnia aerea del volo
+            aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
+            aeroportoArrivo = cardSelezionata.arrivo                #aeroporto di arrivo
+            dataVolo = cardSelezionata.data                         #data del volo
+            orarioPartenza = cardSelezionata.orario                 #orario del volo
+            email = request.form['user-email']                      #eventuale email immessa dall'utente
+
+
+            
 
 
 @app.route("/<string:username>/personalizzato", methods=('GET','POST'))

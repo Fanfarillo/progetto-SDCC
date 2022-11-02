@@ -184,7 +184,7 @@ Managment_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), serv
 
 
 
-logger.info('Avvio del server in ascolto sulla porta 50051...')
+logger.info('Avvio del server in ascolto sulla porta 50052...')
 server.add_insecure_port('[::]:50052')
 server.start()
 logger.info('Server avviato con successo...')

@@ -141,7 +141,7 @@ Booking_pb2_grpc.add_BookingServiceServicer_to_server(BookingInfoServicer(), ser
 
 
 
-logger.info('Avvio del server in ascolto sulla porta 50051...')
+logger.info('Avvio del server in ascolto sulla porta 50053...')
 server.add_insecure_port('[::]:50053')
 server.start()
 logger.info('Server avviato con successo...')

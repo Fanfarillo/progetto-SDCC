@@ -1,3 +1,5 @@
+from datetime import datetime, date
+
 def getAmpm(initialHour):  
     intHour = int(initialHour)
 
@@ -49,3 +51,7 @@ def getDate(initialDay, initialMonth, year):
     month = getTwoDigitsString(initialMonth)
     
     return day + "-" + month + "-" + year
+
+def getCurrentDateStr():
+    today = date.today()
+    return today.strftime("%d-%m-%Y")

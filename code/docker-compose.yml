@@ -30,3 +30,9 @@ services:
     user: root
     ports:
       - 50054:50054
+
+  payment:
+    build: ./payment
+    user: root
+    ports:
+      - 50055:50055

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package proto;
+
+service Pay {
+    rpc AddPayment(NewPayment) returns (PayResponse);
+}
+
+message NewPayment {
+    string username = 1;
+    string idVolo = 2;
+    repeated string selectedSeats = 3;
+    string paymentDate = 4;
+    string basePrice = 5;
+    string seatsPrice = 6;
+    string servicesPrice = 7;
+    int32 numStivaMedi = 8;
+    int32 numStivaGrandi = 9;
+    int32 numBagagliSpeciali = 10;
+    int32 numAnimali = 11;
+    int32 numNeonati = 12;
+}
+
+message PayResponse {
+    bool isOk = 1;
+}
