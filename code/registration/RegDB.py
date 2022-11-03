@@ -1,15 +1,13 @@
 import boto3
 from boto3.dynamodb.types import Binary
 import sys
-sys.path.append("..")
-
-from cipher.security import Security
 
 
 
 
 DYNAMODB = 'dynamodb'
 TABELLA_UTENTE = 'Utente'
+REGIONE = 'us-east-1'
 
 
 
@@ -49,7 +47,7 @@ def storeUser(email, username, password, userType_d, airline, cartaDiCredito, us
         typeToStore = airline
     
     try:
-        dynamodb = boto3.resource(DYNAMODB)
+        dynamodb = boto3.resource(DYNAMODB, REGIONE)
         table = dynamodb.Table(TABELLA_UTENTE)
         table.put_item(
             Item = {
@@ -79,7 +77,7 @@ ritorna FALSE.
 """
 def isNewUser(username):
     try:
-        dynamodb = boto3.resource(DYNAMODB)
+        dynamodb = boto3.resource(DYNAMODB,REGIONE)
         table = dynamodb.Table(TABELLA_UTENTE)
         response = table.get_item(
             Key = {
@@ -103,7 +101,7 @@ utente che corrisponde alle credenziali
 inserite.
 """
 def retrieveUser(username, password):
-    dynamodb = boto3.resource(DYNAMODB)
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_UTENTE)
 
     #read from 'Utente' table in DynamoDB

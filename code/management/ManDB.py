@@ -1,12 +1,19 @@
 import boto3
+
 from boto3.dynamodb.conditions import Attr
 from decimal import *
 
 
 
+DYNAMODB = 'dynamodb'
+REGIONE = 'us-east-1'
+
+
+
+
 def getAllSeatsFlight(compagnia):
     print("Compagnia: " + compagnia)
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('PrezzoPosti')
 
     response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
@@ -39,7 +46,7 @@ def getAllSeatsFlight(compagnia):
 
 def getAlladditionalServicesFlight(compagnia):
     print(compagnia)
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('Servizi')
     response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
 
@@ -69,7 +76,7 @@ def getAlladditionalServicesFlight(compagnia):
 
 
 def storeSeatsPrices(airline, price1, price2, price6, price16, price18):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('PrezzoPosti')
     
     #store (actually update) an item in 'PrezzoPosti' table in DynamoDB
@@ -87,7 +94,7 @@ def storeSeatsPrices(airline, price1, price2, price6, price16, price18):
 
 
 def storeServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('Servizi')
 
     #store (actually update) an item in 'Servizi' table in DynamoDB
@@ -107,7 +114,7 @@ def storeServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, pr
 
 def getPrice(idVolo):
     print(idVolo)
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('Volo')
 
     response = table.scan(FilterExpression=Attr('Id').eq(idVolo))

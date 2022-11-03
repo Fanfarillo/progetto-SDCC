@@ -9,3 +9,5 @@
 
 # .retry file
 *.retry
+
+*credentials

@@ -3,7 +3,7 @@ import grpc
 from proto import Booking_pb2
 from proto import Booking_pb2_grpc
 
-ADDR_PORT = 'localhost:50053'   #server_IP_addr:port_num
+ADDR_PORT = 'booking:50053'   #server_IP_addr:port_num
 
 def checkFlightId(id):
     #open gRPC channel

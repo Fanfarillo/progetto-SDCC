@@ -104,21 +104,6 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
 
 
-    """
-    Recupera tutti i posti che sono attualmente
-    disponibili per il volo il cui identificativo
-    è passato al metodo.
-    
-    def getAllAvailableSeatsForFlight(self, request, context):
-        logger.info("Richiesta dei posti disponibili per il volo " + request.idVolo)
-        postiDisponibili = retrieveAvailableSeats(request.idVolo, postiTotali)
-        for posto in postiDisponibili:
-            ret = Booking_pb2.AvailableSeatReply(idPosto = posto)
-            yield ret
-    """
-
-
-
 """
 Costruisco un file di LOG in cui andare ad
 inserire le richieste che giungono dagli altri

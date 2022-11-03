@@ -1,16 +1,14 @@
 import grpc
 import sys
 
-sys.path.append("..")
-from cipher.security import Security
-
+from security import Security
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
 
 
 
 
-ADDR_PORT = 'localhost:50051'   #server_IP_addr:port_num
+ADDR_PORT = 'registration:50051'
 
 
 
@@ -83,7 +81,7 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
         aerea. Ossia, non sarà un utente di tipo
         Turista.
         """
-        digest = cipher.message_integrity(bytes(airline, 'utf-16'))
+        digest = cipher.message_integrity(bytes(airline, 'utf-8'))
         dig.airline = digest
         ciphertextAirline, iv = cipher.encryptData(bytes(airline, 'utf-8'))
     else:

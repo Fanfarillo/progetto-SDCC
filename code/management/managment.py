@@ -5,7 +5,6 @@ import logging
 from concurrent import futures
 from datetime import datetime
 from decimal import *
-
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 from ManRpcBoo import *

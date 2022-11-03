@@ -7,12 +7,15 @@ from proto import Managment_pb2_grpc
 
 
 
-ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
+ADDR_PORT = 'management:50052'
+TABELLA_VOLO = 'Volo'
+DYNAMODB = 'dynamodb'
+TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
+REGIONE = 'us-east-1'
 
 
 
-
-# Per struttura dell'aereo questi sono i posti disponibili
+# L'assunzione fatta sui possibili posti disponibili dell'aereo.
 postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 'F2','A3', 'B3', 'C3', 'D3', 'E3', 'F3',
 'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5','A6', 'B6', 'C6', 'D6', 'E6', 'F6','A7', 'B7', 'C7', 'D7', 'E7', 'F7',
 'A8', 'B8', 'C8', 'D8', 'E8', 'F8','A9', 'B9', 'C9', 'D9', 'E9', 'F10','A10', 'B10', 'C10', 'D10', 'E10', 'F10','A11', 'B11', 'C11', 'D11', 'E11', 'F11',
@@ -48,8 +51,8 @@ class Flight:
 
 #this function returns true if there is no item with the specified id (i.e. the specified primary key); it returns false otherwise
 def isNewId(flightId):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Volo')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
 
     #read from 'Volo' table in DynamoDB
     response = table.get_item(
@@ -67,8 +70,8 @@ def isNewId(flightId):
 
 
 def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime, arrivalTime, airline, price, seats):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Volo')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
     
     #store an item in 'Utente' table in DynamoDB
     table.put_item(
@@ -89,8 +92,8 @@ def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime,
 
 
 def storeUpdatedFlight(flightId, newPrice):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Volo')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
 
     #read from 'Volo' table in DynamoDB
     response = table.get_item(
@@ -129,8 +132,8 @@ def storeUpdatedFlight(flightId, newPrice):
 
 def retrieveAvailableSeats(idVolo, postiDisponibili):
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('PostiOccupati')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
 
     """
     Ottengo le informazioni relative ai posti disponibili
@@ -193,8 +196,8 @@ i voli disponibili per la data GG/MM/AAAA con la partenza e
 l'arrivo che corrispondono ai dati passati in input.
 """
 def retrieveFlights(giorno, mese, anno, partenza, arrivo):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Volo')
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
 
     response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Aeroporto arrivo').eq(arrivo) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
     

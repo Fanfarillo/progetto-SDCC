@@ -2,7 +2,7 @@ import grpc
 from proto import Booking_pb2
 from proto import Booking_pb2_grpc
 
-ADDR_PORT = 'localhost:50053'   #server_IP_addr:port_num
+ADDR_PORT = 'booking:50053'
 
 
 
@@ -58,22 +58,4 @@ def sendBookingInfo(giorno, mese, anno, aereoporto_partenza, aereoporto_arrivo):
         cards.append(Card(entry.id, entry.compagnia, entry.arrivo, entry.partenza, entry.orario, entry.data, entry.prezzoBase, entry.posti, entry.numPosti))
     result = Result(cards, count)
     return result
-
-
-
-
-"""
-Questa funzione si interfaccia con il microservizio di Booking
-per ottenere i posti disponibili relativi al volo richiesto dall'utente
-
-def sendIdVoloPostiDisponibili(idVolo):
-    channel = grpc.insecure_channel(ADDR_PORT)
-    # Assumo che non ci sia alcun posto disponibile
-    postiDisponibili = []
-    stub = Booking_pb2_grpc.BookingServiceStub(channel)
-    for entry in stub.getAllAvailableSeatsForFlight(Booking_pb2.AvailableSeatRequest(idVolo = idVolo)):
-        # Aggiungo il posto disponibile all'interno della lista dei posti disponibili
-        postiDisponibili.append(entry.idPosto)
-    return postiDisponibili
-"""
 

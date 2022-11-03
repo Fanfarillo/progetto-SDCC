@@ -3,7 +3,12 @@ import grpc
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 
-ADDR_PORT = 'localhost:50052'   #server_IP_addr:port_num
+
+
+ADDR_PORT = 'management:50052'
+
+
+
 
 class AdditionalServices:
     def __init__(self, bagaglioSpeciale, bagaglioStivaMedio, bagaglioStivaGrande, assicurazioneBagagli, animaleDomestico, neonato):
@@ -14,6 +19,9 @@ class AdditionalServices:
         self.bagaglioSpeciale = bagaglioSpeciale
         self.neonato = neonato
 
+
+
+
 class SeatsFlight:
     def __init__(self, primo, secondo, terzo, quarto, quinto):
         self.primo = primo
@@ -21,6 +29,9 @@ class SeatsFlight:
         self.terzo = terzo
         self.quarto = quarto
         self.quinto = quinto
+
+
+
 
 def sendIdCompanySeatsPrice(compagnia):
     # Apertura di un gRPC channel
@@ -45,6 +56,9 @@ def sendIdCompanySeatsPrice(compagnia):
     
     seatsFlight = SeatsFlight(output[0], output[1], output[2], output[3], output[4])
     return seatsFlight
+
+
+
 
 def sendIdCompanydditionalService(compagnia):
 
@@ -72,6 +86,8 @@ def sendIdCompanydditionalService(compagnia):
     return additionalServices
 
 
+
+
 def sendNewFlight(id, date, departureAirport, arrivalAirport, departureTime, arrivalTime, airline, price, seats):
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -83,6 +99,9 @@ def sendNewFlight(id, date, departureAirport, arrivalAirport, departureTime, arr
     output = stub.AddFlight(Managment_pb2.NewFlight(id=id, date=date, departureAirport=departureAirport, arrivalAirport=arrivalAirport, departureTime=departureTime, arrivalTime=arrivalTime, airline=airline, price=price, seats=seats))
     #we need to return the boolean value
     return output.isOk
+
+
+
 
 def sendNewPrice(flightId, newPrice):
     #open gRPC channel
@@ -96,6 +115,10 @@ def sendNewPrice(flightId, newPrice):
     #we need to return the boolean value
     return output.isOk    
 
+
+
+
+
 def sendSeatsPrices(airline, price1, price2, price6, price16, price18):
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -107,6 +130,9 @@ def sendSeatsPrices(airline, price1, price2, price6, price16, price18):
     output = stub.ModifySeats(Managment_pb2.UpdatedSeats(airline=airline, price1=price1, price2=price2, price6=price6, price16=price16, price18=price18))
     #we need to return the boolean value
     return output.isOk 
+
+
+
 
 def sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN):
     #open gRPC channel

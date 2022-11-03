@@ -2,9 +2,8 @@ import grpc
 import time
 import logging
 import sys
-sys.path.append("..")
 
-from cipher.security import Security
+from security import Security
 from concurrent import futures
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
@@ -25,53 +24,6 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
         
         cipher = Security(b"mysecretpassword")
-        
-        """
-        Ottengo una rappresentazione a stringa
-        dei dati binari per poterla scrivere
-        all'interno del Database. In questo modo,
-        fornisco una maggiore sicurezza per i dati.
-        
-        username = str(SignUpInfo.username)
-        print("username cifrato: " + username)
-        #print(len((SignUpInfo.username).decode('utf-8')))
-        print(len(username))
-        print(len(SignUpInfo.username))
-        password = str(SignUpInfo.password)
-        #password = (SignUpInfo.password).decode('utf-8')
-        print("password cifrato: " +password)
-        print(len(password))
-        print(len(SignUpInfo.password))
-        passwordConfirm = str(SignUpInfo.passwordConfirm)
-        #passwordConfirm = (SignUpInfo.passwordConfirm).decode('utf-8')
-        print("passwordConfirm cifrato: " +passwordConfirm)
-        print(len(passwordConfirm))
-        print(len(SignUpInfo.passwordConfirm))
-        email = str(SignUpInfo.email)
-        #email = SignUpInfo.email.decode('utf-8')
-        print("email cifrato: " +email)
-        print(len(email))
-        print(len(SignUpInfo.email))
-        userType = str(SignUpInfo.userType)
-        #userType = SignUpInfo.userType.decode('utf-8')
-        print("userType cifrato: " +userType)
-        print(len(userType))
-        print(len(SignUpInfo.userType))
-        cartaDiCredito = str(SignUpInfo.cartaDiCredito)
-        #cartaDiCredito = SignUpInfo.cartaDiCredito.decode('utf-8')
-        print("cartaDiCredito cifrato: " +cartaDiCredito)
-        print(len(cartaDiCredito))
-        print(len(SignUpInfo.cartaDiCredito))
-    
-        airline = None
-        if SignUpInfo.airline is not None:
-            airline = str(SignUpInfo.airline)  
-            #airline = SignUpInfo.airline.decode('utf-8')
-            print("airline cifrato: " + airline)
-            print(len(airline))
-            print(len(SignUpInfo.airline))   
-
-        """
 
         """
         Ottengo una rappresentazione a stringa dei dati
