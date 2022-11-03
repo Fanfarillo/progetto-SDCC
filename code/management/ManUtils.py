@@ -25,3 +25,18 @@ def checkFutureDate(dateStr):
         return True
     else:
         return False
+
+def roundPrice(initialPrice):
+
+    if not initialPrice.isdigit():      #questo è il caso in cui abbiamo una virgola all'interno del prezzo
+        for i in range(0,len(initialPrice)):
+
+            if initialPrice[i] == '.' and i == len(initialPrice)-1:
+                return initialPrice[0:i]
+            elif initialPrice[i] == '.' and i <= len(initialPrice)-2 and i >= len(initialPrice)-3:
+                return initialPrice
+            elif initialPrice[i] == '.' and i <= len(initialPrice)-4:
+                return initialPrice[0:i+3]
+
+    else:                               #questo è il caso in cui il prezzo è intero
+        return initialPrice

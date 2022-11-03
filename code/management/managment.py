@@ -4,6 +4,8 @@ import logging
 
 from concurrent import futures
 from datetime import datetime
+from decimal import *
+
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 from ManRpcBoo import *
@@ -40,8 +42,10 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         isOk = (isNewFlightId and isExistentDate and isFutureDate and NewFlight.departureAirport!=NewFlight.arrivalAirport and isValidAirline and isValidPrice and NewFlight.seats>0)
 
         if isOk:
+            #questa funzione arrotonda alla seconda cifra dopo la virgola (per difetto) il valore di NewFlight.price
+            roundedPrice = roundPrice(NewFlight.price)
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
-            registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, NewFlight.price, NewFlight.seats)
+            registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, roundedPrice, NewFlight.seats)
 
         output = Managment_pb2.AddResponse(isOk=isOk)
         return output
@@ -62,8 +66,9 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         isOk = isExistentFlightId and isValidPrice
 
         if isOk:
+            roundedPrice = roundPrice(UpdatedFlight.newPrice)
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
-            updateFlightPrice(UpdatedFlight.flightId, UpdatedFlight.newPrice)
+            updateFlightPrice(UpdatedFlight.flightId, roundedPrice)
 
         output = Managment_pb2.ModFlightResponse(isOk=isOk)
         return output
@@ -80,7 +85,12 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
         #if all the prices are ok, then save them into remote database (DynamoDB)
         if isOk:
-            storeSeatsPrices(UpdatedSeats.airline, UpdatedSeats.price1, UpdatedSeats.price2, UpdatedSeats.price6, UpdatedSeats.price16, UpdatedSeats.price18)
+            roundedPrice1 = roundPrice(UpdatedSeats.price1)
+            roundedPrice2 = roundPrice(UpdatedSeats.price2)
+            roundedPrice6 = roundPrice(UpdatedSeats.price6)
+            roundedPrice16 = roundPrice(UpdatedSeats.price16)
+            roundedPrice18 = roundPrice(UpdatedSeats.price18)
+            storeSeatsPrices(UpdatedSeats.airline, roundedPrice1, roundedPrice2, roundedPrice6, roundedPrice16, roundedPrice18)
 
         output = Managment_pb2.ModSeatsResponse(isOk=isOk)
         return output
@@ -96,7 +106,13 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         isOk = (UpdatedServices.priceBM.replace('.','',1).isdigit() and UpdatedServices.priceBG.replace('.','',1).isdigit() and UpdatedServices.priceBS.replace('.','',1).isdigit() and UpdatedServices.priceAD.replace('.','',1).isdigit() and UpdatedServices.priceAB.replace('.','',1).isdigit() and UpdatedServices.priceTN.replace('.','',1).isdigit())
 
         if isOk:
-            storeServicesPrices(UpdatedServices.airline, UpdatedServices.priceBM, UpdatedServices.priceBG, UpdatedServices.priceBS, UpdatedServices.priceAD, UpdatedServices.priceAB, UpdatedServices.priceTN)
+            roundedPriceBM = roundPrice(UpdatedServices.priceBM)
+            roundedPriceBG = roundPrice(UpdatedServices.priceBG)
+            roundedPriceBS = roundPrice(UpdatedServices.priceBS)
+            roundedPriceAD = roundPrice(UpdatedServices.priceAD)
+            roundedPriceAB = roundPrice(UpdatedServices.priceAB)
+            roundedPriceTN = roundPrice(UpdatedServices.priceTN)
+            storeServicesPrices(UpdatedServices.airline, roundedPriceBM, roundedPriceBG, roundedPriceBS, roundedPriceAD, roundedPriceAB, roundedPriceTN)
 
         output = Managment_pb2.ModServicesResponse(isOk=isOk)
         return output
@@ -132,7 +148,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         prezzi = getAllSeatsFlight(request.compagnia)
 
         for item in prezzi:
-            ret = Managment_pb2.SeatCostReply(prezzo=int(item))            
+            ret = Managment_pb2.SeatCostReply(prezzo=Decimal(item))            
             yield ret
 
 
@@ -158,7 +174,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         prezzi = getAlladditionalServicesFlight(request.compagnia)
 
         for item in prezzi:
-            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=int(item))
+            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=Decimal(item))
             yield ret
 
 

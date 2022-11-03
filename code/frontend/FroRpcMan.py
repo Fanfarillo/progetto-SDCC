@@ -48,8 +48,6 @@ def sendIdCompanySeatsPrice(compagnia):
 
 def sendIdCompanydditionalService(compagnia):
 
-    #TODO: che succede se la compagnia non ha servizi aggiuntivi?
-
     # Apertura di un gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 
