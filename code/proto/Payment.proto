@@ -14,11 +14,13 @@ message NewPayment {
     string basePrice = 5;
     string seatsPrice = 6;
     string servicesPrice = 7;
-    int32 numStivaMedi = 8;
-    int32 numStivaGrandi = 9;
-    int32 numBagagliSpeciali = 10;
-    int32 numAnimali = 11;
-    int32 numNeonati = 12;
+    string totalPrice = 8;
+    int32 numStivaMedi = 9;
+    int32 numStivaGrandi = 10;
+    int32 numBagagliSpeciali = 11;
+    int32 numAnimali = 12;
+    int32 numNeonati = 13;
+    string email = 14;
 }
 
 message PayResponse {

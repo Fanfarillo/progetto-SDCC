@@ -17,7 +17,7 @@ message SeatCostRequest {
 }
 
 message SeatCostReply {
-    int32 prezzo = 1;
+    string prezzo = 1;
 }
 
 message AdditionalServiceCostRequest {
@@ -25,7 +25,7 @@ message AdditionalServiceCostRequest {
 }
 
 message AdditionalServiceCostReply {
-    int32 prezzo = 1;
+    string prezzo = 1;
 }
 
 message PriceRequest {

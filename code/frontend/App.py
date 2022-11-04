@@ -450,11 +450,11 @@ def serviziAggiuntivi(username, compagnia, idVolo):
 
     #Ottengo il costo dei posti della compagnia aerea in questione
     seatsFlight = sendIdCompanySeatsPrice(compagnia)
-    print("[1]: " + str(seatsFlight.primo))
-    print("[2-5]: " + str(seatsFlight.secondo))
-    print("[6-15]: " + str(seatsFlight.terzo))
-    print("[16-17]: " + str(seatsFlight.quarto))
-    print("[18-26]: " + str(seatsFlight.quinto))
+    print("[1]: " + seatsFlight.primo)
+    print("[2-5]: " + seatsFlight.secondo)
+    print("[6-15]: " + seatsFlight.terzo)
+    print("[16-17]: " + seatsFlight.quarto)
+    print("[18-26]: " + seatsFlight.quinto)
 
     #I prezzi per la selezione dei posti verranno inseriti all'interno della sessione ma raggruppati nell'oggetto Python per motivi di compattezza
     diz['prezziFilePosti'] = seatsFlight
@@ -468,24 +468,24 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     """
 
     #Ottengo il costo dei servizi aggiuntivi della compagnia aerea in questione
-    additionalServices = sendIdCompanydditionalService(compagnia)
-    print("bagaglioSpeciale: " + str(additionalServices.bagaglioSpeciale))
-    print("bagaglioStivaMedio: " + str(additionalServices.bagaglioStivaMedio))
-    print("bagaglioStivaGrande: " + str(additionalServices.bagaglioStivaGrande))
-    print("assicurazioneBagagli: " + str(additionalServices.assicurazioneBagagli))
-    print("animaleDomestico: " + str(additionalServices.animaleDomestico))
-    print("neonato: " + str(additionalServices.neonato))
+    additionalServices = sendIdCompanyAdditionalService(compagnia)
+    print("bagaglioSpeciale: " + additionalServices.bagaglioSpeciale)
+    print("bagaglioStivaMedio: " + additionalServices.bagaglioStivaMedio)
+    print("bagaglioStivaGrande: " + additionalServices.bagaglioStivaGrande)
+    print("assicurazioneBagagli: " + additionalServices.assicurazioneBagagli)
+    print("animaleDomestico: " + additionalServices.animaleDomestico)
+    print("neonato: " + additionalServices.neonato)
 
     #Anche i prezzi per i servizi aggiuntivi verranno inseriti all'interno della sessione ma raggruppati in un oggetto Python per motivi di compattezza
     diz['prezziServizi'] = additionalServices
 
     """
-    diz['bagaglioSpecialePrezzo'] = str(additionalServices.bagaglioSpeciale)
-    diz['bagaglioStivaMedioPrezzo'] = str(additionalServices.bagaglioStivaMedio)
-    diz['bagaglioStivaGrandePrezzo'] = str(additionalServices.bagaglioStivaGrande)
-    diz['assicurazioneBagagliPrezzo'] = str(additionalServices.assicurazioneBagagli)
-    diz['animaleDomesticoPrezzo'] = str(additionalServices.animaleDomestico)
-    diz['neonatoPrezzo'] = str(additionalServices.neonato)
+    diz['bagaglioSpecialePrezzo'] = additionalServices.bagaglioSpeciale
+    diz['bagaglioStivaMedioPrezzo'] = additionalServices.bagaglioStivaMedio
+    diz['bagaglioStivaGrandePrezzo'] = additionalServices.bagaglioStivaGrande
+    diz['assicurazioneBagagliPrezzo'] = additionalServices.assicurazioneBagagli
+    diz['animaleDomesticoPrezzo'] = additionalServices.animaleDomestico
+    diz['neonatoPrezzo'] = additionalServices.neonato
     """
     
     session.pop(username)
@@ -535,7 +535,7 @@ def pagamentoNormale(username):
             postiPresi = postiLiberi[0:numBigliettiSelezionato]     #i posti che verranno occupati dalla prenotazione
             idVolo = cardSelezionata.idVolo                         #ID del volo prenotato
             dataPagamento = getCurrentDateStr()                     #data del pagamento
-            prezzoTotale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoBase)
+            prezzoTotale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
             
             airline = cardSelezionata.compagnia                     #compagnia aerea del volo
             aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
@@ -543,8 +543,7 @@ def pagamentoNormale(username):
             dataVolo = cardSelezionata.data                         #data del volo
             orarioPartenza = cardSelezionata.orario                 #orario del volo
             email = request.form['user-email']                      #eventuale email immessa dall'utente
-
-
+            
             
 
 
@@ -601,7 +600,7 @@ def confermaRiepilogo(username, idVolo):
         cardSelezionata = diz["cardSelezionata"]
         diz['numBigliettiSelezionato'] = numBigliettiSelezionato
         session[username] = diz
-        prezzo_totale = int(numBigliettiSelezionato) * int(cardSelezionata.prezzoBase)
+        prezzo_totale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
         print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("normale.html", username = username, card = cardSelezionata, numBigliettiSelezionato = numBigliettiSelezionato, prezzo_totale=prezzo_totale)
     
@@ -662,8 +661,8 @@ def personalizzato(username, idVolo):
         #questa funzione restituisce una lista indicante il numero di posti selezionati per ogni gruppo di posti
         fileSelezionate = getFileSelezionate(postiSelezionati)        
 
-        prezzoSelezionePosti = prezziFilePosti.primo*fileSelezionate[0] + prezziFilePosti.secondo*fileSelezionate[1] + prezziFilePosti.terzo*fileSelezionate[2] + prezziFilePosti.quarto*fileSelezionate[3] + prezziFilePosti.quinto*fileSelezionate[4]
-        prezzoServiziAggiuntivi = prezziServizi.bagaglioSpeciale*int(bagaglioSpeciale) + prezziServizi.bagaglioStivaMedio*int(bagaglioStivaMedio) + prezziServizi.bagaglioStivaGrande*int(bagaglioStivaGrande) + prezziServizi.assicurazioneBagagli*int(assicurazioneBagagli) + prezziServizi.animaleDomestico*int(animaleDomestico) + prezziServizi.neonato*int(neonato)
+        prezzoSelezionePosti = Decimal(prezziFilePosti.primo)*fileSelezionate[0] + Decimal(prezziFilePosti.secondo)*fileSelezionate[1] + Decimal(prezziFilePosti.terzo)*fileSelezionate[2] + Decimal(prezziFilePosti.quarto)*fileSelezionate[3] + Decimal(prezziFilePosti.quinto)*fileSelezionate[4]
+        prezzoServiziAggiuntivi = Decimal(prezziServizi.bagaglioSpeciale)*int(bagaglioSpeciale) + Decimal(prezziServizi.bagaglioStivaMedio)*int(bagaglioStivaMedio) + Decimal(prezziServizi.bagaglioStivaGrande)*int(bagaglioStivaGrande) + Decimal(prezziServizi.assicurazioneBagagli)*int(assicurazioneBagagli) + Decimal(prezziServizi.animaleDomestico)*int(animaleDomestico) + Decimal(prezziServizi.neonato)*int(neonato)
         prezzoTotale = Decimal(cardSelezionata.prezzoBase)*len(postiSelezionati) + prezzoSelezionePosti + prezzoServiziAggiuntivi
 
         diz['numBigliettiAcquistati'] = len(postiSelezionati)

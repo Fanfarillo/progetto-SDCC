@@ -4,9 +4,10 @@ import logging
 
 from concurrent import futures
 from datetime import datetime
-from decimal import *
+
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
+
 from ManRpcBoo import *
 from ManUtils import *
 from ManDB import *
@@ -147,7 +148,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         prezzi = getAllSeatsFlight(request.compagnia)
 
         for item in prezzi:
-            ret = Managment_pb2.SeatCostReply(prezzo=Decimal(item))            
+            ret = Managment_pb2.SeatCostReply(prezzo=item)            
             yield ret
 
 
@@ -173,7 +174,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         prezzi = getAlladditionalServicesFlight(request.compagnia)
 
         for item in prezzi:
-            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=Decimal(item))
+            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=item)
             yield ret
 
 

@@ -60,7 +60,7 @@ def sendIdCompanySeatsPrice(compagnia):
 
 
 
-def sendIdCompanydditionalService(compagnia):
+def sendIdCompanyAdditionalService(compagnia):
 
     # Apertura di un gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num

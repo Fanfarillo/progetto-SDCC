@@ -20,6 +20,7 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         E' qui che interviene il design pattern Saga per i microservizi.
         """
         #TODO: scrittura nel DB riservato al microservizio Payment
+        #15:20 del video del Pitone
 
 
 """
