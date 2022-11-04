@@ -519,13 +519,13 @@ def pagamentoNormale(username):
         session.pop(username)
         return redirect("/accedi",401)
 
-    #FANFA-NEW
     if request.method == 'POST':
 
         diz = session.get(username)
         session.pop(username)
         cardSelezionata = diz["cardSelezionata"]
         numBigliettiSelezionato = diz["numBigliettiSelezionato"]
+        session[username] = diz
 
         #la prenotazione può andare a buon fine solo se il volo ha un numero di posti disponibili sufficiente per portare a termine la prenotazione
         if cardSelezionata.numPosti >= numBigliettiSelezionato:
@@ -536,14 +536,22 @@ def pagamentoNormale(username):
             idVolo = cardSelezionata.idVolo                         #ID del volo prenotato
             dataPagamento = getCurrentDateStr()                     #data del pagamento
             prezzoTotale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
+            email = request.form['user-email']                      #eventuale email immessa dall'utente
             
             airline = cardSelezionata.compagnia                     #compagnia aerea del volo
             aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
             aeroportoArrivo = cardSelezionata.arrivo                #aeroporto di arrivo
             dataVolo = cardSelezionata.data                         #data del volo
             orarioPartenza = cardSelezionata.orario                 #orario del volo
-            email = request.form['user-email']                      #eventuale email immessa dall'utente
-            
+
+            #sendPayment(username, idVolo, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, 0, 0, 0, 0, 0, 0, email)
+            #return redirect("/"+username+"/pagamento concluso")
+
+        else:
+            return render_template("errore.hmtl", errore="Non ci sono posti liberi sufficienti per il numero di biglietti selezionato.")
+        
+    #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
+    return redirect("/accedi", 302)
             
 
 
@@ -571,7 +579,43 @@ def pagamentoPersonalizzato(username):
         session.pop(username)
         return redirect("/accedi",401)
 
-    return render_template("Menu.html")
+    if request.method == 'POST':
+
+        diz = session.get(username)
+        session.pop(username)
+        cardSelezionata = diz["cardSelezionata"]
+        numBigliettiAcquistati = diz["numBigliettiAcquistati"]
+        serviziSelezionati = diz["serviziSelezionati"]
+
+        #tra le informazioni che ci servono abbiamo già lo username dell'utente racchiuso nella variabile username
+        idVolo = cardSelezionata.idVolo
+        postiSelezionati = diz["postiSelezionati"]
+        dataPagamento = getCurrentDateStr()
+        prezzoBase = int(numBigliettiAcquistati) * Decimal(cardSelezionata.prezzoBase)
+        prezzoSelezionePosti = diz["prezzoSelezionePosti"]
+        prezzoServiziAggiuntivi = diz["prezzoServiziAggiuntivi"]
+        prezzoTotale = diz["prezzoTotale"]
+        numStivaMedi = serviziSelezionati.bagaglioStivaMedio
+        numStivaGrandi = serviziSelezionati.bagaglioStivaGrande
+        numBagagliSpeciali = serviziSelezionati.bagaglioSpeciale
+        numAssicurazioni = serviziSelezionati.assicurazioneBagagli
+        numAnimali = serviziSelezionati.animaleDomestico
+        numNeonati = serviziSelezionati.neonato
+        email = request.form['user-email']                      #eventuale email immessa dall'utente
+            
+        airline = cardSelezionata.compagnia                     #compagnia aerea del volo
+        aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
+        aeroportoArrivo = cardSelezionata.arrivo                #aeroporto di arrivo
+        dataVolo = cardSelezionata.data                         #data del volo
+        orarioPartenza = cardSelezionata.orario                 #orario del volo
+
+        session[username] = diz
+
+        #sendPayment(username, idVolo, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, numStivaMedi, numStivaGrandi, numBagagliSpeciali, numAssicurazioni, numAnimali, numNeonati, email)
+        #return redirect("/"+username+"/personalizzato concluso")
+
+    #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
+    return redirect("/accedi", 302)
 
 
 @app.route("/<string:username>/<string:idVolo>/conferma", methods=('GET','POST'))

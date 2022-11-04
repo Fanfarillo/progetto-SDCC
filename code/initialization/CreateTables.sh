@@ -29,5 +29,11 @@ aws dynamodb create-table \
 --key-schema AttributeName=Compagnia,KeyType=HASH \
 --billing-mode PAY_PER_REQUEST
 
+aws dynamodb create-table \
+--table-name Pagamento \
+--attribute-definitions AttributeName=IdVolo,AttributeType=S AttributeName=PostiSelezionati,AttributeType=L \
+--key-schema AttributeName=IdVolo,KeyType=HASH AttributeName=PostiSelezionati,KeyType=RANGE \
+--billing-mode PAY_PER_REQUEST
+
 #populate the tables
 python3 PopulateTables.py

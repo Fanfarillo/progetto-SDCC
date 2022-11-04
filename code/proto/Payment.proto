@@ -18,9 +18,10 @@ message NewPayment {
     int32 numStivaMedi = 9;
     int32 numStivaGrandi = 10;
     int32 numBagagliSpeciali = 11;
-    int32 numAnimali = 12;
-    int32 numNeonati = 13;
-    string email = 14;
+    int32 numAssicurazioni = 12;
+    int32 numAnimali = 13;
+    int32 numNeonati = 14;
+    string email = 15;
 }
 
 message PayResponse {
