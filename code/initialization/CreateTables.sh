@@ -31,7 +31,7 @@ aws dynamodb create-table \
 
 aws dynamodb create-table \
 --table-name Pagamento \
---attribute-definitions AttributeName=IdVolo,AttributeType=S AttributeName=PostiSelezionati,AttributeType=L \
+--attribute-definitions AttributeName=IdVolo,AttributeType=S AttributeName=PostiSelezionati,AttributeType=S \
 --key-schema AttributeName=IdVolo,KeyType=HASH AttributeName=PostiSelezionati,KeyType=RANGE \
 --billing-mode PAY_PER_REQUEST
 

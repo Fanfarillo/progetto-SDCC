@@ -34,7 +34,8 @@
           <button type="submit" class="btn btn-primary my-3">Indietro</button>        
         </form>
       </div>
-      <form action="/{{ username }}/{{ card.idVolo }}/personalizzato" method="POST">
+
+    <form action="/{{ username }}/{{ card.idVolo }}/personalizzato" method="POST">
       <div class="container my-4 text-center" style="max-width: 1160px;">
         <div style="padding-bottom: 100px;">
         <h3 class="display-3" style="color: #646464;">Selezionare i posti che si desidera prenotare</h3>
@@ -46,8 +47,8 @@
             <th style="border:1px solid black;">Fila 1</th>
             <th style="border:1px solid black;">File 2-5</th>
             <th style="border:1px solid black;">File 6-15</th>
-            <th style="border:1px solid black;">Fila 16-17</th>
-            <th style="border:1px solid black;">Fila 18-26</th>
+            <th style="border:1px solid black;">File 16-17</th>
+            <th style="border:1px solid black;">File 18-26</th>
           </tr>
           <tr>
             <td style="border:1px solid black;">€{{ seatsFlight.primo }}</td>
@@ -109,27 +110,31 @@
               <td>
                 <div class="mb-3">
                   <label for="Bagaglio speciale" class="form-label">Bagaglio speciale</label>
-                  <input id = "bagaglioSpeciale" type="number" value="0" min="0" class="form-control" name="Bagaglio speciale" aria-describedby="bagaglioSpecialeHelp">
+                  <input id = "bagaglioSpeciale" type="number" value="0" min="0" max="2" class="form-control" name="Bagaglio speciale" aria-describedby="bagaglioSpecialeHelp">
+                  <div id="bagaglioSpecialeHelp" class="form-text">I bagagli speciali sono i supporti alla mobilità, gli strumenti musicali e le attrezzature sportive ingombranti.</div>
                 </div>
                 <div class="mb-3">
                   <label for="Bagaglio stiva medio" class="form-label">Bagaglio stiva medio</label>
-                  <input id = "bagaglioStivaMedio" type="number" value="0" min="0" class="form-control" name="Bagaglio stiva medio" aria-describedby="bagaglioStivaMedioHelp">
+                  <input id = "bagaglioStivaMedio" type="number" value="0" min="0" max="4" class="form-control" name="Bagaglio stiva medio" aria-describedby="bagaglioStivaMedioHelp">
+                  <div id="bagaglioStivaMedioHelp" class="form-text">I bagagli in stiva medi hanno un peso massimo di 20 kg.</div>
                 </div>
                 <div class="mb-3">
                   <label for="Bagaglio stiva grande" class="form-label">Bagaglio stiva grande</label>
-                  <input id = "bagaglioStivaGrande" type="number" value="0" min="0" class="form-control" name="Bagaglio stiva grande" aria-describedby="bagaglioStivaGrandeHelp">
+                  <input id = "bagaglioStivaGrande" type="number" value="0" min="0" max="2" class="form-control" name="Bagaglio stiva grande" aria-describedby="bagaglioStivaGrandeHelp">
+                  <div id="bagaglioStivaMedioHelp" class="form-text">I bagagli in stiva grandi hanno un peso massimo di 30 kg.</div>
                 </div>
                 <div class="mb-3">
                   <label for="assicurazioneBagagli" class="form-label">Assicurazione bagagli</label>
-                  <input id = "assicurazioneBagagli" type="number" value="0" min="0" class="form-control" name="assicurazioneBagagli" aria-describedby="assicurazioneBagagliHelp">
+                  <input id = "assicurazioneBagagli" type="number" value="0" min="0" max="1" class="form-control" name="assicurazioneBagagli" aria-describedby="assicurazioneBagagliHelp">
+                  <div id="bagaglioStivaMedioHelp" class="form-text">L'assicurazione bagagli prevede un prezzo onnicomprensivo dei bagagli trasportati (inclusi quelli extra).</div>
                 </div>
                 <div class="mb-3">
-                  <label for="Animale domestico" class="form-label">Animale domestico</label>
-                  <input id = "animaleDomestico" type="number" value="0" min="0" class="form-control" name="Animale domestico" aria-describedby="animaleDomesticoHelp">
+                  <label for="Animale domestico" class="form-label">Animale domestico in cabina</label>
+                  <input id = "animaleDomestico" type="number" value="0" min="0" max="2" class="form-control" name="Animale domestico" aria-describedby="animaleDomesticoHelp">
                 </div>
                 <div class="mb-3">
                   <label for="Neonato" class="form-label">Neonato</label>
-                  <input id="neonato" type="number" value="0" min="0" class="form-control" name="Neonato" aria-describedby="neonatoHelp">
+                  <input id="neonato" type="number" value="0" min="0" max="2" class="form-control" name="Neonato" aria-describedby="neonatoHelp">
                 </div>
               </td>
             </tr>

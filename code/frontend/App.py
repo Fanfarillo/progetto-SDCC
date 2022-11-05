@@ -53,14 +53,12 @@ def iscrizione():
         password = request.form['inputPassword']
         # Conferma password
         passwordConfirm = request.form['inputPasswordConfirm']
-        # Email
-        email = request.form['inputEmail']
         # Tipologia utente
         userType = request.form['flexRadioDefault']
         # Carta di credito
         cartaDiCredito = request.form['inputCarta']
 
-        #app.logger.info("Richiesta procedura di iscrizione: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
+        #app.logger.info("Richiesta procedura di iscrizione: [" + username + ","+ password + "," + passwordConfirm + "," + userType + "]")
         
         """
         Verifico se l'utente che si sta iscrivendo è un
@@ -85,13 +83,13 @@ def iscrizione():
         tutte le informazioni necessarie per completare
         l'iscrizione dell'utente.
         """
-        isOk = sendSignUpInfo(email, username, password, passwordConfirm, userType, airline, cartaDiCredito)
+        isOk = sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito)
 
         if isOk and userType == "Turista":
-            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "]")
+            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + userType + "]")
             return redirect('/accedi')
         elif isOk and userType != "Turista":
-            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + email + "," + userType + "," + request.form['airlineDropdown'] + "]")
+            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + userType + "," + request.form['airlineDropdown'] + "]")
             return redirect('/accedi')
         else:
             return render_template("Iscrizione.html")
@@ -533,19 +531,14 @@ def pagamentoNormale(username):
 
             #tra le informazioni che ci servono abbiamo già lo username dell'utente racchiuso nella variabile username
             postiPresi = postiLiberi[0:numBigliettiSelezionato]     #i posti che verranno occupati dalla prenotazione
-            idVolo = cardSelezionata.idVolo                         #ID del volo prenotato
             dataPagamento = getCurrentDateStr()                     #data del pagamento
             prezzoTotale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
             email = request.form['user-email']                      #eventuale email immessa dall'utente
-            
-            airline = cardSelezionata.compagnia                     #compagnia aerea del volo
-            aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
-            aeroportoArrivo = cardSelezionata.arrivo                #aeroporto di arrivo
-            dataVolo = cardSelezionata.data                         #data del volo
-            orarioPartenza = cardSelezionata.orario                 #orario del volo
 
-            #sendPayment(username, idVolo, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, 0, 0, 0, 0, 0, 0, email)
-            #return redirect("/"+username+"/pagamento concluso")
+            serviziSelezionati = ServiziSelezionati(0, 0, 0, 0, 0, 0)   #in questo flusso di esecuzione non è stato selezionato alcun servizio aggiuntivo
+
+            #sendPayment(username, cardSelezionata, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, serviziSelezionati, email)
+            return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiSelezionato, paymentDate=dataPagamento, basePrice=prezzoTotale, selectedSeats=postiPresi, seatsPrice='0', selectedServices=serviziSelezionati, servicesPrice='0', totalPrice=prezzoTotale, email=email)
 
         else:
             return render_template("errore.hmtl", errore="Non ci sono posti liberi sufficienti per il numero di biglietti selezionato.")
@@ -575,7 +568,7 @@ def pagamentoPersonalizzato(username):
     A questo punto del flusso di esecuzione ci posso arrivare
     SOLAMENTE da personalizzato.html.
     """
-    if(not isinstance(diz, dict) or len(diz.keys())!= 17):
+    if(not isinstance(diz, dict) or len(diz.keys())!= 12):
         session.pop(username)
         return redirect("/accedi",401)
 
@@ -588,31 +581,18 @@ def pagamentoPersonalizzato(username):
         serviziSelezionati = diz["serviziSelezionati"]
 
         #tra le informazioni che ci servono abbiamo già lo username dell'utente racchiuso nella variabile username
-        idVolo = cardSelezionata.idVolo
-        postiSelezionati = diz["postiSelezionati"]
-        dataPagamento = getCurrentDateStr()
-        prezzoBase = int(numBigliettiAcquistati) * Decimal(cardSelezionata.prezzoBase)
-        prezzoSelezionePosti = diz["prezzoSelezionePosti"]
-        prezzoServiziAggiuntivi = diz["prezzoServiziAggiuntivi"]
-        prezzoTotale = diz["prezzoTotale"]
-        numStivaMedi = serviziSelezionati.bagaglioStivaMedio
-        numStivaGrandi = serviziSelezionati.bagaglioStivaGrande
-        numBagagliSpeciali = serviziSelezionati.bagaglioSpeciale
-        numAssicurazioni = serviziSelezionati.assicurazioneBagagli
-        numAnimali = serviziSelezionati.animaleDomestico
-        numNeonati = serviziSelezionati.neonato
-        email = request.form['user-email']                      #eventuale email immessa dall'utente
-            
-        airline = cardSelezionata.compagnia                     #compagnia aerea del volo
-        aeroportoPartenza = cardSelezionata.partenza            #aeroporto di partenza
-        aeroportoArrivo = cardSelezionata.arrivo                #aeroporto di arrivo
-        dataVolo = cardSelezionata.data                         #data del volo
-        orarioPartenza = cardSelezionata.orario                 #orario del volo
+        postiSelezionati = diz["postiSelezionati"]                      #i posti che verranno occupati dalla prenotazione
+        dataPagamento = getCurrentDateStr()                             #data del pagamento
+        prezzoBase = int(numBigliettiAcquistati) * Decimal(cardSelezionata.prezzoBase)  #prezzo base (moltiplicato per il numero di biglietti acquistati)
+        prezzoSelezionePosti = diz["prezzoSelezionePosti"]              #prezzo dei posti a sedere selezionati
+        prezzoServiziAggiuntivi = diz["prezzoServiziAggiuntivi"]        #prezzo dei servizi aggiuntivi selezionati
+        prezzoTotale = diz["prezzoTotale"]                              #prezzo totale (base + selezione posti + servizi aggiuntivi)
+        email = request.form['user-email']                              #eventuale email immessa dall'utente
 
         session[username] = diz
 
-        #sendPayment(username, idVolo, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, numStivaMedi, numStivaGrandi, numBagagliSpeciali, numAssicurazioni, numAnimali, numNeonati, email)
-        #return redirect("/"+username+"/personalizzato concluso")
+        #sendPayment(username, cardSelezionata, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email)
+        return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiAcquistati, paymentDate=dataPagamento, basePrice=prezzoBase, selectedSeats=postiSelezionati, seatsPrice=prezzoSelezionePosti, selectedServices=serviziSelezionati, servicesPrice=prezzoServiziAggiuntivi, totalPrice=prezzoTotale, email=email)
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
@@ -642,7 +622,7 @@ def confermaRiepilogo(username, idVolo):
         diz = session.get(username)
         session.pop(username)
         cardSelezionata = diz["cardSelezionata"]
-        diz['numBigliettiSelezionato'] = numBigliettiSelezionato
+        diz['numBigliettiSelezionato'] = int(numBigliettiSelezionato)
         session[username] = diz
         prezzo_totale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
         print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
@@ -663,7 +643,7 @@ def personalizzato(username, idVolo):
 
     diz = session.get(username)
 
-    if(not isinstance(diz, dict) or len(diz.keys())!=10 or diz['username']!=username or diz['idVolo']!=idVolo):
+    if(not isinstance(diz, dict) or len(diz.keys())!=6 or diz['username']!=username or diz['idVolo']!=idVolo):
         """
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione

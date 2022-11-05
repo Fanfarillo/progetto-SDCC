@@ -32,7 +32,6 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         username_d = (cipher.decryptData(SignUpInfo.username)).decode('utf-8')
         password_d = (cipher.decryptData(SignUpInfo.password)).decode('utf-8')
         passwordConfirm_d = (cipher.decryptData(SignUpInfo.passwordConfirm)).decode('utf-8')
-        email_d = (cipher.decryptData(SignUpInfo.email)).decode('utf-8')
         userType_d = (cipher.decryptData(SignUpInfo.userType)).decode('utf-8')
         cartaDiCredito_d = (cipher.decryptData(SignUpInfo.cartaDiCredito)).decode('utf-8')
 
@@ -48,7 +47,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         """
         isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.username)
 
-        logger.info("Richiesta procedura di iscrizione: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "," + cartaDiCredito_d + "]")
+        logger.info("Richiesta procedura di iscrizione: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "," + cartaDiCredito_d + "]")
         
         if isOk:
             """
@@ -56,12 +55,12 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
             e non esiste alcun utente che ha già quello
             username, allora è possibile completare l'iscrizione.
             """
-            ret = storeUser(SignUpInfo.email, SignUpInfo.username, SignUpInfo.password, userType_d, SignUpInfo.airline, SignUpInfo.cartaDiCredito, SignUpInfo.userType)
+            ret = storeUser(SignUpInfo.username, SignUpInfo.password, userType_d, SignUpInfo.airline, SignUpInfo.cartaDiCredito, SignUpInfo.userType)
 
             logger.info("Procedura di iscrizione conclusa con successo: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
         else:
             ret = isOk
-            logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
+            logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
         output = Registration_pb2.SignUpResponse(isOk=ret)
         return output
 

@@ -10,7 +10,6 @@ REGIONE = 'us-east-1'
 
 
 
-
 def getAllSeatsFlight(compagnia):
     print("Compagnia: " + compagnia)
     dynamodb = boto3.resource(DYNAMODB, REGIONE)

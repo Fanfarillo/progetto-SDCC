@@ -40,42 +40,36 @@
 
           		<td>
             		<div class="dropdown my-5">
-              		<select name="giorno" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                		<option disabled selected>Giorno</option>
-                		{% for i in range(1,32) %}
-                		<option value="{{ i }}">{{ i }}</option>
-                		{% endfor %}
+					<label for="dayDropdown" class="form-label">Giorno</label><br>
+              		<select name="giorno" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="dayDropdown" required>
+						<option selected value="1">1</option>
+						{% for i in range(2,32) %}
+						<option value="{{ i }}">{{ i }}</option>
+						{% endfor %}
               		</select>
             		</div>
           		</td>
 
           		<td>
             		<div class="dropdown my-5">
-              		<select name="mese" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                		<option disabled selected>Mese</option>
-                		<option value="1">1</option>
-                		<option value="2">2</option>
-                		<option value="3">3</option>
-                		<option value="4">4</option>
-                		<option value="5">5</option>
-                		<option value="6">6</option>
-                		<option value="7">7</option>
-                		<option value="8">8</option>
-                		<option value="9">9</option>
-                		<option value="10">10</option>
-                		<option value="11">11</option>
-                		<option value="12">12</option>
+					<label for="monthDropdown" class="form-label">Mese</label><br>
+              		<select name="mese" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="monthDropdown" required>
+						<option selected value="1">1</option>
+						{% for i in range(2,13) %}
+						<option value="{{ i }}">{{ i }}</option>
+						{% endfor %}
               		</select>
             		</div>
           		</td>
 
           		<td>
             		<div class="dropdown my-5">
-              		<select name="anno" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                		<option disabled selected>Anno</option>
-		                {% for i in range(2022,2024) %}
-        		        <option value="{{ i }}">{{ i }}</option>
-        		        {% endfor %}
+					<label for="yearDropdown" class="form-label">Anno</label><br>
+              		<select name="anno" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="yearDropdown" required>
+						<option selected value="2022">2022</option>
+						{% for i in range(2023,2025) %}
+						<option value="{{ i }}">{{ i }}</option>
+						{% endfor %}
         		      </select>
         		    </div>
         		</td>

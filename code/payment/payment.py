@@ -6,6 +6,9 @@ from concurrent import futures
 from proto import Payment_pb2
 from proto import Payment_pb2_grpc
 
+from PayDB import *
+from PayUtils import *
+
 class PayServicer(Payment_pb2_grpc.PayServicer):
 
     def AddPayment(self, NewPayment, context):
@@ -20,8 +23,10 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         E' qui che interviene il design pattern Saga per i microservizi.
         """
         
+        selectedSeatsStr = listToString(NewPayment.selectedSeats)   #conversione della lista di posti selezionati in un'unica stringa
+
         #store delle informazioni legate al pagamento; qui idVolo e selectedSeats insieme formano la chiave primaria, per cui dovranno essere utilizzate per l'eventuale rimozione delle informazioni dal db dovuta a un rollback
-        storePayment(NewPayment.idVolo, NewPayment.selectedSeats, NewPayment.username, NewPayment.paymentDate, NewPayment.basePrice, NewPayment.seatsPrice, NewPayment.servicesPrice, NewPayment.totalPrice, NewPayment.numStivaMedi, NewPayment.numStivaGrandi, NewPayment.numBagagliSpeciali, NewPayment.numAssicurazioni, NewPayment.numAnimali, NewPayment.numNeonati, NewPayment.email)
+        storePayment(NewPayment.idVolo, selectedSeatsStr, NewPayment.username, NewPayment.paymentDate, NewPayment.basePrice, NewPayment.seatsPrice, NewPayment.servicesPrice, NewPayment.totalPrice, NewPayment.numStivaMedi, NewPayment.numStivaGrandi, NewPayment.numBagagliSpeciali, NewPayment.numAssicurazioni, NewPayment.numAnimali, NewPayment.numNeonati, NewPayment.email)
 
         #TODO: un sacco di roba
 

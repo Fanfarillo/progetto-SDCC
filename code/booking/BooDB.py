@@ -71,10 +71,11 @@ def isNewId(flightId):
 
 def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime, arrivalTime, airline, price, seats):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table(TABELLA_VOLO)
+    tableVolo = dynamodb.Table(TABELLA_VOLO)
+    tablePosti = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
     
-    #store an item in 'Utente' table in DynamoDB
-    table.put_item(
+    #store an item in 'Volo' table in DynamoDB
+    tableVolo.put_item(
         Item = {
             'Id': flightId,
             'Data': date,
@@ -88,6 +89,12 @@ def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime,
         }
     )
 
+    #store an item in 'PostiOccupati' table in DynamoDB
+    tablePosti.put_item(
+        Item = {
+            'IdVolo': flightId
+        }
+    )
 
 
 
@@ -126,8 +133,6 @@ def storeUpdatedFlight(flightId, newPrice):
                 'Posti liberi': seats
 	    }
     )
-
-
 
 
 def retrieveAvailableSeats(idVolo, postiDisponibili):

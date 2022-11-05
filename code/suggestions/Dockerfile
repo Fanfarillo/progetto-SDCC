@@ -3,6 +3,7 @@ USER root
 
 WORKDIR /app
 COPY . .
+COPY ./credentials /root/.aws/
 
 # Install OpenJDK-8
 RUN apt-get update && apt-get install -y openjdk-8-jdk && apt-get install -y ant && apt-get clean

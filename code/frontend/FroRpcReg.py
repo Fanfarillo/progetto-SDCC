@@ -55,11 +55,6 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
     dig.passwordConfirm = digest
     ciphertextPasswordConf, iv = cipher.encryptData(bytes(passwordConfirm, 'utf-8'))
 
-    # Email
-    digest = cipher.message_integrity(bytes(email,'utf-8'))
-    dig.email = digest
-    ciphertextEmail, iv = cipher.encryptData(bytes(email, 'utf-8'))
-
     # Username
     digest = cipher.message_integrity(bytes(username, 'utf-8'))
     dig.username = digest
@@ -98,7 +93,7 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
     i vari digest per controllare l'integrità dei messaggi.
     """
 
-    output = stub.SignUp(Registration_pb2.SignUpInfo(email=ciphertextEmail, username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, dig = dig))
+    output = stub.SignUp(Registration_pb2.SignUpInfo(username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, dig = dig))
 
     return output.isOk
 

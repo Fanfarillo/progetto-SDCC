@@ -28,7 +28,7 @@ class LoggedUser:
 Registra il nuovo utente con le informazioni passate
 come parametri.
 """
-def storeUser(email, username, password, userType_d, airline, cartaDiCredito, userType):
+def storeUser(username, password, userType_d, airline, cartaDiCredito, userType):
 
     if userType_d == 'Turista':
         """
@@ -52,7 +52,6 @@ def storeUser(email, username, password, userType_d, airline, cartaDiCredito, us
         table.put_item(
             Item = {
                 'Username': Binary(username),
-                'Email': Binary(email),
                 'Password': Binary(password),
                 'Tipo': Binary(typeToStore),
                 'cartaDiCredito': Binary(cartaDiCredito)

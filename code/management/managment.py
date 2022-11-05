@@ -148,7 +148,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         prezzi = getAllSeatsFlight(request.compagnia)
 
         for item in prezzi:
-            ret = Managment_pb2.SeatCostReply(prezzo=item)            
+            ret = Managment_pb2.SeatCostReply(prezzo=str(item))            
             yield ret
 
 
@@ -174,7 +174,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         prezzi = getAlladditionalServicesFlight(request.compagnia)
 
         for item in prezzi:
-            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=item)
+            ret = Managment_pb2.AdditionalServiceCostReply(prezzo=str(item))
             yield ret
 
 

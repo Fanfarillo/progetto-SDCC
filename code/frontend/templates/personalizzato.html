@@ -70,12 +70,12 @@
           <input type="text" class="form-control" name="prezzo" aria-describedby="partenzaHelp" value="€ {{ prezzoTotale }}" readonly>
         </div>
 
-        <h1 class="display-6" style="color: #646464;">Inserire l'indirizzo email per ricevere la conferma del pagamento.</h1>
-
         <div class="mb-3">
-            <label for="user-email" class="form-label">Questo campo non è obbligatorio.</label>
-            <input type="email" class="form-control" name="user-email" aria-describedby="emailHelp" value="{{ request.form['user-email'] }}">
+            <label for="user-email" class="form-label">Inserire l'indirizzo email per ricevere la conferma del pagamento.</label>
+            <input type="email" class="form-control" name="inputEmail" aria-describedby="emailHelp" value="{{ request.form['user-email'] }}" required>
+            <div id="emailHelp" class="form-text">Non condivideremo con nessuno il tuo indirizzo email.</div>
         </div>
+
         <h1 class="display-6" style="color: #646464;">Premere il bottone 'Conferma' per completare l'acquisto dei biglietti.</h1>
         <button type="submit" class="btn btn-primary my-3">Conferma</button>
       </form>
