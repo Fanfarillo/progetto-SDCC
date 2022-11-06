@@ -4,11 +4,9 @@ import sys
 
 
 
-
 DYNAMODB = 'dynamodb'
-TABELLA_UTENTE = 'Utente'
 REGIONE = 'us-east-1'
-
+TABELLA_UTENTE = 'Utente'
 
 
 
@@ -23,7 +21,6 @@ class LoggedUser:
 
 
 
-
 """
 Registra il nuovo utente con le informazioni passate
 come parametri.
@@ -35,7 +32,6 @@ def storeUser(username, password, userType_d, airline, cartaDiCredito, userType)
         Il check viene fatto sul valore decodficato
         mentre la scrittura nel DB è codificata.
         """
-        print("SONO UN TURISTA")
         typeToStore = userType
     else:
         """
@@ -43,7 +39,6 @@ def storeUser(username, password, userType_d, airline, cartaDiCredito, userType)
         non è un Turista, allora il suo tipo
         corrisponde alla compagnia aerea.
         """
-        print("SONO UNA COMPAGNIA")
         typeToStore = airline
     
     try:
@@ -64,7 +59,6 @@ def storeUser(username, password, userType_d, airline, cartaDiCredito, userType)
 
 
 
-#this function returns true if there is no item with the specified email (i.e. the specified primary key); it returns false otherwise
 """
 Verifica se esiste già un utente iscritto nel
 sistema che ha lo username inserito come parametro
@@ -90,7 +84,6 @@ def isNewUser(username):
         return False
     else:
         return True
-
 
 
 

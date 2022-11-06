@@ -42,19 +42,19 @@
           <input type="text" class="form-control" name="compagnia" aria-describedby="partenzaHelp" value="{{ card.compagnia }}" readonly>
         </div>
   
-        <!--Aereoporto di Partenza-->
+        <!--Aeroporto di Partenza-->
         <div class="mb-3">
-          <label for="partenza" class="form-label">Aereoporto di partenza</label>
+          <label for="partenza" class="form-label">Aeroporto di partenza</label>
           <input type="text" class="form-control" name="partenza" aria-describedby="partenzaHelp" value="{{ card.partenza }}" readonly>
         </div>
   
-        <!--Aereoporto di Arrivo-->
+        <!--Aeroporto di Arrivo-->
         <div class="mb-3">
-          <label for="arrivo" class="form-label">Aereoporto di arrivo</label>
+          <label for="arrivo" class="form-label">Aeroporto di arrivo</label>
           <input type="text" class="form-control" name="arrivo" value="{{ card.arrivo }}" readonly>
         </div>
   
-        <!--Aereoporto di Partenza-->
+        <!--Aeroporto di Partenza-->
         <div class="mb-3">
           <label for="data" class="form-label">Data</label>
           <input type="text" class="form-control" name="data" aria-describedby="partenzaHelp" value="{{ card.data }}" readonly>
@@ -77,7 +77,7 @@
 
         <div class="mb-3">
           <label for="user-email" class="form-label">Inserire l'indirizzo email per ricevere la conferma del pagamento.</label>
-          <input type="email" class="form-control" name="inputEmail" aria-describedby="emailHelp" value="{{ request.form['user-email'] }}" required>
+          <input type="email" class="form-control" name="user-email" aria-describedby="emailHelp" value="{{ request.form['user-email'] }}" required>
           <div id="emailHelp" class="form-text">Non condivideremo con nessuno il tuo indirizzo email.</div>
         </div>
         

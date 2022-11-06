@@ -4,9 +4,7 @@ from proto import Payment_pb2
 from proto import Payment_pb2_grpc
 
 
-
 ADDR_PORT = 'payment:50055'
-
 
 
 def sendPayment(username, card, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email):

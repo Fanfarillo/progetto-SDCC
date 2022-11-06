@@ -1,29 +1,29 @@
 import boto3
 import grpc
+
 from boto3.dynamodb.conditions import Attr
 from decimal import *
+
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 
 
 
 ADDR_PORT = 'management:50052'
-TABELLA_VOLO = 'Volo'
 DYNAMODB = 'dynamodb'
-TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
 REGIONE = 'us-east-1'
+TABELLA_VOLO = 'Volo'
+TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
 
 
 
 # L'assunzione fatta sui possibili posti disponibili dell'aereo.
-postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1','A2', 'B2', 'C2', 'D2', 'E2', 'F2','A3', 'B3', 'C3', 'D3', 'E3', 'F3',
-'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5','A6', 'B6', 'C6', 'D6', 'E6', 'F6','A7', 'B7', 'C7', 'D7', 'E7', 'F7',
-'A8', 'B8', 'C8', 'D8', 'E8', 'F8','A9', 'B9', 'C9', 'D9', 'E9', 'F10','A10', 'B10', 'C10', 'D10', 'E10', 'F10','A11', 'B11', 'C11', 'D11', 'E11', 'F11',
-'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'A13', 'B13', 'C13', 'D13', 'E13', 'F13','A14', 'B14', 'C14', 'D14', 'E14', 'F14','A15', 'B15', 'C1', 'D15', 'E15', 'F15','A16', 'B16', 'C16', 'D16', 'E16', 'F16',
-'A17', 'B17', 'C17', 'D17', 'E17', 'F17','A18', 'B18', 'C18', 'D18', 'E18', 'F18','A19', 'B19', 'C19', 'D19', 'E19', 'F19','A20', 'B20', 'C20', 'D20', 'E20', 'F20',
-"A21", "B21", "C21", "D21", "E21", "F21","A22", "B22", "C22", "D22", "E22", "F22","A23", "B23", "C23", "D23", "E23", "F23","A24", "B24", "C24", "D24", "E24", "F24",
-"A25", "B25", "C25", "D25", "E25", "F25","A26", "B26", "C26", "D26", "E26", "F26"]
-
+postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5',
+'A6', 'B6', 'C6', 'D6', 'E6', 'F6', 'A7', 'B7', 'C7', 'D7', 'E7', 'F7', 'A8', 'B8', 'C8', 'D8', 'E8', 'F8', 'A9', 'B9', 'C9', 'D9', 'E9', 'F9', 'A10', 'B10', 'C10', 'D10', 'E10', 'F10',
+'A11', 'B11', 'C11', 'D11', 'E11', 'F11', 'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'A13', 'B13', 'C13', 'D13', 'E13', 'F13', 'A14', 'B14', 'C14', 'D14', 'E14', 'F14', 'A15', 'B15', 'C15', 'D15', 'E15', 'F15',
+'A16', 'B16', 'C16', 'D16', 'E16', 'F16', 'A17', 'B17', 'C17', 'D17', 'E17', 'F17', 'A18', 'B18', 'C18', 'D18', 'E18', 'F18', 'A19', 'B19', 'C19', 'D19', 'E19', 'F19', 'A20', 'B20', 'C20', 'D20', 'E20', 'F20',
+"A21", "B21", "C21", "D21", "E21", "F21", "A22", "B22", "C22", "D22", "E22", "F22", "A23", "B23", "C23", "D23", "E23", "F23", "A24", "B24", "C24", "D24", "E24", "F24", "A25", "B25", "C25", "D25", "E25", "F25",
+"A26", "B26", "C26", "D26", "E26", "F26"]
 
 
 
@@ -33,9 +33,9 @@ class Flight:
         self.idKey = idKey
         # Compagnia aerea
         self.compagnia_aerea = compagnia_aerea
-        # Aereoporto di arrivo
+        # Aeroporto di arrivo
         self.arrivo = arrivo
-        # Aereoporto di partenza
+        # Aeroporto di partenza
         self.partenza = partenza
         # Orario del volo
         self.orario = orario
@@ -45,7 +45,6 @@ class Flight:
         self.prezzo = prezzo
         # Identificativi dei posti disponibili
         self.postiDisponibili = postiDisponibili
-
 
 
 
@@ -65,7 +64,6 @@ def isNewId(flightId):
         return False
     else:
         return True
-
 
 
 
@@ -147,15 +145,12 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
     riga al più.
     """
     response = table.scan(FilterExpression=Attr('IdVolo').eq(idVolo))   
-    print(response)
 
     """
     Il valore di items è una array che ha esattamente un elemento
     poiché l'identificativo del volo è la chiave primaria.
     """
     items = response['Items']
-
-    print(items)
 
     """
     In questo scenario, si sta richiedendo di accedere ai posti disponibili
@@ -167,7 +162,6 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
     
     #Estraggo il dizionario relativo alla riga
     row = items[0]
-    print(row)
     keys = row.keys()
 
     """
@@ -191,7 +185,6 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
             print("[ECCEZIONE]: " + key)
     #Restituisco tutti e soli i posti attualmente disponibili
     return postiDisponibili
-
 
 
 
@@ -232,10 +225,10 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo):
                 # Compagnia aerea che offre il volo
                 compagnia_aerea = value  
             if(key=='Aeroporto arrivo'):
-                # Aereoporto di arrivo del volo
+                # Aeroporto di arrivo del volo
                 arrivo = value
             if(key=='Aeroporto partenza'):
-                # Aereoporto di partenza del volo
+                # Aeroporto di partenza del volo
                 partenza = value
             if(key=='Data'):
                 # Data del volo
@@ -279,3 +272,59 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo):
         flight.postiDisponibili = postiDisponibili
 
     return flights
+
+
+"""
+Restituisce tutti gli aeroporti di partenza che figurano nella tabella Volo.
+"""
+def retrieveDepartures():
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
+
+    departures = []     #la lista degli aeroporti di partenza da restituire al chiamante
+
+    response = table.scan()
+
+    """
+    La variabile items è una lista di dizionari fatta nel seguente modo:
+    [{}, {}, ..., {}]
+    """
+    items = response['Items']
+
+    #itero sui dizionari.
+    for item in items:
+        #itero su tutte le coppie (key, value) del dizionario fissato.
+        for key, value in item.items():
+            #aggiungo l'aeroporto di partenza alla lista solo se non vi è già presente
+            if(key=='Aeroporto partenza' and value not in departures):        
+                departures.append(value)
+
+    return departures
+
+
+"""
+Restituisce tutti gli aeroporti di arrivo che figurano nella tabella Volo.
+"""
+def retrieveArrivals():
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
+
+    arrivals = []     #la lista degli aeroporti di partenza da restituire al chiamante
+
+    response = table.scan()
+
+    """
+    La variabile items è una lista di dizionari fatta nel seguente modo:
+    [{}, {}, ..., {}]
+    """
+    items = response['Items']
+
+    #itero sui dizionari.
+    for item in items:
+        #itero su tutte le coppie (key, value) del dizionario fissato.
+        for key, value in item.items():
+            #aggiungo l'aeroporto di arrivo alla lista solo se non vi è già presente
+            if(key=='Aeroporto arrivo' and value not in arrivals):        
+                arrivals.append(value)
+
+    return arrivals

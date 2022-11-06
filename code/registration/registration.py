@@ -11,17 +11,13 @@ from RegDB import *
 
 
 
-
 class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
-
-
 
 
     """
     Implementa le procedura di iscrizione.
     """
     def SignUp(self, SignUpInfo, context):
-
         
         cipher = Security(b"mysecretpassword")
 
@@ -45,7 +41,15 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         sono lo stesso valore. Inoltre, verifica se un utente
         con lo stesso username è gà iscritto all'applicazione.
         """
-        isOk = (SignUpInfo.password == SignUpInfo.passwordConfirm) and isNewUser(SignUpInfo.username)
+        if SignUpInfo.password != SignUpInfo.passwordConfirm:
+            isOk = False
+            err = "PASSWORD E CONFERMA PASSWORD NON CORRISPONDONO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELL'ISCRIZIONE."
+        elif not isNewUser(SignUpInfo.username):
+            isOk = False
+            err = "ESISTE GIÀ UN UTENTE CON QUESTO USERNAME.\nPROVA A INSERIRE NUOVAMENTE I DATI DELL'ISCRIZIONE."
+        else:
+            isOk = True
+            err = None
 
         logger.info("Richiesta procedura di iscrizione: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "," + cartaDiCredito_d + "]")
         
@@ -57,13 +61,18 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
             """
             ret = storeUser(SignUpInfo.username, SignUpInfo.password, userType_d, SignUpInfo.airline, SignUpInfo.cartaDiCredito, SignUpInfo.userType)
 
-            logger.info("Procedura di iscrizione conclusa con successo: [" + email_d + "," + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
+            if ret == False:
+                err = "SI È VERIFICATO UN PROBLEMA INTERNO AL SERVER DURANTE LA REGISTRAZIONE.\nRIPROVARE PIÙ TARDI."
+                logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
+            else:
+                logger.info("Procedura di iscrizione conclusa con successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
+        
         else:
-            ret = isOk
+            ret = False
             logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
-        output = Registration_pb2.SignUpResponse(isOk=ret)
+        
+        output = Registration_pb2.SignUpResponse(isOk=ret, error=err)
         return output
-
 
 
 
@@ -101,7 +110,6 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
 
 
-
 """
 Costruisco un file di LOG in cui andare ad
 inserire le richieste che giungono dagli altri
@@ -116,7 +124,6 @@ logger_warnings.setLevel(logging.WARNING)
 
 
 
-
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Registration_pb2_grpc.add_UsersInfoServicer_to_server(UsersInfoServicer(), server)
@@ -126,8 +133,7 @@ Registration_pb2_grpc.add_UsersInfoServicer_to_server(UsersInfoServicer(), serve
 logger.info('Avvio del server in ascolto sulla porta 50051...')
 server.add_insecure_port('[::]:50051')
 server.start()
-logger.info('Server avviato con successo...')
-
+logger.info('Server avviato con successo.')
 
 
 

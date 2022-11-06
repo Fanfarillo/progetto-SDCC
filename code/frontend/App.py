@@ -10,16 +10,12 @@ from FroRpcBoo import *
 from FroUtils import *
 
 
-"""
-Stato del dizionario quando ritorno dal pagamento
-"""
-PAGAMENTO_BACK = 5
-"""
-Stato del dizionario personalizzato quando ritorno dal pagamento
-"""
-PAGAMENTO_PERSONALIZZATO_BACK = 17
+PAGAMENTO_BACK = 5                      #Stato del dizionario quando ritorno dal pagamento
+PAGAMENTO_PERSONALIZZATO_BACK = 12      #Stato del dizionario personalizzato quando ritorno dal pagamento
 NUM_SEATS = 156
+
 app = Flask(__name__)
+app.debug = True
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -83,16 +79,12 @@ def iscrizione():
         tutte le informazioni necessarie per completare
         l'iscrizione dell'utente.
         """
-        isOk = sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito)
+        response = sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito)
 
-        if isOk and userType == "Turista":
-            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + userType + "]")
-            return redirect('/accedi')
-        elif isOk and userType != "Turista":
-            #app.logger.info("Procedura di iscrizione conclusa con successo: [" + username + ","+ password + "," + passwordConfirm + "," + userType + "," + request.form['airlineDropdown'] + "]")
+        if response.isOk:
             return redirect('/accedi')
         else:
-            return render_template("Iscrizione.html")
+            return render_template("errore.html", errore=response.error, airline=None, username=None)
 
     return render_template("Iscrizione.html")
 
@@ -133,7 +125,8 @@ def accesso():
             #app.logger.info("Procedura di accesso completata con successo per l'utente: [" + username + ","+ password + "," + response.storedType + "]")
             return redirect("/"+response.storedType+"/"+username+"/airlineHome")
         else:
-            return render_template("Accesso.html")
+            stringa = "LE CREDENZIALI IMMESSE SONO ERRATE.\nPROVA AD ACCEDERE NUOVAMENTE."
+            return render_template("errore.html", errore=stringa, airline=None, username=None)
     
     #app.logger.warning("Richiesta GET per la procedura di accesso...")
     # Utile nel momento in cui viene eseguita una richiesta GET
@@ -158,8 +151,11 @@ def home(username):
         """
         return redirect("/accedi", 401)
 
-    print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
-    return render_template("Home.html", username=username)
+    #qui è necessario fare una query a Booking per recuperare gli aeroporti da inserire nelle scrollbar "Aeroporto di partenza" e "Aeroporto di destinazione"
+    airportsLists = retrieveAirports()
+
+    #print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
+    return render_template("Home.html", username=username, airportsLists=airportsLists)
 
 
 #here the airline specifies which information has to be managed
@@ -209,21 +205,15 @@ def booking(username):
             diz.pop('idVolo')
         if 'cardSelezionata' in keys:
             diz.pop('cardSelezionata')
-        if 'bagaglioSpecialePrezzo' in keys:
-            diz.pop('bagaglioSpecialePrezzo')
-        if 'bagaglioStivaMedioPrezzo' in keys:
-            diz.pop('bagaglioStivaMedioPrezzo')
-        if 'bagaglioStivaGrandePrezzo' in keys:
-            diz.pop('bagaglioStivaGrandePrezzo')
-        if 'assicurazioneBagagliPrezzo' in keys:
-            diz.pop('assicurazioneBagagliPrezzo')
-        if 'animaleDomesticoPrezzo' in keys:
-            diz.pop('animaleDomesticoPrezzo')
-        if 'neonatoPrezzo' in keys:
-            diz.pop('neonatoPrezzo')
+        if 'prezziFilePosti' in keys:
+            diz.pop('prezziFilePosti')
+        if 'prezziServizi' in keys:
+            diz.pop('prezziServizi')
+
         session.pop(username)
         session[username] = diz
-        print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
+
+        #print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), username = username)
 
 
@@ -240,14 +230,18 @@ def booking(username):
             giorno = request.form['giorno']
             mese = request.form['mese']
             anno = request.form['anno']
-            partenza = request.form['aereoporto_partenza']
-            arrivo = request.form['aereoporto_arrivo']
-            #persone = request.form['persone']
+            partenza = request.form['aeroporto_partenza']
+            arrivo = request.form['aeroporto_arrivo']
 
-            #Non è possibile avere i due aereoporti uguali
-            if(partenza == arrivo):
-                stringa = "L'AREOPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO\nPROVA AD INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE"
-                return render_template("errore.html", errore = stringa)
+            #Non è possibile avere gli aeroporti non selezionati
+            if partenza=="Selezionare un aeroporto" or arrivo=="Selezionare un aeroporto":
+                stringa = "È NECESSARIO SELEZIONARE GLI AEROPORTI DI PARTENZA E DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
+                return render_template("errore.html", errore=stringa, airline=None, username=username)
+
+            #Non è neanche possibile avere i due aeroporti uguali
+            if partenza == arrivo:
+                stringa = "L'AEROPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
+                return render_template("errore.html", errore=stringa, airline=None, username=username)
 
             """
             Ricavo tutte le informazioni che dovranno essere
@@ -267,7 +261,7 @@ def booking(username):
             #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
             session[username] = {'username':username, 'cards':result.cards}
 
-            print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
+            #print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
 
             #E'necessario portarmi appresso l'informazione relativa al username che mi permette di gestire completamente la sessione
             return render_template("Booking.html", items = result.cards, num = result.num, username = username)
@@ -284,12 +278,10 @@ def booking(username):
 
 @app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto", methods=('GET','POST'))
 def resoconto(username, compagnia, idVolo):
-    #TODO implementare il resoconto
     """
     Arrivato a questo punto, devo avere uno stato differente da None
     """
     if session.get(username) is None:
-        print("ERRORE 0")
         return redirect("/accedi", 401)
 
     """
@@ -304,7 +296,6 @@ def resoconto(username, compagnia, idVolo):
         Faccio la pop per eliminare lo stato della sessione poiché vengo
         reindirizzato all'accesso in cui non ho alcuno stato della sessione.
         """
-        print("ERRORE 1")
         session.pop(username)
         return redirect("/accedi", 401)
 
@@ -312,9 +303,9 @@ def resoconto(username, compagnia, idVolo):
     cardSelezionata = None
 
     if(len(diz.keys()) == PAGAMENTO_BACK):
-        print("SONO TORNATO INDIETRO DA PAGAMENTO!")
         cardSelezionata = diz['cardSelezionata']
         diz.pop('numBigliettiSelezionato')
+
     else:
         cards = diz['cards']
         check = False
@@ -343,7 +334,6 @@ def resoconto(username, compagnia, idVolo):
             Faccio la pop per eliminare lo stato della sessione poiché vengo
             reindirizzato all'accesso in cui non ho alcuno stato della sessione.
             """
-            print("ERRORE 2")
             session.pop(username)
             return redirect("/accedi", 401)
 
@@ -354,7 +344,7 @@ def resoconto(username, compagnia, idVolo):
     session.pop(username)
     session[username] = diz
 
-    print("[DEBUG SESSIONE (/username/compagnia/idVolo/resoconto)]: key = " + username + "   value = " + str(session.get(username)))
+    #print("[DEBUG SESSIONE (/username/compagnia/idVolo/resoconto)]: key = " + username + "   value = " + str(session.get(username)))
     return render_template("resoconto.html", username = username, card = cardSelezionata)
 
 
@@ -393,22 +383,17 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     postiDisponibiliVolo = None
 
     if(len(diz.keys()) == PAGAMENTO_PERSONALIZZATO_BACK):
-        print("SONO TORNATO INDIETRO DA PAGAMENTO PERSONALIZZATO!")
         cardSelezionata = diz['cardSelezionata']
         postiDisponibiliVolo = cardSelezionata.posti.posti
-        diz.pop('bagaglioSpecialePrezzo')
-        diz.pop('bagaglioStivaMedioPrezzo')
-        diz.pop('bagaglioStivaGrandePrezzo')
-        diz.pop('assicurazioneBagagliPrezzo')
-        diz.pop('animaleDomesticoPrezzo')
-        diz.pop('neonatoPrezzo')
-        diz.pop('bagaglioSpeciale')
-        diz.pop('bagaglioStivaMedio')
-        diz.pop('bagaglioStivaGrande')
-        diz.pop('assicurazioneBagagli')
-        diz.pop('animaleDomestico')
-        diz.pop('neonato')
         diz.pop('postiSelezionati')
+        diz.pop('serviziSelezionati')
+        diz.pop('numBigliettiAcquistati')
+        diz.pop('prezzoSelezionePosti')
+        diz.pop('prezzoServiziAggiuntivi')
+        diz.pop('prezzoTotale')
+        diz.pop('prezziFilePosti')
+        diz.pop('prezziServizi')
+
     else:
         cards = diz['cards']
         check = False
@@ -421,15 +406,6 @@ def serviziAggiuntivi(username, compagnia, idVolo):
                 check = True
                 cardSelezionata = card
                 postiDisponibiliVolo = card.posti.posti
-                """
-                partenza = card.partenza
-                arrivo = card.arrivo
-                compagnia = card.compagnia
-                orario = card.orario
-                data = card.data
-                prezzoBase = card.prezzoBase
-                numPosti = card.numPosti
-                """
 
         if(not check):
             """
@@ -438,7 +414,6 @@ def serviziAggiuntivi(username, compagnia, idVolo):
             Faccio la pop per eliminare lo stato della sessione poiché vengo
             reindirizzato all'accesso in cui non ho alcuno stato della sessione.
             """
-            print("ERRORE 2")
             session.pop(username)
             return redirect("/accedi", 401)
 
@@ -448,48 +423,18 @@ def serviziAggiuntivi(username, compagnia, idVolo):
 
     #Ottengo il costo dei posti della compagnia aerea in questione
     seatsFlight = sendIdCompanySeatsPrice(compagnia)
-    print("[1]: " + seatsFlight.primo)
-    print("[2-5]: " + seatsFlight.secondo)
-    print("[6-15]: " + seatsFlight.terzo)
-    print("[16-17]: " + seatsFlight.quarto)
-    print("[18-26]: " + seatsFlight.quinto)
-
     #I prezzi per la selezione dei posti verranno inseriti all'interno della sessione ma raggruppati nell'oggetto Python per motivi di compattezza
     diz['prezziFilePosti'] = seatsFlight
 
-    """
-    diz['prezzoFila1'] = str(seatsFlight.primo)
-    diz['prezzoFile2-5'] = str(seatsFlight.secondo)
-    diz['prezzoFile6-15'] = str(seatsFlight.terzo)
-    diz['prezzoFile16-17'] = str(seatsFlight.quarto)
-    diz['prezzoFile18-26'] = str(seatsFlight.quinto)
-    """
-
     #Ottengo il costo dei servizi aggiuntivi della compagnia aerea in questione
     additionalServices = sendIdCompanyAdditionalService(compagnia)
-    print("bagaglioSpeciale: " + additionalServices.bagaglioSpeciale)
-    print("bagaglioStivaMedio: " + additionalServices.bagaglioStivaMedio)
-    print("bagaglioStivaGrande: " + additionalServices.bagaglioStivaGrande)
-    print("assicurazioneBagagli: " + additionalServices.assicurazioneBagagli)
-    print("animaleDomestico: " + additionalServices.animaleDomestico)
-    print("neonato: " + additionalServices.neonato)
-
     #Anche i prezzi per i servizi aggiuntivi verranno inseriti all'interno della sessione ma raggruppati in un oggetto Python per motivi di compattezza
     diz['prezziServizi'] = additionalServices
-
-    """
-    diz['bagaglioSpecialePrezzo'] = additionalServices.bagaglioSpeciale
-    diz['bagaglioStivaMedioPrezzo'] = additionalServices.bagaglioStivaMedio
-    diz['bagaglioStivaGrandePrezzo'] = additionalServices.bagaglioStivaGrande
-    diz['assicurazioneBagagliPrezzo'] = additionalServices.assicurazioneBagagli
-    diz['animaleDomesticoPrezzo'] = additionalServices.animaleDomestico
-    diz['neonatoPrezzo'] = additionalServices.neonato
-    """
-    
+   
     session.pop(username)
     session[username] = diz
 
-    print("[DEBUG SESSION (/username/idVolo/servuzuAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
+    #print("[DEBUG SESSION (/username/idVolo/servuzuAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
     return render_template("serviziAggiuntivi.html", username = username, card=cardSelezionata, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
 
@@ -537,11 +482,13 @@ def pagamentoNormale(username):
 
             serviziSelezionati = ServiziSelezionati(0, 0, 0, 0, 0, 0)   #in questo flusso di esecuzione non è stato selezionato alcun servizio aggiuntivo
 
+            #TODO: decommentare sta roba
             #sendPayment(username, cardSelezionata, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, serviziSelezionati, email)
             return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiSelezionato, paymentDate=dataPagamento, basePrice=prezzoTotale, selectedSeats=postiPresi, seatsPrice='0', selectedServices=serviziSelezionati, servicesPrice='0', totalPrice=prezzoTotale, email=email)
 
         else:
-            return render_template("errore.hmtl", errore="Non ci sono posti liberi sufficienti per il numero di biglietti selezionato.")
+            stringa = "NON CI SONO POSTI LIBERI SUFFICIENTI\nPER IL NUMERO DI BIGLIETTI SELEZIONATO."
+            return render_template("errore.html", errore=stringa, airline=None, username=username)
         
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
@@ -591,6 +538,7 @@ def pagamentoPersonalizzato(username):
 
         session[username] = diz
 
+        #TODO: decommentare sta roba
         #sendPayment(username, cardSelezionata, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email)
         return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiAcquistati, paymentDate=dataPagamento, basePrice=prezzoBase, selectedSeats=postiSelezionati, seatsPrice=prezzoSelezionePosti, selectedServices=serviziSelezionati, servicesPrice=prezzoServiziAggiuntivi, totalPrice=prezzoTotale, email=email)
 
@@ -625,7 +573,8 @@ def confermaRiepilogo(username, idVolo):
         diz['numBigliettiSelezionato'] = int(numBigliettiSelezionato)
         session[username] = diz
         prezzo_totale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
-        print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
+
+        #print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("normale.html", username = username, card = cardSelezionata, numBigliettiSelezionato = numBigliettiSelezionato, prezzo_totale=prezzo_totale)
     
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
@@ -660,23 +609,12 @@ def personalizzato(username, idVolo):
         animaleDomestico = request.form['Animale domestico']
         neonato = request.form['Neonato']
 
-        print(postiSelezionati)
-
         diz = session.get(username)
         session.pop(username)
 
         diz['postiSelezionati'] = postiSelezionati
         #I servizi aggiuntivi selezionati verranno inseriti all'interno della sessione ma raggruppati nell'oggetto Python per motivi di compattezza
         diz['serviziSelezionati'] = ServiziSelezionati(int(bagaglioSpeciale), int(bagaglioStivaMedio), int(bagaglioStivaGrande), int(assicurazioneBagagli), int(animaleDomestico), int(neonato))
-
-        """
-        diz['bagaglioSpeciale'] = int(bagaglioSpeciale)
-        diz['bagaglioStivaMedio'] = int(bagaglioStivaMedio)
-        diz['bagaglioStivaGrande'] = int(bagaglioStivaGrande)
-        diz['assicurazioneBagagli'] = int(assicurazioneBagagli)
-        diz['animaleDomestico'] = int(animaleDomestico)
-        diz['neonato'] = int(neonato)
-        """
 
         cardSelezionata = diz['cardSelezionata']
         prezziFilePosti = diz['prezziFilePosti']
@@ -696,7 +634,7 @@ def personalizzato(username, idVolo):
 
         session[username] = diz
 
-        print("[DEBUG SESSIONE (/username/idVolo/personalizzato)]: key = " + username + "   value = " + str(session.get(username)))
+        #print("[DEBUG SESSIONE (/username/idVolo/personalizzato)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("personalizzato.html", prezzoTotale = prezzoTotale, username = username, card = diz['cardSelezionata'])
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
@@ -707,10 +645,10 @@ def personalizzato(username, idVolo):
 @app.route("/<string:username>/logout")
 def logoutUtentePrenotazione(username):
     if session.get(username) is None:
-        stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
-        return render_template("errore.html", errore = stringa)
+        stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE."
+        return render_template("errore.html", errore=stringa, airline=None, username=None)
 
-    # Termino la sessione relativa all'utente loggato
+    #termino la sessione relativa all'utente loggato
     session.pop(username)
 
     return redirect("/accedi")
@@ -718,23 +656,22 @@ def logoutUtentePrenotazione(username):
 
 @app.route("/<string:airline>/<string:username>/logout")
 def logoutUtenteAirline(airline, username):
-    print(session.get(airline+username))
-    #if not session.get(airline+username):
     if session.get(airline+username) is None:
-        stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE"
-        return render_template("errore.html", errore = stringa)
-    #session.pop(session.get(airline+username))
+        stringa = "ERRORE NELLA GESTIONE DELLA SESSIONE."
+        return render_template("errore.html", errore=stringa, airline=None, username=None)
+
+    #termino la sessione relativa all'utente loggato
     session.pop(airline+username)
+
     return redirect("/accedi")
 
 
 #here the airline adds a new flight
 @app.route("/<string:airline>/<string:username>/addFlight", methods=('GET', 'POST'))
 def addFlight(airline, username):
-    #if not session.get(session.get(airline + username)):
     if session.get(airline + username) is None:
-        print("Dentro")
         return redirect("/accedi", 302)
+
     if request.method == 'POST':
 
         flightId = request.form['inputId']
@@ -749,13 +686,13 @@ def addFlight(airline, username):
         fullDepartureHour = getFullHour(request.form['departureHour'], request.form['departureMinute'])
         fullArrivalHour = getFullHour(request.form['arrivalHour'], request.form['arrivalMinute'])
 
-        isOk = sendNewFlight(flightId, date, departureAirport, arrivalAirport, fullDepartureHour, fullArrivalHour, airline, price, NUM_SEATS)
+        response = sendNewFlight(flightId, date, departureAirport, arrivalAirport, fullDepartureHour, fullArrivalHour, airline, price, NUM_SEATS)
 
         #if new flight info is ok, then notify the user; else go back to addFlight page because the user has to change something
-        if isOk:
+        if response.isOk:
             return redirect("/"+airline+"/"+username+"/Volo aggiunto")
         else:
-            return render_template("AddFlight.html", airline=airline, username=username)
+            return render_template("errore.html", errore=response.error, airline=airline, username=username)
 
     return render_template("AddFlight.html", airline=airline, username=username)
 
@@ -763,21 +700,20 @@ def addFlight(airline, username):
 #here the airline modifies the price of an existing flight
 @app.route("/<string:airline>/<string:username>/modifyFlight", methods=('GET', 'POST'))
 def modifyFlight(airline, username):
-    #if not session.get(session.get(airline + username)):
     if session.get(airline + username) is None:
-        print("Dentro")
         return redirect("/accedi", 302)
+
     if request.method == 'POST':
 
         flightId = request.form['inputId']
         newPrice = request.form['inputPrice']
 
-        isOk = sendNewPrice(flightId, newPrice)
+        response = sendNewPrice(flightId, newPrice)
 
-        if isOk:
+        if response.isOk:
             return redirect("/"+airline+"/"+username+"/Prezzi modificati")
         else:
-            return render_template("ModifyFlight.html", airline=airline, username=username)
+            return render_template("errore.html", errore=response.error, airline=airline, username=username)
 
     return render_template("ModifyFlight.html", airline=airline, username=username)
 
@@ -785,10 +721,9 @@ def modifyFlight(airline, username):
 #here the airline modifies the price for seat selection
 @app.route("/<string:airline>/<string:username>/modifySeatsPrices", methods=('GET', 'POST'))
 def modifySeatsPrices(airline, username):
-    #if not session.get(session.get(airline + username)):
     if session.get(airline + username) is None:
-        print("Dentro")
         return redirect("/accedi", 302)
+
     if request.method == 'POST':
 
         price1 = request.form['inputPrice1']
@@ -797,12 +732,12 @@ def modifySeatsPrices(airline, username):
         price16 = request.form['inputPrice16']
         price18 = request.form['inputPrice18']
 
-        isOk = sendSeatsPrices(airline, price1, price2, price6, price16, price18)
+        response = sendSeatsPrices(airline, price1, price2, price6, price16, price18)
 
-        if isOk:
+        if response.isOk:
             return redirect("/"+airline+"/"+username+"/Prezzi modificati")
         else:
-            return render_template("ModifySeatsPrices.html", airline=airline, username=username)
+            return render_template("errore.html", errore=response.error, airline=airline, username=username)
 
     return render_template("ModifySeatsPrices.html", airline=airline, username=username)
 
@@ -810,10 +745,9 @@ def modifySeatsPrices(airline, username):
 #here the airline modifies the price of extra-services
 @app.route("/<string:airline>/<string:username>/modifyServicesPrices", methods=('GET', 'POST'))
 def modifyServicesPrices(airline, username):
-    #if not session.get(session.get(airline + username)):
     if session.get(airline + username) is None:
-        print("Dentro")
         return redirect("/accedi", 302)
+
     if request.method == 'POST':
 
         priceBM = request.form['inputPrice1']
@@ -823,12 +757,12 @@ def modifyServicesPrices(airline, username):
         priceAB = request.form['inputPrice5']
         priceTN = request.form['inputPrice6']
 
-        isOk = sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN)
+        response = sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN)
 
-        if isOk:
+        if response.isOk:
             return redirect("/"+airline+"/"+username+"/Prezzi modificati")
         else:
-            return render_template("ModifyServicesPrices.html", airline=airline, username=username)
+            return render_template("errore.html", errore=response.error, airline=airline, username=username)
 
     return render_template("ModifyServicesPrices.html", airline=airline, username=username)
 
@@ -836,10 +770,9 @@ def modifyServicesPrices(airline, username):
 #here an ok message is shown
 @app.route("/<string:airline>/<string:username>/<string:okMessage>", methods=('GET', 'POST'))
 def showOkMessage(airline, username, okMessage):
-    #if not session.get(session.get(airline + username)):
     if session.get(airline + username) is None:
-        print("Dentro")
         return redirect("/accedi", 302)
+
     if request.method == 'POST':
         return redirect("/"+airline+"/"+username+"/airlineHome")
 

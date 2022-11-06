@@ -9,6 +9,7 @@ class ServiziSelezionati:
         self.animaleDomestico = animaleDomestico            #num animali domestici selezionati
         self.neonato = neonato                              #num neonati selezionati
 
+
 def getAmpm(initialHour):  
     intHour = int(initialHour)
 

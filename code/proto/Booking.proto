@@ -8,6 +8,7 @@ service BookingService {
     rpc RegisterFlight(NewFlight2) returns (RegisterResponse);
     rpc UpdateFlightPrice(UpdatedFlight2) returns (UpdateResponse);
     rpc getAllAvailableSeatsForFlight(AvailableSeatRequest) returns (stream AvailableSeatReply);
+    rpc GetAirports(AirportsRequest) returns (AirportsResponse);
 }
 
 message AvailableSeatReply {
@@ -22,8 +23,8 @@ message getAllFlightsRequest {
     int32 giorno = 1;
     int32 mese = 2;
     int32 anno = 3;
-    string aereoporto_arrivo = 4;
-    string aereoporto_partenza = 5;    
+    string aeroporto_arrivo = 4;
+    string aeroporto_partenza = 5;    
 }
 
 message postiDisponibili {
@@ -73,4 +74,13 @@ message UpdatedFlight2 {
 
 message UpdateResponse {
     bool isOk = 1;
+}
+
+message AirportsRequest {
+    bool isDummy = 1;
+}
+
+message AirportsResponse {
+    repeated string departureAirports = 1;
+    repeated string arrivalAirports = 2;
 }

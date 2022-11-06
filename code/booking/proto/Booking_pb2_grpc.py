@@ -39,6 +39,11 @@ class BookingServiceStub(object):
                 request_serializer=proto_dot_Booking__pb2.AvailableSeatRequest.SerializeToString,
                 response_deserializer=proto_dot_Booking__pb2.AvailableSeatReply.FromString,
                 )
+        self.GetAirports = channel.unary_unary(
+                '/proto.BookingService/GetAirports',
+                request_serializer=proto_dot_Booking__pb2.AirportsRequest.SerializeToString,
+                response_deserializer=proto_dot_Booking__pb2.AirportsResponse.FromString,
+                )
 
 
 class BookingServiceServicer(object):
@@ -74,6 +79,12 @@ class BookingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAirports(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BookingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -101,6 +112,11 @@ def add_BookingServiceServicer_to_server(servicer, server):
                     servicer.getAllAvailableSeatsForFlight,
                     request_deserializer=proto_dot_Booking__pb2.AvailableSeatRequest.FromString,
                     response_serializer=proto_dot_Booking__pb2.AvailableSeatReply.SerializeToString,
+            ),
+            'GetAirports': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAirports,
+                    request_deserializer=proto_dot_Booking__pb2.AirportsRequest.FromString,
+                    response_serializer=proto_dot_Booking__pb2.AirportsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -194,5 +210,22 @@ class BookingService(object):
         return grpc.experimental.unary_stream(request, target, '/proto.BookingService/getAllAvailableSeatsForFlight',
             proto_dot_Booking__pb2.AvailableSeatRequest.SerializeToString,
             proto_dot_Booking__pb2.AvailableSeatReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAirports(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/proto.BookingService/GetAirports',
+            proto_dot_Booking__pb2.AirportsRequest.SerializeToString,
+            proto_dot_Booking__pb2.AirportsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

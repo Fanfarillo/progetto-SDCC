@@ -12,7 +12,7 @@ from PayUtils import *
 class PayServicer(Payment_pb2_grpc.PayServicer):
 
     def AddPayment(self, NewPayment, context):
-        logger.info("Messaggio Matteo...")
+        logger.info("Richiesta di pagamento per il volo " + NewPayment.idVolo + " da parte di " + NewPayment.username + ".")
 
         """
         Per prima cosa, bisogna memorizzare le informazioni strettamente legate al pagamento nell'apposita tabella;
@@ -53,7 +53,7 @@ Payment_pb2_grpc.add_PayServicer_to_server(PayServicer(), server)
 logger.info('Avvio del server in ascolto sulla porta 50055...')
 server.add_insecure_port('[::]:50055')
 server.start()
-logger.info('Server avviato con successo...')
+logger.info('Server avviato con successo.')
 
 
 try:
@@ -61,4 +61,3 @@ try:
         time.sleep(86400)   #86400 seconds == 24 hours
 except KeyboardInterrupt:
     server.stop(0)
-

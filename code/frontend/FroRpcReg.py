@@ -6,18 +6,13 @@ from proto import Registration_pb2
 from proto import Registration_pb2_grpc
 
 
-
-
 ADDR_PORT = 'registration:50051'
-
-
 
 
 class Output:
     def __init__(self, storedType, isCorrect):
         self.isCorrect = isCorrect
         self.storedType = storedType
-
 
 
 
@@ -28,7 +23,7 @@ l'applicazione. Viene passato in input un
 messaggio contenente tutte le informazioni
 necessarie per l'iscrizione.
 """
-def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline, cartaDiCredito):
+def sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito):
 
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
@@ -95,8 +90,7 @@ def sendSignUpInfo(email, username, password, passwordConfirm, userType, airline
 
     output = stub.SignUp(Registration_pb2.SignUpInfo(username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, dig = dig))
 
-    return output.isOk
-
+    return output
 
 
 

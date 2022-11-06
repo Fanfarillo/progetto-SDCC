@@ -11,26 +11,20 @@ REGIONE = 'us-east-1'
 
 
 def getAllSeatsFlight(compagnia):
-    print("Compagnia: " + compagnia)
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('PrezzoPosti')
 
     response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
     # Prezzo dei posti nella fila 1
     primo = response['Items'][0]['1']
-    print("1: "+str(primo))
     # Prezzo dei posti nelle file 2-5
     secondo = response['Items'][0]['2-5']
-    print("2-5: "+str(secondo))
     # Prezzo dei posti nelle file 6-15
     terzo = response['Items'][0]['6-15']
-    print("6-15: "+str(terzo))
     # Prezzo dei posti nelle file 16-17
     quarto = response['Items'][0]['16-17']
-    print("16-17: "+str(quarto))
     # Prezzo dei posti nelle file 18-26
     quinto = response['Items'][0]['18-26']
-    print("18-26: "+str(quinto))
 
     prezzi = []
     prezzi.append(primo)
@@ -44,23 +38,16 @@ def getAllSeatsFlight(compagnia):
 
 
 def getAlladditionalServicesFlight(compagnia):
-    print(compagnia)
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('Servizi')
     response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
 
     bagaglioSpeciale = response['Items'][0]['Bagaglio speciale']
-    print(str(bagaglioSpeciale))
     bagaglioStivaMedio = response['Items'][0]['Bagaglio in stiva medio']
-    print(str(bagaglioStivaMedio))
     bagaglioStivaGrande = response['Items'][0]['Bagaglio in stiva grande']
-    print(str(bagaglioStivaGrande))
     assicurazioneBagagli = response['Items'][0]['Assicurazione bagagli']
-    print(str(assicurazioneBagagli))
     animaleDomestico = response['Items'][0]['Animale domestico']
-    print(str(animaleDomestico))
     neonato = response['Items'][0]['Neonato']
-    print(str(neonato))
 
     prezzi = []
     prezzi.append(bagaglioSpeciale)
@@ -112,11 +99,8 @@ def storeServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, pr
 
 
 def getPrice(idVolo):
-    print(idVolo)
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table('Volo')
 
     response = table.scan(FilterExpression=Attr('Id').eq(idVolo))
-
-    print(response['Items'][0]['Prezzo base'])
     return response['Items'][0]['Prezzo base']

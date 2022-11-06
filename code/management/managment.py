@@ -14,10 +14,7 @@ from ManDB import *
 
 
 
-
 class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
-
-
 
 
     def AddFlight(self, NewFlight, context):
@@ -30,7 +27,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         #   6) Price should be a number and it should be greater than zero
         #   7) Seats should be greater than zero
 
-        logger.info("Messaggio Matteo...")
+        logger.info("Richiesta di aggiunta di un nuovo volo: [" + NewFlight.id + "," + NewFlight.date + "," + NewFlight.departureAirport + "," + NewFlight.arrivalAirport + "," + NewFlight.departureTime + "," + NewFlight.arrivalTime + "," + NewFlight.airline + "," + NewFlight.price + "]")
 
         isNewFlightId = checkFlightId(NewFlight.id)                 #condition 1)
         isExistentDate = checkDateExistance(NewFlight.date)         #condition 2)
@@ -39,7 +36,25 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         isValidAirline = (NewFlight.airline=='EasyJet' or NewFlight.airline=='ITA' or NewFlight.airline=='Ryanair')     #condition 5)
         isValidPrice = NewFlight.price.replace('.','',1).isdigit()  #condition 6)
 
-        isOk = (isNewFlightId and isExistentDate and isFutureDate and NewFlight.departureAirport!=NewFlight.arrivalAirport and isValidAirline and isValidPrice and NewFlight.seats>0)
+        isOk = False    #isOk will be True only if ALL the conditions are satisfied
+
+        if not isNewFlightId:
+            err = "ESISTE GIÀ UN VOLO CON QUESTO ID.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif not isExistentDate:
+            err = "LA DATA INSERITA NON ESISTE.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif not isFutureDate:
+            err = "LA DATA INSERITA DEVE ESSERE SUCCESSIVA A QUELLA ODIERNA.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif NewFlight.departureAirport==NewFlight.arrivalAirport:
+            err = "L'AEROPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif not isValidAirline:
+            err = "LA COMPAGNIA AEREA SELEZIONATA NON È VALIDA.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif not isValidPrice:
+            err = "IL PREZZO DEL VOLO NON È STATO SCRITTO CORRETTAMENTE.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif NewFlight.seats<=0:
+            err = "IL NUMERO DI POSTI A SEDERE DEVE ESSERE MAGGIORE DI ZERO.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        else:
+            isOk = True
+            err = None
 
         if isOk:
             #questa funzione arrotonda alla seconda cifra dopo la virgola (per difetto) il valore di NewFlight.price
@@ -47,9 +62,8 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
             registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, roundedPrice, NewFlight.seats)
 
-        output = Managment_pb2.AddResponse(isOk=isOk)
+        output = Managment_pb2.AddResponse(isOk=isOk, error=err)
         return output
-
 
 
 
@@ -58,54 +72,64 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         #   1) Flight id should already exist
         #   2) Price should be a number and it should be greater than zero
 
-        logger.info("Messaggio Matteo...")
+        logger.info("Richiesta di modifica del prezzo di un volo: [" + UpdatedFlight.flightId + "," + UpdatedFlight.newPrice + "]")
 
         isExistentFlightId = not checkFlightId(UpdatedFlight.flightId)      #condition 1)
         isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()   #condition 2)
 
-        isOk = isExistentFlightId and isValidPrice
+        isOk = False    #isOk will be True only if ALL the conditions are satisfied
+
+        if not isExistentFlightId:
+            err = "NON ESISTE UN VOLO CON QUESTO ID.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif not isValidPrice:
+            err = "IL PREZZO DEL VOLO NON È STATO SCRITTO CORRETTAMENTE.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        else:
+            isOk = True
+            err = None
 
         if isOk:
             roundedPrice = roundPrice(UpdatedFlight.newPrice)
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
             updateFlightPrice(UpdatedFlight.flightId, roundedPrice)
 
-        output = Managment_pb2.ModFlightResponse(isOk=isOk)
+        output = Managment_pb2.ModFlightResponse(isOk=isOk, error=err)
         return output
-
 
 
 
     def ModifySeats(self, UpdatedSeats, context):
 
-        logger.info("Messaggio Matteo...")
+        logger.info("Richiesta di modifica del prezzo dei posti a sedere: [" + UpdatedSeats.airline + ", fila 1: €" + UpdatedSeats.price1 + ", file 2-5: €" + UpdatedSeats.price2 + ", file 6-15: €" + UpdatedSeats.price6 + ", file 16-17: €" + UpdatedSeats.price16 + ", file 18-25: €" + UpdatedSeats.price18 + "]")
 
         #all the prices should be numbers and should be greater than zero
         isOk = (UpdatedSeats.price1.replace('.','',1).isdigit() and UpdatedSeats.price2.replace('.','',1).isdigit() and UpdatedSeats.price6.replace('.','',1).isdigit() and UpdatedSeats.price16.replace('.','',1).isdigit() and UpdatedSeats.price18.replace('.','',1).isdigit())
 
         #if all the prices are ok, then save them into remote database (DynamoDB)
         if isOk:
+            err = None
             roundedPrice1 = roundPrice(UpdatedSeats.price1)
             roundedPrice2 = roundPrice(UpdatedSeats.price2)
             roundedPrice6 = roundPrice(UpdatedSeats.price6)
             roundedPrice16 = roundPrice(UpdatedSeats.price16)
             roundedPrice18 = roundPrice(UpdatedSeats.price18)
-            storeSeatsPrices(UpdatedSeats.airline, roundedPrice1, roundedPrice2, roundedPrice6, roundedPrice16, roundedPrice18)
+            storeSeatsPrices(UpdatedSeats.airline, roundedPrice1, roundedPrice2, roundedPrice6, roundedPrice16, roundedPrice18)      
+        else:
+            err = "QUALCHE PREZZO NON È STATO SCRITTO CORRETTAMENTE.\nPROVA A INSERIRE NUOVAMENTE I PREZZI."
 
-        output = Managment_pb2.ModSeatsResponse(isOk=isOk)
+        output = Managment_pb2.ModSeatsResponse(isOk=isOk, error=err)
         return output
-
 
 
 
     def ModifyServices(self, UpdatedServices, context):
 
-        logger.info("Messaggio Matteo...")
+        logger.info("Richiesta di modifica del prezzo dei servizi aggiuntivi: [" + UpdatedServices.airline + ", stiva medio: €" + UpdatedServices.priceBM + ", stiva grande: €" + UpdatedServices.priceBG + ", bagaglio speciale: €" + UpdatedServices.priceBS + ", animale: €" + UpdatedServices.priceAD + ", assicurazione: €" + UpdatedServices.priceAB + ", neonato: €" + UpdatedServices.priceTN + "]")
 
         #all the prices should be numbers and should be greater than zero
         isOk = (UpdatedServices.priceBM.replace('.','',1).isdigit() and UpdatedServices.priceBG.replace('.','',1).isdigit() and UpdatedServices.priceBS.replace('.','',1).isdigit() and UpdatedServices.priceAD.replace('.','',1).isdigit() and UpdatedServices.priceAB.replace('.','',1).isdigit() and UpdatedServices.priceTN.replace('.','',1).isdigit())
 
         if isOk:
+            err = None
             roundedPriceBM = roundPrice(UpdatedServices.priceBM)
             roundedPriceBG = roundPrice(UpdatedServices.priceBG)
             roundedPriceBS = roundPrice(UpdatedServices.priceBS)
@@ -113,20 +137,20 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
             roundedPriceAB = roundPrice(UpdatedServices.priceAB)
             roundedPriceTN = roundPrice(UpdatedServices.priceTN)
             storeServicesPrices(UpdatedServices.airline, roundedPriceBM, roundedPriceBG, roundedPriceBS, roundedPriceAD, roundedPriceAB, roundedPriceTN)
+        else:
+            err = "QUALCHE PREZZO NON È STATO SCRITTO CORRETTAMENTE.\nPROVA A INSERIRE NUOVAMENTE I PREZZI."
 
-        output = Managment_pb2.ModServicesResponse(isOk=isOk)
+        output = Managment_pb2.ModServicesResponse(isOk=isOk, error=err)
         return output
-
 
 
 
     def GetPriceFlight(self, request, context):
 
-        logger.info("Messaggio Matteo...")
+        logger.info("Richiesta del prezzo del volo " + request.idVolo + ".")
 
         response = getPrice(request.idVolo)
         return Managment_pb2.PriceReply(price=str(response))
-
 
 
 
@@ -144,13 +168,12 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         4. 16-17
         5. 18-26
         """
-        logger.info("Richiesta del prezzo dei posti per la compagnia area " + request.compagnia + "...")
+        logger.info("Richiesta del prezzo dei posti per la compagnia area " + request.compagnia + ".")
         prezzi = getAllSeatsFlight(request.compagnia)
 
         for item in prezzi:
             ret = Managment_pb2.SeatCostReply(prezzo=str(item))            
             yield ret
-
 
 
 
@@ -170,13 +193,12 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         5. animaleDomestico
         6. neonato
         """
-        logger.info("Richiesta del prezzo dei servizi aggiuntivi offerti dalla compagnia area " + request.compagnia + "...")
+        logger.info("Richiesta del prezzo dei servizi aggiuntivi offerti dalla compagnia area " + request.compagnia + ".")
         prezzi = getAlladditionalServicesFlight(request.compagnia)
 
         for item in prezzi:
             ret = Managment_pb2.AdditionalServiceCostReply(prezzo=str(item))
             yield ret
-
 
 
 
@@ -192,19 +214,16 @@ logger.setLevel(logging.INFO)
 
 
 
-
 #create gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Managment_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), server)
 
 
 
-
 logger.info('Avvio del server in ascolto sulla porta 50052...')
 server.add_insecure_port('[::]:50052')
 server.start()
-logger.info('Server avviato con successo...')
-
+logger.info('Server avviato con successo.')
 
 
 

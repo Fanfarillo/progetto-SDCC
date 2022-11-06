@@ -25,3 +25,51 @@ INFO - 2022-11-01 16:08:12,238 - Server avviato con successo...
 INFO - 2022-11-01 16:09:47,641 - Richiesta dei voli disponibili: [26,12,2022,Fiumicino (Roma),Heathrow (Londra)]
 INFO - 2022-11-01 16:21:53,962 - Richiesta dei voli disponibili: [26,12,2022,Fiumicino (Roma),Heathrow (Londra)]
 INFO - 2022-11-01 17:08:23,738 - Richiesta dei voli disponibili: [24,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+INFO - 2022-11-06 22:13:03,622 - Avvio del server in ascolto sulla porta 50053...
+INFO - 2022-11-06 22:13:03,641 - Server avviato con successo.
+INFO - 2022-11-06 22:15:30,134 - Recupero degli aeroporti coinvolti nei voli disponibili.
+INFO - 2022-11-06 22:15:44,862 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+ERROR - 2022-11-06 22:15:45,770 - Exception iterating responses: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = "DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers"
+	debug_error_string = "UNKNOWN:DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers {grpc_status:14, created_time:"2022-11-06T22:15:45.769882066+01:00"}"
+>
+Traceback (most recent call last):
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_server.py", line 461, in _take_response_from_response_iterator
+    return next(response_iterator), True
+  File "booking.py", line 37, in getAllFlights
+    flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aeroporto_arrivo, request.aeroporto_partenza)
+  File "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/code/booking/BooDB.py", line 268, in retrieveFlights
+    response = stub.GetPriceFlight(Managment_pb2.PriceRequest(idVolo=flight.idKey))
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_channel.py", line 946, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_channel.py", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = "DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers"
+	debug_error_string = "UNKNOWN:DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers {grpc_status:14, created_time:"2022-11-06T22:15:45.769882066+01:00"}"
+>
+INFO - 2022-11-06 22:18:34,991 - Recupero degli aeroporti coinvolti nei voli disponibili.
+INFO - 2022-11-06 22:18:45,617 - Richiesta dei voli disponibili: [22,12,2022,Fiumicino (Roma),Heathrow (Londra)]
+ERROR - 2022-11-06 22:18:46,661 - Exception iterating responses: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = "DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers"
+	debug_error_string = "UNKNOWN:DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers {created_time:"2022-11-06T22:18:46.661523469+01:00", grpc_status:14}"
+>
+Traceback (most recent call last):
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_server.py", line 461, in _take_response_from_response_iterator
+    return next(response_iterator), True
+  File "booking.py", line 37, in getAllFlights
+    flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aeroporto_arrivo, request.aeroporto_partenza)
+  File "/home/fanfa/Scrivania/Work in progress/progetto-SDCC/code/booking/BooDB.py", line 268, in retrieveFlights
+    response = stub.GetPriceFlight(Managment_pb2.PriceRequest(idVolo=flight.idKey))
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_channel.py", line 946, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+  File "/home/fanfa/.local/lib/python3.6/site-packages/grpc/_channel.py", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = "DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers"
+	debug_error_string = "UNKNOWN:DNS resolution failed for management:50052: C-ares status is not ARES_SUCCESS qtype=AAAA name=management is_balancer=0: Could not contact DNS servers {created_time:"2022-11-06T22:18:46.661523469+01:00", grpc_status:14}"
+>

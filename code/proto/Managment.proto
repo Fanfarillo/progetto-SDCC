@@ -50,6 +50,7 @@ message NewFlight {
 
 message AddResponse {
     bool isOk = 1;
+    string error = 2;
 }
 
 message UpdatedFlight {
@@ -59,6 +60,7 @@ message UpdatedFlight {
 
 message ModFlightResponse {
     bool isOk = 1;
+    string error = 2;
 }
 
 message UpdatedSeats {
@@ -72,6 +74,7 @@ message UpdatedSeats {
 
 message ModSeatsResponse {
     bool isOk = 1;
+    string error = 2;
 }
 
 message UpdatedServices {
@@ -86,4 +89,5 @@ message UpdatedServices {
 
 message ModServicesResponse {
     bool isOk = 1;
+    string error = 2;
 }

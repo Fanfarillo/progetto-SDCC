@@ -76,22 +76,24 @@
           
           		<td>
             		<div class="dropdown my-5">
-              		<select name="aereoporto_partenza" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                		<option disabled selected>Aeroporto di partenza</option>
-                		<option value="Fiumicino (Roma)">Fiumicino (Roma)</option>
-                		<option value="Heathrow (Londra)">Heathrow (Londra)</option>
-                		<option value="Schiphol (Amsterdam)">Schiphol (Amsterdam)</option>
+					<label for="departureDropdown" class="form-label">Aeroporto di partenza</label><br>
+              		<select name="aeroporto_partenza" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="departureDropdown" required>
+                		<option disabled selected>Selezionare un aeroporto</option>
+						{% for departureAirport in airportsLists.departures %}
+                		<option value="{{ departureAirport }}">{{ departureAirport }}</option>
+						{% endfor %}
               		</select>
             		</div>
           		</td>
 
           		<td>
             		<div class="dropdown my-5">
-              		<select name="aereoporto_arrivo" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" required>
-                		<option disabled selected>Aeroporto di arrivo</option>
-                		<option value="Fiumicino (Roma)">Fiumicino (Roma)</option>
-                		<option value="Heathrow (Londra)">Heathrow (Londra)</option>
-                		<option value="Schiphol (Amsterdam)">Schiphol (Amsterdam)</option>
+					<label for="arrivalDropdown" class="form-label">Aeroporto di arrivo</label><br>
+              		<select name="aeroporto_arrivo" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" name="arrivalDropdown" required>
+                		<option disabled selected>Selezionare un aeroporto</option>
+						{% for arrivalAirport in airportsLists.arrivals %}
+                		<option value="{{ arrivalAirport }}">{{ arrivalAirport }}</option>
+						{% endfor %}
               		</select>
             		</div>
           		</td>
