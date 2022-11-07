@@ -7,6 +7,7 @@ from decimal import *
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
 
+from BooUtils import *
 
 
 ADDR_PORT = 'management:50052'
@@ -14,7 +15,6 @@ DYNAMODB = 'dynamodb'
 REGIONE = 'us-east-1'
 TABELLA_VOLO = 'Volo'
 TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
-
 
 
 # L'assunzione fatta sui possibili posti disponibili dell'aereo.
@@ -197,7 +197,7 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_VOLO)
 
-    response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Aeroporto arrivo').eq(arrivo) & Attr('Data').eq(str(giorno)+'-'+str(mese)+'-'+str(anno)))
+    response = table.scan(FilterExpression=Attr('Aeroporto partenza').eq(partenza) & Attr('Aeroporto arrivo').eq(arrivo) & Attr('Data').eq(getTwoDigitsString(str(giorno))+'-'+getTwoDigitsString(str(mese))+'-'+str(anno)))
     
     """
     La variabile items è una lista di dizionari fatta nel seguente modo:

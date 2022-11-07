@@ -233,13 +233,31 @@ def booking(username):
             partenza = request.form['aeroporto_partenza']
             arrivo = request.form['aeroporto_arrivo']
 
-            #Non è possibile avere gli aeroporti non selezionati
+            #this function returns a string like "DD-MM-YYYY"
+            date = getDate(giorno, mese, anno)
+
+            #non è possibile avere gli aeroporti non selezionati
+            """
             if partenza=="Selezionare un aeroporto" or arrivo=="Selezionare un aeroporto":
                 stringa = "È NECESSARIO SELEZIONARE GLI AEROPORTI DI PARTENZA E DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
                 return render_template("errore.html", errore=stringa, airline=None, username=username)
+            """
 
-            #Non è neanche possibile avere i due aeroporti uguali
-            if partenza == arrivo:
+            #sanity checks are the following:
+            #   1) Date should exist (e.g. it cannot be '31-04-2023')
+            #   2) Date should be future
+            #   3) Departure airport != arrival airport
+            isExistentDate = checkDateExistance(date)         #condition 1)
+            if isExistentDate:
+                isFutureDate = checkFutureDate(date)          #condition 2)
+
+            if not isExistentDate:
+                stringa = "LA DATA INSERITA NON ESISTE.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
+                return render_template("errore.html", errore=stringa, airline=None, username=username)
+            elif not isFutureDate:
+                stringa = "LA DATA INSERITA DEVE ESSERE SUCCESSIVA A QUELLA ODIERNA.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
+                return render_template("errore.html", errore=stringa, airline=None, username=username)
+            elif partenza == arrivo:                          #condition 3)
                 stringa = "L'AEROPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
                 return render_template("errore.html", errore=stringa, airline=None, username=username)
 
@@ -634,11 +652,84 @@ def personalizzato(username, idVolo):
 
         session[username] = diz
 
+        if len(postiSelezionati) < 1 or len(postiSelezionati) > 20:
+            stringa = "È NECESSARIO SELEZIONARE UN NUMERO DI POSTI NON INFERIORE A 1 E NON SUPERIORE A 20."
+            return render_template("errore.html", errore=stringa, airline=None, username=username)
+
         #print("[DEBUG SESSIONE (/username/idVolo/personalizzato)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("personalizzato.html", prezzoTotale = prezzoTotale, username = username, card = diz['cardSelezionata'])
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
+
+
+@app.route("/<string:username>/<string:compagnia>/<string:idVolo>/suggerimento")
+def visualizzaSuggerimento(username, compagnia, idVolo):
+    """
+    Arrivato a questo punto, devo avere uno stato differente da None.
+    """
+    if session.get(username) is None:
+        return redirect("/accedi", 401)
+
+    """
+    Non solo devo controllare se esiste la sessione relativa a
+    tale utente, ma devo anche verificare se il dizionario è
+    configurato correttamente per la sessione corrente.
+    """
+    diz = session.get(username)
+
+    """
+    Ho un numero di chiavi pari a due nel momento in cui provengo
+    da booking. Tuttavia, ho un numero di chiavi pari a PAGAMENTO_PERSONALIZZATO_BACK
+    se provengo da pagamento personalizzato.
+    """
+    if(not isinstance(diz, dict) or (len(diz.keys())!=2) or diz['username']!=username):
+        """
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
+        """
+        session.pop(username)
+        return redirect("/accedi", 401)
+
+    """
+    Mi porto l'informazione relativa alla card che è stata selezionata dall'utente.
+    """
+    cardSelezionata = None
+    postiDisponibiliVolo = None
+
+    cards = diz['cards']
+    check = False
+    for card in cards:
+        if card.idVolo == idVolo:
+            """
+            Mi registro il fatto che l'identificativo passato nella URL effettivamente
+            corrisponde ad uno dei voli esistenti nello stato della sessione
+            """
+            check = True
+            cardSelezionata = card
+            postiDisponibiliVolo = card.posti.posti
+
+    if(not check):
+        """
+        Nella URL è stato inserito l'identificativo di un volo insesistente,
+        magari per sbaglio da parte dell'utente oppure come tentativo di attacco.
+        Faccio la pop per eliminare lo stato della sessione poiché vengo
+        reindirizzato all'accesso in cui non ho alcuno stato della sessione.
+        """
+        session.pop(username)
+        return redirect("/accedi", 401)
+   
+    session.pop(username)
+    session[username] = diz
+
+    today = getCurrentDateStr()
+
+    #TODO: chiamata gRPC per sapere tra quanti giorni convenga acquistare i biglietti; tale valore dovrà essere passato come parametro a render_template()
+    #(vedere riga seguente)
+    #numDaysBefore = getNumDaysBefore(cardSelezionata, today)
+
+    #print("[DEBUG SESSION (/username/idVolo/serviziAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
+    return render_template("Suggerimento.html", username = username, card=cardSelezionata)
 
 
 #logout

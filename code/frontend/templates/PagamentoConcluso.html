@@ -29,17 +29,11 @@
     </nav>
 
     <div class="container mt-5" style="background-color: #ffffff;">
-      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <form action="/{{ username }}/home" method="GET">
-          <button type="submit" class="btn btn-primary my-3">Indietro</button>        
-        </form>
-      </div>
 
       <h1 class="display-6" style="color: #646464;">Fare uno screenshot a questa pagina, stamparlo e presentarlo al momento dell'imbarcazione.</h1>
 
       <form action="/{{ username }}/home" method="POST">
         <div class="card mt-5" style="border-style: double;">
-            <img src="{{url_for('static', filename='Logo.png')}}" class="card-img-top" alt="Logo" width="116" height="80">      <!--Logo-->
             <div class="card-body">
               <h5 class="card-title">Prenotazione effettuata con Fly on the Cloud</h5>
               <p class="card-subtitle mb-2 text-muted">{{ numTickets }} biglietti acquistati da {{ username }}</p>
