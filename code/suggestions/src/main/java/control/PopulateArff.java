@@ -46,7 +46,7 @@ public class PopulateArff {
 
         }
         catch(Exception e) {
-            //do nothing
+            e.printStackTrace();
         }
 
     }
