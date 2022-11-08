@@ -1,13 +1,17 @@
-# Directory target
+# Directories target
 **/target
 
-# Directory __pycache__
+# Directories __pycache__
 **/__pycache__
 
-# Directory venv
+# Directories venv
 **/venv
 
-# .retry file
+# .retry files
 *.retry
 
+# .log files
+*.log
+
+# AWS credentials files
 *credentials
