@@ -6,8 +6,8 @@ Per poter utilizzare l'applicazione, pensata per essere eseguita in un sistema U
 - Docker Compose
 
 ## Configurazione dell'applicazione
-E' possibile istanziare e pre-popolare le tabelle (chiave, valore) relative ai microservizi stateless su DynamoDB lanciando lo script CreateTables.sh (che si trova all'interno della directory /code/initialization).
-E' altresì possibile eliminare tali tabelle mediante lo script RemoveTables.sh (che si trova all'interno della directory /code).
+È possibile istanziare e pre-popolare le tabelle (chiave, valore) relative ai microservizi stateless su DynamoDB lanciando lo script CreateTables.sh (che si trova all'interno della directory /code/initialization).
+È altresì possibile eliminare tali tabelle mediante lo script RemoveTables.sh (che si trova all'interno della directory /code).
 
 ## Avvio dell'applicazione
 Per far partire l'applicazione, basta eseguire lo script Startup.sh (che si trova all'interno della directory /code).
