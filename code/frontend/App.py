@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
 from decimal import *
@@ -10,16 +8,15 @@ from FroRpcBoo import *
 from FroUtils import *
 
 
-PAGAMENTO_BACK = 5                      #Stato del dizionario quando ritorno dal pagamento
-PAGAMENTO_PERSONALIZZATO_BACK = 12      #Stato del dizionario personalizzato quando ritorno dal pagamento
-NUM_SEATS = 156
+PAGAMENTO_BACK = 5                      # Stato del dizionario quando ritorno dal pagamento
+PAGAMENTO_PERSONALIZZATO_BACK = 12      # Stato del dizionario personalizzato quando ritorno dal pagamento
+NUM_SEATS = 156                         # Numero di posti disponibili per il volo
 
 app = Flask(__name__)
 app.debug = True
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-#logging.basicConfig(filename="application_server.log", level=logging.DEBUG, format=f'%(asctime)s %(message)s')
 
 
 """
@@ -27,8 +24,8 @@ Pagina Root
 """
 @app.route("/")
 def menu():
-    app.logger.info("Rchiesta pagina root...")
     return render_template("Menu.html")
+
 
 
 
@@ -53,8 +50,6 @@ def iscrizione():
         userType = request.form['flexRadioDefault']
         # Carta di credito
         cartaDiCredito = request.form['inputCarta']
-
-        #app.logger.info("Richiesta procedura di iscrizione: [" + username + ","+ password + "," + passwordConfirm + "," + userType + "]")
         
         """
         Verifico se l'utente che si sta iscrivendo è un
@@ -82,11 +77,15 @@ def iscrizione():
         response = sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito)
 
         if response.isOk:
+            # L'iscrizione è stata completata con successo.
             return redirect('/accedi')
         else:
+            # L'iscrizion non è stata completata con successo.
             return render_template("errore.html", errore=response.error, airline=None, username=None)
 
     return render_template("Iscrizione.html")
+
+
 
 
 """
@@ -97,17 +96,21 @@ all'applicazione.
 def accesso():
 
     if request.method == 'POST':
+
+        """
+        Ottengo le credenziali inserite dall'utente
+        per richiedere il Login al sistema.
+        """
         # Username
         username = request.form['inputUsername']
         # Password
         password = request.form['inputPassword']
 
-        #app.logger.info("Richiesta procedura di accesso: [" + username + ","+ password + "]")
 
         """
         Verifico le credenziali inserite dall'utente.
         Il campo isCorrect vale TRUE nel momento in
-        cui il login ha avuto successo; altrimenri, vale
+        cui il login ha avuto successo; altrimenti, vale
         FALSE. Il campo storedType contiene il valore
         'Turista' oppure una specifica compagnia aerea.
         """
@@ -117,20 +120,19 @@ def accesso():
         if response.isCorrect == True and response.storedType == "Turista":
             # Salvataggio dello stato della sessione
             session[username] = username
-            #app.logger.info("Procedura di accesso completata con successo per l'utente: [" + username + ","+ password + "]")
             return redirect("/"+username+"/home")
         elif response.isCorrect == True and response.storedType != "Turista":
             # Salvataggio dello stato della sessione
             session[response.storedType + username] = response.storedType + username
-            #app.logger.info("Procedura di accesso completata con successo per l'utente: [" + username + ","+ password + "," + response.storedType + "]")
             return redirect("/"+response.storedType+"/"+username+"/airlineHome")
         else:
             stringa = "LE CREDENZIALI IMMESSE SONO ERRATE.\nPROVA AD ACCEDERE NUOVAMENTE."
             return render_template("errore.html", errore=stringa, airline=None, username=None)
     
-    #app.logger.warning("Richiesta GET per la procedura di accesso...")
     # Utile nel momento in cui viene eseguita una richiesta GET
     return render_template("Accesso.html")
+
+
 
 
 @app.route("/<string:username>/home", methods=('GET','POST'))
@@ -148,14 +150,18 @@ def home(username):
         """
         Si sta tentando di accedere alla home di un utente
         senza prima aver effettuato correttamente l'accesso.
+        Infatti, non si ha alcuna sessione relativa al valore
+        di username.
         """
         return redirect("/accedi", 401)
 
     #qui è necessario fare una query a Booking per recuperare gli aeroporti da inserire nelle scrollbar "Aeroporto di partenza" e "Aeroporto di destinazione"
     airportsLists = retrieveAirports()
 
-    #print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
+    print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
     return render_template("Home.html", username=username, airportsLists=airportsLists)
+
+
 
 
 #here the airline specifies which information has to be managed
@@ -173,6 +179,8 @@ def airlineHome(airline, username):
         """
         Si sta tentando di accedere alla home di un utente
         senza prima aver effettuato correttamente l'accesso.
+        Infatti, non si ha alcuna sessione relativa al valore
+        di airline + username.
         """
         return redirect("/accedi", 401)
     
@@ -181,17 +189,20 @@ def airlineHome(airline, username):
     return render_template("AirlineHome.html", airline=airline, username=username)
 
 
+
+
 @app.route("/<string:username>/booking", methods=('GET','POST'))
 def booking(username):
     """
     Arrivato a questo punto, devo avere uno stato differente da None
+    poiché l'utente deve aver fatto il Login e inserito dei dati.
     """
     if session.get(username) is None:
         return redirect("/accedi", 401)
 
     """
     E' possibile arrivare a questo punto anche premendo
-    il tasto indietro da pagine html differenti dopo aver
+    il tasto 'indietro' da pagine html differenti dopo aver
     selezionato un volo. Di conseguenza, è necessario cambiare
     lo stato della sessione cancellando l'informazione relativa
     al volo che è stato selezionato in precedenza dall'utente.

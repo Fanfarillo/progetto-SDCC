@@ -73,7 +73,6 @@ def retrieveAirports():
     departures = []
     arrivals = []
 
-    #with grpc.insecure_channel(ADDR_PORT) as channel: #server_IP_addr:port_num
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Booking_pb2_grpc.BookingServiceStub(channel)
 

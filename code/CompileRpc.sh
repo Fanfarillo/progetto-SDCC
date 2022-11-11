@@ -13,3 +13,5 @@ python3 -m grpc_tools.protoc -I. --python_out=./frontend --grpc_python_out=./fro
 python3 -m grpc_tools.protoc -I. --python_out=./payment --grpc_python_out=./payment ./proto/Payment.proto
 
 python3 -m grpc_tools.protoc -I. --python_out=./frontend --grpc_python_out=./frontend ./proto/Suggestions.proto
+
+python3 -m grpc_tools.protoc -I. --python_out=./discovery --grpc_python_out=./discovery ./proto/Discovery.proto

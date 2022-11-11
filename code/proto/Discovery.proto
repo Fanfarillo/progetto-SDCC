@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+service DiscoveryService {
+
+
+
+
+	/*
+		Consente di ottenere la porta relativa
+		al microservizio passato come parametro.
+	*/
+	rpc get(GetRequest) returns (GetReply);
+	
+	
+	
+	
+	/*
+		Consente di registrare la porta relativa
+		al microservizio passato come parametro.
+	*/
+	rpc put(PutRequest) returns (PutReply);
+
+
+
+
+	/*
+		I microservizi per il discovery service si
+		scambiano tra di loro le informazioni.
+	*/
+	rpc sendMicroserviceInfo(microserviceInfoRequest) returns (microserviceInfoReply);
+}
+
+
+
+
+/*
+Contiene le informazioni di un singolo microservizio.
+*/
+message infoMicroservice {
+    string serviceName = 1;
+	string port = 2;
+}
+
+
+
+
+message infoMicroservices {
+    repeated infoMicroservice microservices_list = 1;
+}
+
+
+
+
+message microserviceInfoRequest {
+    infoMicroservices microservices = 1;
+}
+
+
+
+
+message microserviceInfoReply {
+    infoMicroservices microservices = 1;
+}
+
+
+
+
+/*
+	serviceName: Nome del microservizio di cui si
+		     sta richiedendo l'informazione
+	             relativa alla porta.
+*/
+message GetRequest {
+	string serviceName = 1;
+	string serviceNameTarget = 2;
+}
+
+
+
+
+/*
+	serviceName: Nome del microservizio di cui si
+		     è chiesto l'informazione relativa
+		     alla porta.
+	             
+	port: 	     valore della porta su cui il microservizio
+	      	     è in ascolto
+*/
+message GetReply {
+	string serviceName = 1;
+	string port = 2;
+}
+
+
+
+
+/*
+	serviceName: Nome del microservizio di cui si
+		         vuole memorizzare l'informazione
+	             relativa alla porta.
+	             
+	port: 	     valore della porta su cui il microservizio
+	      	     è in ascolto
+*/
+message PutRequest {
+	string serviceName = 1;
+	string port = 2;
+}
+
+
+
+
+message DiscoveryServers {
+	repeated string servers = 1;
+}
+
+
+
+
+
+/*
+	result:      risultato dell'esecuzione. Il metodo
+		         ritorna TRUE se l'esecuzione è andata
+		         a buon fine; altrimenti, ritorna FALSE.
+	list_server: Lista dei discovery server.
+*/
+message PutReply {
+	bool result = 1;
+	DiscoveryServers list_server = 2;
+}
