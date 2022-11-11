@@ -19,6 +19,18 @@ postiTotali = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'A2', 'B2', 'C2', 'D2', 'E2',
 
 
 
+"""
+La seguente lista contiene inizialmente solo il
+default discovery server per il microservizio di booking.
+Tuttavia, nel momento in cui si registra, all'interno possono
+essere inserite le informazioni relative all'altro
+discovery server.
+"""
+all_discovery_servers = ['code_discovery_1:50060'] 
+
+
+
+
 class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
 
@@ -34,7 +46,7 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
         Recupero tutti i voli relativi ai parametri
         della richiesta ricevuta.
         """
-        flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aeroporto_arrivo, request.aeroporto_partenza)
+        flights = retrieveFlights(request.giorno, request.mese, request.anno, request.aeroporto_arrivo, request.aeroporto_partenza, all_discovery_servers, logger)
         
         for flight in flights:
             postiDisp = Booking_pb2.postiDisponibili()
@@ -140,6 +152,26 @@ server.start()
 logger.info('Server avviato con successo.')
 
 
+# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
+
+"""
+Registrazione del microservizio al Discovery Server di default.
+Inizialmente il microservizio di booking è a conoscenza solamente
+del discovery server 1
+"""
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server ...')
+discovery_servers = put_discovery_server(all_discovery_servers, logger)
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo...')
+
+
+
+
+# Registro l'eventuale altro discovery server
+for item in discovery_servers:
+    all_discovery_servers.append(item)
+
+
+# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
 
 try:
     while True:

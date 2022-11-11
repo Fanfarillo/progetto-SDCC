@@ -14,6 +14,18 @@ from ManDB import *
 
 
 
+"""
+La seguente lista contiene inizialmente solo il
+default discovery server per il microservizio di booking.
+Tuttavia, nel momento in cui si registra, all'interno possono
+essere inserite le informazioni relative all'altro
+discovery server.
+"""
+all_discovery_servers = ['code_discovery_1:50060']
+
+
+
+
 class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
 
@@ -29,7 +41,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
         logger.info("Richiesta di aggiunta di un nuovo volo: [" + NewFlight.id + "," + NewFlight.date + "," + NewFlight.departureAirport + "," + NewFlight.arrivalAirport + "," + NewFlight.departureTime + "," + NewFlight.arrivalTime + "," + NewFlight.airline + "," + NewFlight.price + "]")
 
-        isNewFlightId = checkFlightId(NewFlight.id)                 #condition 1)
+        isNewFlightId = checkFlightId(NewFlight.id, logger, all_discovery_servers)                 #condition 1)
         isExistentDate = checkDateExistance(NewFlight.date)         #condition 2)
         if isExistentDate:
             isFutureDate = checkFutureDate(NewFlight.date)          #condition 3)
@@ -60,7 +72,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
             #questa funzione arrotonda alla seconda cifra dopo la virgola (per difetto) il valore di NewFlight.price
             roundedPrice = roundPrice(NewFlight.price)
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
-            registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, roundedPrice, NewFlight.seats)
+            registerFlight(NewFlight.id, NewFlight.date, NewFlight.departureAirport, NewFlight.arrivalAirport, NewFlight.departureTime, NewFlight.arrivalTime, NewFlight.airline, roundedPrice, NewFlight.seats, logger, all_discovery_servers)
 
         output = Managment_pb2.AddResponse(isOk=isOk, error=err)
         return output
@@ -90,7 +102,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         if isOk:
             roundedPrice = roundPrice(UpdatedFlight.newPrice)
             #we can decide to do something with return value of registerFlight; at the moment we will not use it
-            updateFlightPrice(UpdatedFlight.flightId, roundedPrice)
+            updateFlightPrice(UpdatedFlight.flightId, roundedPrice, logger, all_discovery_servers)
 
         output = Managment_pb2.ModFlightResponse(isOk=isOk, error=err)
         return output
@@ -224,6 +236,29 @@ logger.info('Avvio del server in ascolto sulla porta 50052...')
 server.add_insecure_port('[::]:50052')
 server.start()
 logger.info('Server avviato con successo.')
+
+
+
+
+# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
+
+"""
+Registrazione del microservizio al Discovery Server di default.
+Inizialmente il microservizio di management è a conoscenza solamente
+del discovery server 1
+"""
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server ...')
+discovery_servers = put_discovery_server(all_discovery_servers, logger)
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo...')
+
+
+
+
+# Registro l'eventuale altro discovery server
+for item in discovery_servers:
+    all_discovery_servers.append(item)
+
+# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
 
 
 

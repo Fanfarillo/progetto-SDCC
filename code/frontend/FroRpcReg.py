@@ -6,13 +6,46 @@ from proto import Registration_pb2
 from proto import Registration_pb2_grpc
 
 
-ADDR_PORT = 'registration:50051'
+# ADDR_PORT = 'registration:50051'
+# -------------------------------------------------- DISCOVERY ----------------------------------------------
+ADDR_PORT = ''
+DISCOVERY_SERVER = 'code_discovery_2:50060'
+# -------------------------------------------------- DISCOVERY ----------------------------------------------
+
+
 
 
 class Output:
     def __init__(self, storedType, isCorrect):
         self.isCorrect = isCorrect
         self.storedType = storedType
+
+
+
+# --------------------------------------DISCOVERY -----------------------------
+"""
+Ha il compito di recuperare la porta su cui
+il microservizio registration è in ascolto.
+"""
+def discovery_registration():
+
+    """
+    Si tenta di contattare il discovery server registrato
+    per ottenere la porta su cui il servizio di registration è in
+    ascolto. Se la chiamata dovesse fallire, si attendono 5
+    secondi per poi eseguire nuovamente il tentativo di connessione.
+    """
+    while(True):
+        try:
+            channel = grpc.insecure_channel(DISCOVERY_SERVER)
+            stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
+            res = stub.get(Discovery_pb2.GetRequest(serviceName="frontend" , serviceNameTarget="registration"))
+            ADDR_PORT = res.serviceName + ':' + res.port
+            break;
+        except:
+            time.sleep(5)
+            continue
+# --------------------------------------DISCOVERY -----------------------------
 
 
 
@@ -24,6 +57,14 @@ messaggio contenente tutte le informazioni
 necessarie per l'iscrizione.
 """
 def sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito):
+# -------------------------------- DISCOVERY -------------------------------------------------------------------
+    """
+    Verifico se il fronted già è a conoscenza della porta
+    su cui contattare il micorservizio di registration.
+    """
+    if (ADDR_PORT == ''):
+        discovery_registration()
+# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
@@ -102,6 +143,14 @@ messaggio contenente tutte le informazioni
 necessarie per effettuare il login.
 """
 def sendCredentials(username, password):
+# -------------------------------- DISCOVERY -------------------------------------------------------------------
+    """
+    Verifico se il fronted già è a conoscenza della porta
+    su cui contattare il micorservizio di registration.
+    """
+    if (ADDR_PORT == ''):
+        discovery_registration()
+# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
     stub = Registration_pb2_grpc.UsersInfoStub(channel)

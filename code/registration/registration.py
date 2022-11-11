@@ -8,7 +8,19 @@ from concurrent import futures
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
 from RegDB import *
+from regUtils import *
 
+
+# ------------------------------------------------------ DISCOVERY -----------------------------------------------------
+"""
+La seguente lista contiene inizialmente solo il
+default discovery server per il microservizio di booking.
+Tuttavia, nel momento in cui si registra, all'interno possono
+essere inserite le informazioni relative all'altro
+discovery server.
+"""
+all_discovery_servers = ['code_discovery_2:50060']
+# ------------------------------------------------------ DISCOVERY -----------------------------------------------------
 
 
 class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
@@ -134,6 +146,29 @@ logger.info('Avvio del server in ascolto sulla porta 50051...')
 server.add_insecure_port('[::]:50051')
 server.start()
 logger.info('Server avviato con successo.')
+
+
+
+
+# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
+
+"""
+Registrazione del microservizio al Discovery Server di default.
+Inizialmente il microservizio di registration è a conoscenza solamente
+del discovery server 2
+"""
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server ...')
+discovery_servers = put_discovery_server(all_discovery_servers, logger)
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo...')
+
+
+
+
+# Registro l'eventuale altro discovery server
+for item in discovery_servers:
+    all_discovery_servers.append(item)
+
+# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
 
 
 

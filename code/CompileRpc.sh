@@ -15,3 +15,7 @@ python3 -m grpc_tools.protoc -I. --python_out=./payment --grpc_python_out=./paym
 python3 -m grpc_tools.protoc -I. --python_out=./frontend --grpc_python_out=./frontend ./proto/Suggestions.proto
 
 python3 -m grpc_tools.protoc -I. --python_out=./discovery --grpc_python_out=./discovery ./proto/Discovery.proto
+python3 -m grpc_tools.protoc -I. --python_out=./frontend --grpc_python_out=./frontend ./proto/Discovery.proto
+python3 -m grpc_tools.protoc -I. --python_out=./booking --grpc_python_out=./booking ./proto/Discovery.proto
+python3 -m grpc_tools.protoc -I. --python_out=./management --grpc_python_out=./management ./proto/Discovery.proto
+python3 -m grpc_tools.protoc -I. --python_out=./registration --grpc_python_out=./registration ./proto/Discovery.proto

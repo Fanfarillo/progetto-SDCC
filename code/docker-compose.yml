@@ -1,11 +1,17 @@
 version: "3.8"
 
 services:
-  frontend:
-    build: ./frontend
+#  frontend:
+#    build: ./frontend
+#    user: root
+#    ports:
+#      - 5000:5000
+  
+  discovery:
+    build: ./discovery
     user: root
     ports:
-      - 5000:5000
+      - "50060-50061:50060"
 
   registration:
     build: ./registration
@@ -25,14 +31,14 @@ services:
     ports:
       - 50053:50053
 
-  suggestions:
-    build: ./suggestions
-    user: root
-    ports:
-      - 50054:50054
+  # suggestions:
+  #   build: ./suggestions
+  #   user: root
+  #   ports:
+  #     - 50054:50054
 
-  payment:
-    build: ./payment
-    user: root
-    ports:
-      - 50055:50055
+  # payment:
+  #   build: ./payment
+  #   user: root
+  #   ports:
+  #     - 50055:50055
