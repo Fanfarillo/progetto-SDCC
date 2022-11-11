@@ -14,8 +14,6 @@ DISCOVERY_SERVER = 'code_discovery_1:50060'
 
 
 
-
-
 class CardResult:
     def __init__(self, cards, num):
         self.cards = cards
@@ -60,7 +58,7 @@ Ha il compito di recuperare la porta su cui
 il microservizio booking è in ascolto.
 """
 def discovery_booking():
-
+    global ADDR_PORT
     """
     Si tenta di contattare il discovery server registrato
     per ottenere la porta su cui il servizio di booking è in
@@ -69,16 +67,19 @@ def discovery_booking():
     """
     while(True):
         try:
+            # Provo a connettermi al server.
             channel = grpc.insecure_channel(DISCOVERY_SERVER)
             stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
+            # Ottengo la porta su cui il microservizio di Booking è in ascolto.
             res = stub.get(Discovery_pb2.GetRequest(serviceName="frontend" , serviceNameTarget="booking"))
             if (res.port == -1):
-                # Il discovery server ancora non è a conoscenza della porta.
+                # Il discovery server ancora non è a conoscenza della porta richiesta.
                 time.sleep(5)
                 continue
             ADDR_PORT = res.serviceName + ':' + res.port
             break;
         except:
+            # Problema nella connessione con il server.
             time.sleep(5)
             continue
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
@@ -100,7 +101,7 @@ def sendBookingInfo(giorno, mese, anno, aeroporto_partenza, aeroporto_arrivo):
     count = 0
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
-    Verifico se il fronted già è a conoscenza della porta
+    Verifico se il frontend già è a conoscenza della porta
     su cui contattare il micorservizio di booking.
     """
     if (ADDR_PORT == ''):

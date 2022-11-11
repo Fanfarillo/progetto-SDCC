@@ -9,15 +9,12 @@ dig code_discovery_1 | grep '172.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' -o > 
 
 # L'indirizzo IP del container in esecuzione
 export ARG1=$(cat /app/own_ip_address.txt)
-#export ARG1
 
 # L'indirizzo IP del primo server di Discovery
 export ARG2=$(cat /app/server1.txt)
-#export ARG2
 
 # L'indirizzo IP del secondo server di Discovery
 export ARG3=$(cat /app/server2.txt)
-#export ARG3
 
 # rm /app/own_ip_address.txt
 # rm /app/server2.txt

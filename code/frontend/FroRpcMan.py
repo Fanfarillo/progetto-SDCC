@@ -2,6 +2,8 @@ import grpc
 
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
+from proto import Discovery_pb2
+from proto import Discovery_pb2_grpc
 
 
 # ADDR_PORT = 'management:50052'
@@ -38,10 +40,10 @@ class SeatsFlight:
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
 """
 Ha il compito di recuperare la porta su cui
-il microservizio management è in ascolto.
+il microservizio di Management è in ascolto.
 """
 def discovery_management():
-
+    global ADDR_PORT
     """
     Si tenta di contattare il discovery server registrato
     per ottenere la porta su cui il servizio di management è in
@@ -50,12 +52,19 @@ def discovery_management():
     """
     while(True):
         try:
+            # Provo a connettermi al server.
             channel = grpc.insecure_channel(DISCOVERY_SERVER)
             stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
+            # Ottengo la porta su cui il microservizio di Management è in ascolto.
             res = stub.get(Discovery_pb2.GetRequest(serviceName="frontend" , serviceNameTarget="management"))
+            if (res.port == -1):
+                # Il discovery server ancora non è a conoscenza della porta richiesta.
+                time.sleep(5)
+                continue            
             ADDR_PORT = res.serviceName + ':' + res.port
             break;
         except:
+            # Problema nella connessione con il server.
             time.sleep(5)
             continue
 # -------------------------------- DISCOVERY -------------------------------------------------------------------

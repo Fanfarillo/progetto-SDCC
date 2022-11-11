@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-#  frontend:
-#    build: ./frontend
-#    user: root
-#    ports:
-#      - 5000:5000
+  frontend:
+    build: ./frontend
+    user: root
+    ports:
+      - 5000:5000
   
   discovery:
     build: ./discovery

@@ -16,7 +16,7 @@ from ManDB import *
 
 """
 La seguente lista contiene inizialmente solo il
-default discovery server per il microservizio di booking.
+default discovery server per il microservizio di Management.
 Tuttavia, nel momento in cui si registra, all'interno possono
 essere inserite le informazioni relative all'altro
 discovery server.
@@ -256,10 +256,18 @@ logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery se
 
 # Registro l'eventuale altro discovery server
 for item in discovery_servers:
-    all_discovery_servers.append(item)
+    try:
+        all_discovery_servers.index(item)
+    except:
+        # Inserisco il Discovery Server mancante all'interno della lista.
+        all_discovery_servers.append(item)
+
+logger.info('[DISCOVER SERVERS LIST] I discovery servers noti sono:\n')
+for item in all_discovery_servers:
+    logger.info(item + '\n')
+logger.info('\n\n')
 
 # ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
-
 
 
 try:

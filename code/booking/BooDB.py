@@ -144,6 +144,7 @@ def storeUpdatedFlight(flightId, newPrice):
 
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 def discovery_management_micro(all_discovery_servers, logger):
+    global ADDR_PORT
     ok = False
     while(True):
         """
@@ -152,24 +153,28 @@ def discovery_management_micro(all_discovery_servers, logger):
         """
         for discovery in all_discovery_servers:
             try:
+                # Provo a connettermi al Discovery server.
                 channel = grpc.insecure_channel(discovery)
                 stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
+                # Recupero la porta su cui è in ascolto il servizio di Management.
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="management"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ PUT DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery_server + '.')
+                logger.info('[ GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery_server + '.')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ PUT DISCOVERY MANAGEMENT] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare...')
+                logger.info('[ GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery_server + ' riprovare...')
                 time.sleep(2)
                 continue
+            # Non ho avuto problemi di connsessione e la porta restituita è valida.
             ok = True
-            logger.info('[ PUT DISCOVERY MANAGEMENT] porta del servizio di management recuperata: ' + res.port + '.')
+            logger.info('[ GET DISCOVERY MANAGEMENT] porta del servizio di management recuperata: ' + res.port + '.')
             ADDR_PORT = res.serviceName + ':' + res.port
             break
         if(ok):
             break
+        logger.info('[ GET DISCOVERY MANAGEMENT ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers...')
         time.sleep(5)
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 
@@ -303,9 +308,11 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, all_discovery_servers,
 
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     if (ADDR_PORT == ''):
+        # Recupero la porta su cui è in ascolto il microservizio di Management.
         discovery_management_micro(all_discovery_servers,logger)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
 
+    # La porta del microservizio di Management è stata recuperata con successo.
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Managment_pb2_grpc.FlightsInfoStub(channel)
     

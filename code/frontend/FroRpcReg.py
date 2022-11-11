@@ -1,9 +1,11 @@
 import grpc
 import sys
-
+import logging
 from security import Security
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
+from proto import Discovery_pb2
+from proto import Discovery_pb2_grpc
 
 
 # ADDR_PORT = 'registration:50051'
@@ -27,8 +29,8 @@ class Output:
 Ha il compito di recuperare la porta su cui
 il microservizio registration è in ascolto.
 """
-def discovery_registration():
-
+def discovery_registration(logger):
+    global ADDR_PORT
     """
     Si tenta di contattare il discovery server registrato
     per ottenere la porta su cui il servizio di registration è in
@@ -37,12 +39,20 @@ def discovery_registration():
     """
     while(True):
         try:
+            # Provo a connettermi al server.
             channel = grpc.insecure_channel(DISCOVERY_SERVER)
             stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
+            # Ottengo la porta su cui il microservizio di Booking è in ascolto.
             res = stub.get(Discovery_pb2.GetRequest(serviceName="frontend" , serviceNameTarget="registration"))
+            if (res.port == -1):
+                # Il discovery server ancora non è a conoscenza della porta richiesta.
+                time.sleep(5)
+                continue            
             ADDR_PORT = res.serviceName + ':' + res.port
+            logger.info("DENTRO ALLA FUNZIONE = "+ADDR_PORT)
             break;
         except:
+            # Problema nella connessione con il server.
             time.sleep(5)
             continue
 # --------------------------------------DISCOVERY -----------------------------
@@ -57,15 +67,18 @@ messaggio contenente tutte le informazioni
 necessarie per l'iscrizione.
 """
 def sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito):
+    logging.basicConfig(filename="logfile.log", format=f'%(levelname)s - %(asctime)s - %(message)s')
+    logger = logging.getLogger("frontedInfo")
+    logger.setLevel(logging.INFO)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di registration.
     """
     if (ADDR_PORT == ''):
-        discovery_registration()
+        discovery_registration(logger)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
-
+    logger.info("ADDR = " + ADDR_PORT)
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
@@ -143,15 +156,18 @@ messaggio contenente tutte le informazioni
 necessarie per effettuare il login.
 """
 def sendCredentials(username, password):
+    logging.basicConfig(filename="logfile.log", format=f'%(levelname)s - %(asctime)s - %(message)s')
+    logger = logging.getLogger("frontedInfo")
+    logger.setLevel(logging.INFO)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di registration.
     """
     if (ADDR_PORT == ''):
-        discovery_registration()
+        discovery_registration(logger)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
-
+    logger.info("ADDR = " + ADDR_PORT)
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
