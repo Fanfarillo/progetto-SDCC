@@ -183,6 +183,7 @@ def set_conn_micro():
                 grpc_conn.conn = stub
 
                 # Registro il fatto che questa connessione si è conclusa con successo.
+                logger.info("[ CONNESSIONI ] Tentativo di connessione al microservizio di " + grpc_conn.nome + " avvenuta con successo...")
                 count = count + 1
                 conn_concluse.append(grpc_conn.nome)
             except:
@@ -215,6 +216,13 @@ contenuto dei file di LOG dei microservizi.
 def run_logger():
     # Contatore delle richieste che vengono fatte ai microservizi
     count = 0
+    for item in files:
+        if(item.nome=="booking"):
+            boo = item
+        elif(item.nome=="management"):
+            man = item
+        elif(item.nome=="registration"):
+            reg = item
     while(True):
         count = count + 1
         for grpc_conn in grpc_connections:
@@ -222,29 +230,32 @@ def run_logger():
             # Distinguo i microservizi da contattare.
             if(grpc_conn.nome ==  "booking"):
                 try:
-                    for response in grpc_conn.conn.getLogFile(Booking_pb2.GetLogFileRequest(numRichiesta=count)):
+                    for response in grpc_conn.conn.getLogFileBoo(Booking_pb2.GetLogFileRequestBoo(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
-                        grpc_conn.f.write(logging_info)
-                        grpc_conn.f.flush()
+                        boo.f.write(logging_info)
+                        boo.f.flush()
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Booking completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Booking...")
             elif(grpc_conn.nome ==  "management"):
                 try:
-                    for response in grpc_conn.conn.getLogFile(Managment_pb2.GetLogFileRequest(numRichiesta=count)):
+                    for response in grpc_conn.conn.getLogFileMan(Managment_pb2.GetLogFileRequestMan(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
-                        grpc_conn.f.write(logging_info)
-                        grpc_conn.f.flush()
+                        man.f.write(logging_info)
+                        man.f.flush()
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Management completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Management...")
             elif(grpc_conn.nome ==  "registration"):
                 try:
-                    for response in grpc_conn.conn.getLogFile(Registration_pb2.GetLogFileRequest(numRichiesta=count)):
+                    for response in grpc_conn.conn.getLogFileReg(Registration_pb2.GetLogFileRequestReg(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
-                        grpc_conn.f.write(logging_info)
-                        grpc_conn.f.flush()
+                        reg.f.write(logging_info)
+                        reg.f.flush()
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Registration completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Registration...")
-        logger.info("[ LOGGING ] Richieste ai microservizi completate con successo...")
+        
         time.sleep(10)
 
 

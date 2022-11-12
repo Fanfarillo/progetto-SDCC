@@ -23,6 +23,8 @@ discovery server.
 """
 all_discovery_servers = ['code_discovery_1:50060']
 
+CHUNK_DIM = 1000
+
 
 
 

@@ -21,6 +21,7 @@ discovery server.
 """
 all_discovery_servers = ['code_discovery_2:50060']
 # ------------------------------------------------------ DISCOVERY -----------------------------------------------------
+CHUNK_DIM = 1000
 
 
 class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):

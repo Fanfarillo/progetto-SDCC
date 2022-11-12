@@ -26,7 +26,9 @@ Tuttavia, nel momento in cui si registra, all'interno possono
 essere inserite le informazioni relative all'altro
 discovery server.
 """
-all_discovery_servers = ['code_discovery_1:50060'] 
+all_discovery_servers = ['code_discovery_1:50060']
+
+CHUNK_DIM = 1000
 
 
 
