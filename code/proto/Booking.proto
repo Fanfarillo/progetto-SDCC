@@ -9,6 +9,8 @@ service BookingService {
     rpc UpdateFlightPrice(UpdatedFlight2) returns (UpdateResponse);
     rpc getAllAvailableSeatsForFlight(AvailableSeatRequest) returns (stream AvailableSeatReply);
     rpc GetAirports(AirportsRequest) returns (AirportsResponse);
+    //Logging
+    rpc getLogFileBoo(GetLogFileRequestBoo) returns (stream GetLogFileReplyBoo);
 }
 
 message AvailableSeatReply {
@@ -83,4 +85,15 @@ message AirportsRequest {
 message AirportsResponse {
     repeated string departureAirports = 1;
     repeated string arrivalAirports = 2;
+}
+
+message GetLogFileRequestBoo {
+    int32 numRichiesta = 1;
+}
+
+
+
+message GetLogFileReplyBoo {
+    bytes chunk_file  = 1;
+    int32 num_chunk = 2;
 }

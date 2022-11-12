@@ -5,6 +5,8 @@ package proto;
 service UsersInfo {
     rpc SignUp(SignUpInfo) returns (SignUpResponse);
     rpc SignIn(Credentials) returns (SignInResponse);
+    // Logging
+    rpc getLogFileReg(GetLogFileRequestReg) returns (stream GetLogFileReplyReg);
 }
 
 message SignUpInfo {
@@ -47,4 +49,15 @@ message digestCredentials {
 message SignInResponse {
     bytes storedType = 1;
     bool isCorrect = 2;
+}
+
+message GetLogFileRequestReg {
+    int32 numRichiesta = 1;
+}
+
+
+
+message GetLogFileReplyReg {
+    bytes chunk_file  = 1;
+    int32 num_chunk = 2;
 }

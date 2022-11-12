@@ -160,11 +160,11 @@ def discovery_management_micro(all_discovery_servers, logger):
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="management"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery_server + '.')
+                logger.info('[ GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery + '.')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery_server + ' riprovare...')
+                logger.info('[ GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery + ' riprovare...')
                 time.sleep(2)
                 continue
             # Non ho avuto problemi di connsessione e la porta restituita è valida.

@@ -29,6 +29,50 @@ all_discovery_servers = ['code_discovery_1:50060']
 class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
 
+
+    def getLogFileMan(self, request, context):
+    	# Logging.
+        logger.info("[LOGGING] richiesta dati di logging...\n\n")
+        r = -1
+        q = -1
+        
+        
+        f = open("managment.log","r")
+        
+        contenuto = f.read()
+        
+        dim = len(contenuto)
+        
+        q = dim // CHUNK_DIM
+        r = dim % CHUNK_DIM
+        
+        if(q==0):
+        	yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto.encode(), num_chunk  =0)
+        else:
+        	count = 0        
+        	for i in range(0, q):
+        		try:
+        			yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk  =i)
+        		except:
+        			logger.info("[LOGGING] Dati di logging inviati senza successo...")
+        		count = count + 1
+        	if(r > 0):
+        		lower_bound = count * CHUNK_DIM
+        		yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
+        logger.info("[LOGGING] Dati di logging inviati con successo...")
+        # open file 
+        f.close()
+        f = open("managment.log", "r+") 
+  
+        # absolute file positioning
+        f.seek(0) 
+  
+        # to erase all data 
+        f.truncate()
+        f.close()
+
+
+
     def AddFlight(self, NewFlight, context):
         #sanity checks are the following:
         #   1) Id should not exist yet

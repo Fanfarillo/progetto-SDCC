@@ -24,6 +24,11 @@ class UsersInfoStub(object):
                 request_serializer=proto_dot_Registration__pb2.Credentials.SerializeToString,
                 response_deserializer=proto_dot_Registration__pb2.SignInResponse.FromString,
                 )
+        self.getLogFileReg = channel.unary_stream(
+                '/proto.UsersInfo/getLogFileReg',
+                request_serializer=proto_dot_Registration__pb2.GetLogFileRequestReg.SerializeToString,
+                response_deserializer=proto_dot_Registration__pb2.GetLogFileReplyReg.FromString,
+                )
 
 
 class UsersInfoServicer(object):
@@ -41,6 +46,13 @@ class UsersInfoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getLogFileReg(self, request, context):
+        """Logging
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UsersInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +65,11 @@ def add_UsersInfoServicer_to_server(servicer, server):
                     servicer.SignIn,
                     request_deserializer=proto_dot_Registration__pb2.Credentials.FromString,
                     response_serializer=proto_dot_Registration__pb2.SignInResponse.SerializeToString,
+            ),
+            'getLogFileReg': grpc.unary_stream_rpc_method_handler(
+                    servicer.getLogFileReg,
+                    request_deserializer=proto_dot_Registration__pb2.GetLogFileRequestReg.FromString,
+                    response_serializer=proto_dot_Registration__pb2.GetLogFileReplyReg.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +112,22 @@ class UsersInfo(object):
         return grpc.experimental.unary_unary(request, target, '/proto.UsersInfo/SignIn',
             proto_dot_Registration__pb2.Credentials.SerializeToString,
             proto_dot_Registration__pb2.SignInResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getLogFileReg(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/proto.UsersInfo/getLogFileReg',
+            proto_dot_Registration__pb2.GetLogFileRequestReg.SerializeToString,
+            proto_dot_Registration__pb2.GetLogFileReplyReg.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

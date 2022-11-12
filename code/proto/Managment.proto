@@ -10,6 +10,8 @@ service FlightsInfo {
     rpc GetPriceFlight(PriceRequest) returns (PriceReply);
     rpc GetAllSeatsFlight(SeatCostRequest) returns (stream SeatCostReply);
     rpc GetAlladditionalServicesFlight(AdditionalServiceCostRequest) returns (stream AdditionalServiceCostReply);
+    //Logging
+    rpc getLogFileMan(GetLogFileRequestMan) returns (stream GetLogFileReplyMan);
 }
 
 message SeatCostRequest {
@@ -90,4 +92,15 @@ message UpdatedServices {
 message ModServicesResponse {
     bool isOk = 1;
     string error = 2;
+}
+
+message GetLogFileRequestMan {
+    int32 numRichiesta = 1;
+}
+
+
+
+message GetLogFileReplyMan {
+    bytes chunk_file  = 1;
+    int32 num_chunk = 2;
 }

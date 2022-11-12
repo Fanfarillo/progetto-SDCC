@@ -49,6 +49,11 @@ class FlightsInfoStub(object):
                 request_serializer=proto_dot_Managment__pb2.AdditionalServiceCostRequest.SerializeToString,
                 response_deserializer=proto_dot_Managment__pb2.AdditionalServiceCostReply.FromString,
                 )
+        self.getLogFileMan = channel.unary_stream(
+                '/proto.FlightsInfo/getLogFileMan',
+                request_serializer=proto_dot_Managment__pb2.GetLogFileRequestMan.SerializeToString,
+                response_deserializer=proto_dot_Managment__pb2.GetLogFileReplyMan.FromString,
+                )
 
 
 class FlightsInfoServicer(object):
@@ -96,6 +101,13 @@ class FlightsInfoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getLogFileMan(self, request, context):
+        """Logging
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FlightsInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -133,6 +145,11 @@ def add_FlightsInfoServicer_to_server(servicer, server):
                     servicer.GetAlladditionalServicesFlight,
                     request_deserializer=proto_dot_Managment__pb2.AdditionalServiceCostRequest.FromString,
                     response_serializer=proto_dot_Managment__pb2.AdditionalServiceCostReply.SerializeToString,
+            ),
+            'getLogFileMan': grpc.unary_stream_rpc_method_handler(
+                    servicer.getLogFileMan,
+                    request_deserializer=proto_dot_Managment__pb2.GetLogFileRequestMan.FromString,
+                    response_serializer=proto_dot_Managment__pb2.GetLogFileReplyMan.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -260,5 +277,22 @@ class FlightsInfo(object):
         return grpc.experimental.unary_stream(request, target, '/proto.FlightsInfo/GetAlladditionalServicesFlight',
             proto_dot_Managment__pb2.AdditionalServiceCostRequest.SerializeToString,
             proto_dot_Managment__pb2.AdditionalServiceCostReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getLogFileMan(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/proto.FlightsInfo/getLogFileMan',
+            proto_dot_Managment__pb2.GetLogFileRequestMan.SerializeToString,
+            proto_dot_Managment__pb2.GetLogFileReplyMan.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
