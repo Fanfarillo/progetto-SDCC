@@ -6,6 +6,10 @@ services:
     user: root
     ports:
       - 5000:5000
+
+  logging:
+    build: ./logging
+    user: root
   
   discovery:
     build: ./discovery

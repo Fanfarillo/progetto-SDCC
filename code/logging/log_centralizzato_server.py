@@ -247,6 +247,9 @@ def run_logger():
         logger.info("[ LOGGING ] Richieste ai microservizi completate con successo...")
         time.sleep(10)
 
+
+
+
 if __name__ == "__main__":
     log_file()
     set_conn_micro()
