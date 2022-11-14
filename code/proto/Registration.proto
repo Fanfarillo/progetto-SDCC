@@ -17,17 +17,6 @@ message SignUpInfo {
     bytes userType = 5;
     bytes airline = 6;
     bytes cartaDiCredito = 7;
-    digestSignUpInfo dig = 8;
-}
-
-message digestSignUpInfo {
-    bytes email = 1;
-    bytes username = 2;
-    bytes password = 3;
-    bytes passwordConfirm = 4;
-    bytes userType = 5;
-    bytes airline = 6;
-    bytes cartaDiCredito = 7;
 }
 
 message SignUpResponse {
@@ -36,12 +25,6 @@ message SignUpResponse {
 }
 
 message Credentials {
-    bytes username = 1;
-    bytes password = 2;
-    digestCredentials dig = 3;
-}
-
-message digestCredentials {
     bytes username = 1;
     bytes password = 2;
 }

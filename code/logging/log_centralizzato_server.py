@@ -203,7 +203,11 @@ i microservizi che devono essere monitorati.
 def log_file_microservizi():
     global files
     for grpc_conn in grpc_connections:
-        f = open(grpc_conn.nome + '.log', "a")
+        f = open(grpc_conn.nome + '.log', "w")
+        f.seek(0) 
+        f.truncate()
+        f.flush()
+        f.seek(0) 
         files.append(LogFileMicro(grpc_conn.nome, f))
 
 

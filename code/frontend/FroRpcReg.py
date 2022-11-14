@@ -29,7 +29,7 @@ class Output:
 Ha il compito di recuperare la porta su cui
 il microservizio registration è in ascolto.
 """
-def discovery_registration(logger):
+def discovery_registration():
     global ADDR_PORT
     """
     Si tenta di contattare il discovery server registrato
@@ -49,7 +49,6 @@ def discovery_registration(logger):
                 time.sleep(5)
                 continue            
             ADDR_PORT = res.serviceName + ':' + res.port
-            logger.info("DENTRO ALLA FUNZIONE = "+ADDR_PORT)
             break;
         except:
             # Problema nella connessione con il server.
@@ -67,22 +66,16 @@ messaggio contenente tutte le informazioni
 necessarie per l'iscrizione.
 """
 def sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito):
-    logging.basicConfig(filename="logfile.log", format=f'%(levelname)s - %(asctime)s - %(message)s')
-    logger = logging.getLogger("frontedInfo")
-    logger.setLevel(logging.INFO)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di registration.
     """
     if (ADDR_PORT == ''):
-        discovery_registration(logger)
+        discovery_registration()
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
-    logger.info("ADDR = " + ADDR_PORT)
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
-
-    dig = Registration_pb2.digestSignUpInfo()
 
     """
     Implemento meccanismi di sicurezza:
@@ -95,28 +88,18 @@ def sendSignUpInfo(username, password, passwordConfirm, userType, airline, carta
     cipher = Security(b"mysecretpassword")
 
     # Password
-    digest = cipher.message_integrity(bytes(password, 'utf-8'))
-    dig.password = digest
     ciphertextPassword, iv = cipher.encryptData(bytes(password, 'utf-8'))
 
     # Password conferma
-    digest = cipher.message_integrity(bytes(passwordConfirm, 'utf-8'))
-    dig.passwordConfirm = digest
     ciphertextPasswordConf, iv = cipher.encryptData(bytes(passwordConfirm, 'utf-8'))
 
     # Username
-    digest = cipher.message_integrity(bytes(username, 'utf-8'))
-    dig.username = digest
     ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8'))
 
     # Carta di credito
-    digest = cipher.message_integrity(bytes(cartaDiCredito, 'utf-8'))
-    dig.cartaDiCredito = digest
     ciphertextCartaDiCredito, iv = cipher.encryptData(bytes(cartaDiCredito, 'utf-8'))
 
     # Tipologia utente
-    digest = cipher.message_integrity(bytes(userType, 'utf-8'))
-    dig.userType = digest
     ciphertextUserType, iv = cipher.encryptData(bytes(userType, 'utf-8'))
 
     if airline is not None:
@@ -125,8 +108,6 @@ def sendSignUpInfo(username, password, passwordConfirm, userType, airline, carta
         aerea. Ossia, non sarà un utente di tipo
         Turista.
         """
-        digest = cipher.message_integrity(bytes(airline, 'utf-8'))
-        dig.airline = digest
         ciphertextAirline, iv = cipher.encryptData(bytes(airline, 'utf-8'))
     else:
         ciphertextAirline = None
@@ -142,7 +123,7 @@ def sendSignUpInfo(username, password, passwordConfirm, userType, airline, carta
     i vari digest per controllare l'integrità dei messaggi.
     """
 
-    output = stub.SignUp(Registration_pb2.SignUpInfo(username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito, dig = dig))
+    output = stub.SignUp(Registration_pb2.SignUpInfo(username=ciphertextUsername, password=ciphertextPassword, passwordConfirm=ciphertextPasswordConf, userType=ciphertextUserType, airline=ciphertextAirline, cartaDiCredito=ciphertextCartaDiCredito))
 
     return output
 
@@ -156,22 +137,16 @@ messaggio contenente tutte le informazioni
 necessarie per effettuare il login.
 """
 def sendCredentials(username, password):
-    logging.basicConfig(filename="logfile.log", format=f'%(levelname)s - %(asctime)s - %(message)s')
-    logger = logging.getLogger("frontedInfo")
-    logger.setLevel(logging.INFO)
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di registration.
     """
     if (ADDR_PORT == ''):
-        discovery_registration(logger)
+        discovery_registration()
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
-    logger.info("ADDR = " + ADDR_PORT)
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
-
-    dig = Registration_pb2.digestCredentials()
 
     """
     Implemento meccanismi di sicurezza:
@@ -184,17 +159,12 @@ def sendCredentials(username, password):
     cipher = Security(b"mysecretpassword")
 
     # Username
-    digest = cipher.message_integrity(bytes(username, 'utf-8'))
-    dig.username = digest
-    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8')) 
+    ciphertextUsername, iv = cipher.encryptData(bytes(username, 'utf-8'))
 
     # Password
-    digest = cipher.message_integrity(bytes(password, 'utf-8'))
-    dig.password = digest
     ciphertextPassword, iv = cipher.encryptData(bytes(password, 'utf-8'))
     
-    output = stub.SignIn(Registration_pb2.Credentials(username=ciphertextUsername, password=ciphertextPassword, dig=dig))
-
+    output = stub.SignIn(Registration_pb2.Credentials(username=ciphertextUsername, password=ciphertextPassword))
 
     storedTypeString = cipher.decryptData(output.storedType).decode()
 
