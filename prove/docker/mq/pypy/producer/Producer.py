@@ -1,7 +1,8 @@
-import pika
+import pika, os
 
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+amqp_url = os.environ['AMQP_URL']
+parameters = pika.URLParameters(amqp_url)
+connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
 channel.queue_declare(queue='hello')

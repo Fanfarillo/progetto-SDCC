@@ -4,5 +4,9 @@ bash InstallServer.sh
 2) INSTALL PIKA
 python3 -m pip install pika --upgrade
 
+3) STOP RABBITMQ ON HOST
+sudo systemctl status rabbitmq-server
+sudo systemctl stop rabbitmq-server
+
 3) BUILD IMAGES AND EXECUTE CONTAINERS (in docker/mq/pypy directory)
 docker compose up --build
