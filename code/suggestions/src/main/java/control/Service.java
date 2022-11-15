@@ -24,12 +24,13 @@ public class Service extends SuggestionsServiceImplBase {
         int r = -1;
         int q = -1;
 
+        String content = "";         //the whole content of suggestions.log
+        int count, lowerBound;
+
         try(FileReader rd = new FileReader("suggestions.log")) {
 
             BufferedReader bReader = new BufferedReader(rd);
-            String content = "";         //the whole content of suggestions.log
             String line;
-            int count, lowerBound;
 
             while(true) {
                 line = bReader.readLine();
@@ -48,7 +49,9 @@ public class Service extends SuggestionsServiceImplBase {
         r = dim % chunkDim;
 
         if(q==0) {
-            //TODO: farsi spiegare da Luca come diavolo funziona lo yield nell'ambito gRPC
+            //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto.encode(), num_chunk=0)
+            GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.getBytes()).setNum_chunk(0).build();
+            responseObserver.onNext(response);
 
         }
         else {
@@ -56,7 +59,9 @@ public class Service extends SuggestionsServiceImplBase {
 
             for(int i=0; i<q; i++) {
                 try {
-                    //TODO
+                    //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk=i)
+                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.substring(i,i+chunkDim).getBytes()).setNum_chunk(i).build();
+                    responseObserver.onNext(response);
                 }
                 catch(Exception e) {
                     opfile.writeLog("[LOGGING] Dati di logging inviati senza successo.");
@@ -66,7 +71,9 @@ public class Service extends SuggestionsServiceImplBase {
             }
             if(r>0) {
                 lowerBound = count*chunkDim;
-                //TODO
+                // EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk=count)
+                GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.substring(lowerBound,lowerBound+r).getBytes()).setNum_chunk(count).build();
+                responseObserver.onNext(response);
 
             }
 
@@ -76,6 +83,8 @@ public class Service extends SuggestionsServiceImplBase {
         try(RandomAccessFile raf = new RandomAccessFile("suggesions.log", "rw")) {
             raf.setLength(0);   //to erase all data
         }
+
+        responseObserver.onCompleted();
 
     }
 
