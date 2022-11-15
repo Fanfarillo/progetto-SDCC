@@ -7,6 +7,9 @@ option java_package = "control.proto";
 
 service SuggestionsService {
     rpc GetSelectedFlight(SelectedFlight) returns (SelectionResponse);
+    rpc StoreOldFlight(OldFlight) returns (StoreOldResponse);
+    // Logging
+    rpc getLogFileSug(GetLogFileRequestSug) returns (stream GetLogFileReplySug);
 }
 
 message SelectedFlight {
@@ -19,4 +22,21 @@ message SelectedFlight {
 
 message SelectionResponse {
     int32 numDaysBeforeConvenient = 1;
+}
+
+message OldFlight {
+    string oldFlightsMsg = 1;
+}
+
+message StoreOldResponse {
+    bool isOk = 1;
+}
+
+message GetLogFileRequestSug {
+    int32 numRichiesta = 1;
+}
+
+message GetLogFileReplySug {
+    bytes chunk_file  = 1;
+    int32 num_chunk = 2;
 }

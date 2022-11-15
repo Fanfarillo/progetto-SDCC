@@ -38,8 +38,6 @@ message GetLogFileRequestReg {
     int32 numRichiesta = 1;
 }
 
-
-
 message GetLogFileReplyReg {
     bytes chunk_file  = 1;
     int32 num_chunk = 2;

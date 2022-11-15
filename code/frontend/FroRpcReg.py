@@ -42,7 +42,7 @@ def discovery_registration():
             # Provo a connettermi al server.
             channel = grpc.insecure_channel(DISCOVERY_SERVER)
             stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
-            # Ottengo la porta su cui il microservizio di Booking è in ascolto.
+            # Ottengo la porta su cui il microservizio di Registration è in ascolto.
             res = stub.get(Discovery_pb2.GetRequest(serviceName="frontend" , serviceNameTarget="registration"))
             if (res.port == -1):
                 # Il discovery server ancora non è a conoscenza della porta richiesta.

@@ -11,6 +11,7 @@ from proto import Managment_pb2_grpc
 from ManRpcBoo import *
 from ManUtils import *
 from ManDB import *
+from ManDiscov import *
 
 
 

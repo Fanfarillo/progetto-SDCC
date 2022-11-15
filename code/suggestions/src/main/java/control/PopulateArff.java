@@ -26,13 +26,13 @@ import utils.DateUtil;
 
 public class PopulateArff {
 
-    public static void storeNewData(String message) {
+    public static boolean storeNewData(String message) {
 
         try {            
-            /* Il messaggio (associato a uno specifico volo V) è composto da tante righe ciascuna delle quali è relativo a uno specifico giorno in cui si poteva
+            /* Il messaggio (associato a uno specifico volo V) è composto da tante righe ciascuna delle quali è relativa a uno specifico giorno in cui si poteva
              * prenotare V. Ciaascuna riga è fatta così:
              * Data_prenotazione,data_volo,aeroporto_partenza,aeroporto_arrivo,compagnia_aerea,prezzo_base */
-            List<PastFlight> pastFlights = PastFlightUtil.instantiatePastFligths(message);
+            List<PastFlight> pastFlights = PastFlightUtil.instantiatePastFlights(message);
         
             try(FileWriter wr = new FileWriter("Train.arff", true)) {   //true == sto aprendo il FileWriter in append; in tal modo non sovrascrivo i dati esistenti
                for(PastFlight pastFlight : pastFlights) {
@@ -41,12 +41,14 @@ public class PopulateArff {
                         "," + pastFlight.isConvenient() + "\n");
 
                 }
+                return true;
 
             }
 
         }
         catch(Exception e) {
             e.printStackTrace();
+            return false;
         }
 
     }

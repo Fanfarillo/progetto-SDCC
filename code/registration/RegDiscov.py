@@ -4,14 +4,13 @@ import grpc
 import time
 
 
-
 # ---------------------------------------- DISCOVERY ---------------------------------------------
 def put_discovery_server(discovery_servers, logger):
     new_discovery_servers = []
     """
     Si tenta di contattare il discovery server registrato
     per memorizzare la porta su cui il servizio di Registration è in
-    ascolto. Se le chiamate dovesse fallire, si attendono 5
+    ascolto. Se le chiamate dovessero fallire, si attendono 5
     secondi per poi eseguire nuovamente il tentativo di connessione.
     """
     ok = False

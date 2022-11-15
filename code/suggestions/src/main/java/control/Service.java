@@ -20,10 +20,30 @@ public class Service extends SuggestionsServiceImplBase {
         opfile.createLog();                 //creazione del file di log
         opfile.writeLog("Richiesta di suggerimenti riguardanti un volo.");
 
+        //i metodi get() applicati a req sono propri di gRPC; non c'entrano nulla con i getter di PastFlight
         int output = PopulateArff.createTestingSet(req.getBookingDate(), req.getFlightDate(), req.getAirline(), req.getDepartureAirport(), req.getArrivalAirport());
 
         //output è il numero di giorni prima del volo in cui conviene effettuare l'acquisto dei biglietti
         SelectionResponse response = SelectionResponse.newBuilder().setNumDaysBeforeConvenient(output).build();
+
+        //send data to the client
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+
+    }
+
+    @Override
+    public void storeOldFlight(OldFlight req, StreamObserver<StoreOldResponse> responseObserver) {
+
+        //questa funzione riceve nuovi dati da aggiungere poi al training set
+        LogUtil opfile = new LogUtil();
+        opfile.createLog();                 //creazione del file di log
+        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.");
+
+        boolean output = PopulateArff.storeNewData(req.getOldFlightsMsg());
+
+        //output è il numero di giorni prima del volo in cui conviene effettuare l'acquisto dei biglietti
+        StoreOldResponse response = StoreOldResponse.newBuilder().setIsOk(output).build();
 
         //send data to the client
         responseObserver.onNext(response);

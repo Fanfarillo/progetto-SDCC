@@ -4,6 +4,8 @@ package proto;
 
 service Pay {
     rpc AddPayment(NewPayment) returns (PayResponse);
+    // Logging
+    rpc getLogFilePay(GetLogFileRequestPay) returns (stream GetLogFileReplyPay);
 }
 
 message NewPayment {
@@ -26,4 +28,13 @@ message NewPayment {
 
 message PayResponse {
     bool isOk = 1;
+}
+
+message GetLogFileRequestPay {
+    int32 numRichiesta = 1;
+}
+
+message GetLogFileReplyPay {
+    bytes chunk_file  = 1;
+    int32 num_chunk = 2;
 }

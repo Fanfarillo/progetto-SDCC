@@ -12,7 +12,7 @@ import model.PastFlight;
 
 public class PastFlightUtil {
 
-    public static List<PastFlight> instantiatePastFligths(String message) throws ParseException {
+    public static List<PastFlight> instantiatePastFlights(String message) throws ParseException {
 
         //singleDaysMsg è un array che contiene tante stringhe quanti erano i giorni in cui era potenzialmente possibile prenotare il volo
         String[] singleDaysMsg = message.split("\n");

@@ -98,8 +98,6 @@ message GetLogFileRequestMan {
     int32 numRichiesta = 1;
 }
 
-
-
 message GetLogFileReplyMan {
     bytes chunk_file  = 1;
     int32 num_chunk = 2;

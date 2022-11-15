@@ -7,8 +7,9 @@ from security import Security
 from concurrent import futures
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
+
 from RegDB import *
-from regUtils import *
+from RegDiscov import *
 
 
 # ------------------------------------------------------ DISCOVERY -----------------------------------------------------
@@ -25,7 +26,6 @@ CHUNK_DIM = 1000
 
 
 class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
-
 
 
     def getLogFileReg(self, request, context):
@@ -192,7 +192,6 @@ logger.info('Avvio del server in ascolto sulla porta 50051...')
 server.add_insecure_port('[::]:50051')
 server.start()
 logger.info('Server avviato con successo.')
-
 
 
 

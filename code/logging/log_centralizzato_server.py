@@ -255,6 +255,24 @@ def run_logger():
                         logger.info("[ LOGGING ] Richiesta al microservizio di Registration completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Registration...")
+            elif(grpc_conn.nome ==  "payment"):
+                try:
+                    for response in grpc_conn.conn.getLogFilePay(Payment_pb2.GetLogFileRequestPay(numRichiesta=count)):
+                        logging_info = response.chunk_file.decode()
+                        reg.f.write(logging_info)
+                        reg.f.flush()
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Payment completata con successo...")
+                except:
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Payment...")
+            elif(grpc_conn.nome ==  "suggestions"):
+                try:
+                    for response in grpc_conn.conn.getLogFileSug(Suggestions_pb2.GetLogFileRequestSug(numRichiesta=count)):
+                        logging_info = response.chunk_file.decode()
+                        reg.f.write(logging_info)
+                        reg.f.flush()
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Suggestions completata con successo...")
+                except:
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Suggestions...")
         
         time.sleep(10)
 
