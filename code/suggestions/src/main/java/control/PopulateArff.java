@@ -93,7 +93,7 @@ public class PopulateArff {
         while(true) {
             line = bReader.readLine();
             if(line==null)      //se line==null vuol dire che il file è finito e non è stata trovata alcuna riga col valore true;
-                break;          //in tal caso si ricorre al valore di default per l numero di giorni in anticipo in cui conviene prenotare il volo
+                break;          //in tal caso si ricorre al valore di default per il numero di giorni in anticipo in cui conviene prenotare il volo
 
             if(line.contains(",true")) {
                 //se esiste una riga col valore true, numDaysBeforeConv assume il valore del primo attributo proprio di quella riga
