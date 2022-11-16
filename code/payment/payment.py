@@ -9,6 +9,7 @@ from proto import Payment_pb2_grpc
 from PayDB import *
 from PayUtils import *
 from PayDiscov import *
+from PayMqProducer import *
 
 
 # ------------------------------------------------------ DISCOVERY -----------------------------------------------------
@@ -87,7 +88,8 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         #store delle informazioni legate al pagamento; qui idVolo e selectedSeats insieme formano la chiave primaria, per cui dovranno essere utilizzate per l'eventuale rimozione delle informazioni dal db dovuta a un rollback
         storePayment(NewPayment.idVolo, selectedSeatsStr, NewPayment.username, NewPayment.paymentDate, NewPayment.basePrice, NewPayment.seatsPrice, NewPayment.servicesPrice, NewPayment.totalPrice, NewPayment.numStivaMedi, NewPayment.numStivaGrandi, NewPayment.numBagagliSpeciali, NewPayment.numAssicurazioni, NewPayment.numAnimali, NewPayment.numNeonati, NewPayment.email)
 
-        #TODO: un sacco di roba
+        #invio di username e lista di posti selezionati a Booking mediante una coda di messaggi
+        sendMqBooking(NewPayment.username, selectedSeatsStr, logger)
 
         output = Payment_pb2.PayResponse(isOk=isOk)
         return output
