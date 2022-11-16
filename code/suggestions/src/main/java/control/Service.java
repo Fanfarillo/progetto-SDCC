@@ -17,14 +17,14 @@ public class Service extends SuggestionsServiceImplBase {
     public void getLogFileBoo(GetLogFileRequestSug req, StreamObserver<GetLogFileReplySug> responseObserver) {
 
         LogUtil opfile = new LogUtil();
-        opfile.createLog();                 //creazione del file di log
+        opfile.createLog();             //creazione del file di log
         opfile.writeLog("[LOGGING] richiesta dati di logging...\n\n");
 
         final int chunkDim = 1000;      //in Python era una macro
         int r = -1;
         int q = -1;
 
-        String content = "";         //the whole content of suggestions.log
+        String content = "";            //the whole content of suggestions.log
         int count, lowerBound;
 
         try(FileReader rd = new FileReader("suggestions.log")) {
@@ -71,7 +71,7 @@ public class Service extends SuggestionsServiceImplBase {
             }
             if(r>0) {
                 lowerBound = count*chunkDim;
-                // EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk=count)
+                //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk=count)
                 GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.substring(lowerBound,lowerBound+r).getBytes()).setNum_chunk(count).build();
                 responseObserver.onNext(response);
 

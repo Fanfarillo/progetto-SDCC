@@ -1,17 +1,11 @@
 syntax = "proto3";
 
 service DiscoveryService {
-
-
-
-
 	/*
 		Consente di ottenere la porta relativa
 		al microservizio passato come parametro.
 	*/
 	rpc get(GetRequest) returns (GetReply);
-	
-	
 	
 	
 	/*
@@ -20,16 +14,13 @@ service DiscoveryService {
 	*/
 	rpc put(PutRequest) returns (PutReply);
 
-
-
-
 	/*
 		I microservizi per il discovery service si
 		scambiano tra di loro le informazioni.
 	*/
 	rpc sendMicroserviceInfo(microserviceInfoRequest) returns (microserviceInfoReply);
-}
 
+}
 
 
 
@@ -43,11 +34,9 @@ message infoMicroservice {
 
 
 
-
 message infoMicroservices {
     repeated infoMicroservice microservices_list = 1;
 }
-
 
 
 
@@ -57,11 +46,9 @@ message microserviceInfoRequest {
 
 
 
-
 message microserviceInfoReply {
     infoMicroservices microservices = 1;
 }
-
 
 
 
@@ -74,7 +61,6 @@ message GetRequest {
 	string serviceName = 1;
 	string serviceNameTarget = 2;
 }
-
 
 
 
@@ -93,7 +79,6 @@ message GetReply {
 
 
 
-
 /*
 	serviceName: Nome del microservizio di cui si
 		         vuole memorizzare l'informazione
@@ -109,12 +94,9 @@ message PutRequest {
 
 
 
-
 message DiscoveryServers {
 	repeated string servers = 1;
 }
-
-
 
 
 
