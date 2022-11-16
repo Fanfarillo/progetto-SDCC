@@ -511,9 +511,13 @@ def pagamentoNormale(username):
 
             serviziSelezionati = ServiziSelezionati(0, 0, 0, 0, 0, 0)   #in questo flusso di esecuzione non è stato selezionato alcun servizio aggiuntivo
 
-            #TODO: decommentare sta roba
-            #sendPayment(username, cardSelezionata, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, serviziSelezionati, email)
-            return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiSelezionato, paymentDate=dataPagamento, basePrice=prezzoTotale, selectedSeats=postiPresi, seatsPrice='0', selectedServices=serviziSelezionati, servicesPrice='0', totalPrice=prezzoTotale, email=email)
+            isOk = sendPayment(username, cardSelezionata, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, serviziSelezionati, email)
+            #se il pagamento è andato a buon fine, mostra all'utente la ricevuta di pagamento; altrimenti mostra un messaggio di errore
+            if isOk:
+                return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiSelezionato, paymentDate=dataPagamento, basePrice=prezzoTotale, selectedSeats=postiPresi, seatsPrice='0', selectedServices=serviziSelezionati, servicesPrice='0', totalPrice=prezzoTotale, email=email)
+            else:
+                stringa = "SI È VERIFICATO UN ERRORE NELLA FINALIZZAZIONE DEL PAGAMENTO\nRIPROVARE PIÙ TARDI."
+                return render_template("errore.html", errore=stringa, airline=None, username=username)
 
         else:
             stringa = "NON CI SONO POSTI LIBERI SUFFICIENTI\nPER IL NUMERO DI BIGLIETTI SELEZIONATO."
@@ -567,9 +571,13 @@ def pagamentoPersonalizzato(username):
 
         session[username] = diz
 
-        #TODO: decommentare sta roba
-        #sendPayment(username, cardSelezionata, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email)
-        return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiAcquistati, paymentDate=dataPagamento, basePrice=prezzoBase, selectedSeats=postiSelezionati, seatsPrice=prezzoSelezionePosti, selectedServices=serviziSelezionati, servicesPrice=prezzoServiziAggiuntivi, totalPrice=prezzoTotale, email=email)
+        isOk = sendPayment(username, cardSelezionata, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email)
+        #se il pagamento è andato a buon fine, mostra all'utente la ricevuta di pagamento; altrimenti mostra un messaggio di errore
+        if isOk:
+            return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiAcquistati, paymentDate=dataPagamento, basePrice=prezzoBase, selectedSeats=postiSelezionati, seatsPrice=prezzoSelezionePosti, selectedServices=serviziSelezionati, servicesPrice=prezzoServiziAggiuntivi, totalPrice=prezzoTotale, email=email)
+        else:
+            stringa = "SI È VERIFICATO UN ERRORE NELLA FINALIZZAZIONE DEL PAGAMENTO\nRIPROVARE PIÙ TARDI."
+            return render_template("errore.html", errore=stringa, airline=None, username=username)
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)

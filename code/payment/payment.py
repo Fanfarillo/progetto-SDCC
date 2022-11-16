@@ -10,6 +10,7 @@ from PayDB import *
 from PayUtils import *
 from PayDiscov import *
 from PayMqProducer import *
+from PayMqConsumer import *
 
 
 # ------------------------------------------------------ DISCOVERY -----------------------------------------------------
@@ -81,8 +82,7 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         NB: gli aggiornamenti della tabella relativa al pagamento e della tabella PostiOccupati costituiscono una transazione all-or-nothing per cui,
         se dovessero esserci problemi nell'aggiornamento di PostiOccupati, dal lato pagamento bisogna effettuare il rollback della scrittura.
         E' qui che interviene il design pattern Saga per i microservizi.
-        """
-        
+        """      
         selectedSeatsStr = listToString(NewPayment.selectedSeats)   #conversione della lista di posti selezionati in un'unica stringa
 
         #store delle informazioni legate al pagamento; qui idVolo e selectedSeats insieme formano la chiave primaria, per cui dovranno essere utilizzate per l'eventuale rimozione delle informazioni dal db dovuta a un rollback
@@ -91,7 +91,14 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         #invio di username e lista di posti selezionati a Booking mediante una coda di messaggi
         sendMqBooking(NewPayment.username, selectedSeatsStr, logger)
 
-        output = Payment_pb2.PayResponse(isOk=isOk)
+        #ricezione di un messaggio da parte di Booking indicante se la transazione complessa è andata a buon fine o meno
+        isFinalized = receiveMqBooking(logger)
+
+        #se la transazione NON è andata a buon fine, allora si effettua il rollback della porzione di transazione già effettuata in Payment
+        if not isFinalized:
+            deletePayment(NewPayment.idVolo, selectedSeatsStr)
+
+        output = Payment_pb2.PayResponse(isOk=isFinalized)
         return output
 
 

@@ -1,6 +1,6 @@
 Flask
+Flask-Session
 boto3
 grpcio
 grpcio-tools
-Flask-Session
 pycryptodome

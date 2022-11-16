@@ -10,4 +10,9 @@ RUN apt-get update && apt-get install -y python3-distutils python3-pip python3-a
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 50055
+
+#Flush on stdout all the prints
+ENV  PYTHONUNBUFFERED=1
+
+CMD ["bash", "./InstallMqServer.sh"]
 CMD ["python3", "./payment.py"]
