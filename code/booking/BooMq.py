@@ -32,7 +32,7 @@ class MqChannels:
 
                 #invio della risposta a Payment sull'altra coda di messaggi
                 self.channelP.basic_publish(exchange='', routing_key='booProducer', body=msg)
-                self.logger.info('[MESSAGE QUEUE] Inviato un messaggio di risposta a Payment mediante la coda di messaggi')
+                self.logger.info('[MESSAGE QUEUE] Inviato un messaggio di risposta a Payment mediante la coda di messaggi.')
                 #lascio la connessione aperta perché in futuro potrebbe essere necessario di inviare altri messaggi di risposta
 
 

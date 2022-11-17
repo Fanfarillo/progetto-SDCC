@@ -297,6 +297,8 @@ logger.setLevel(logging.INFO)
 logger_warnings.setLevel(logging.WARNING)
 
 
+#------------------------------INIZIO CODICE CHE GESTISCE LA REPLICAZIONE DEL DISCOVERY SERVER-----------------------------
+
 try:
     # Recupero i parametri passati da linea di comando
     params = sys.argv
@@ -362,6 +364,7 @@ stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
 x = threading.Thread(target=periodicUpdate)
 x.start()
 
+#------------------------------FINE CODICE CHE GESTISCE LA REPLICAZIONE DEL DISCOVERY SERVER-----------------------------
 
 
 

@@ -743,12 +743,11 @@ def visualizzaSuggerimento(username, compagnia, idVolo):
 
     today = getCurrentDateStr()
 
-    #TODO: chiamata gRPC per sapere tra quanti giorni convenga acquistare i biglietti; tale valore dovrà essere passato come parametro a render_template()
-    #(vedere riga seguente)
-    #numDaysBefore = getNumDaysBefore(cardSelezionata, today)
+    #chiamata gRPC per sapere tra quanti giorni convenga acquistare i biglietti; tale valore dovrà essere passato come parametro a render_template()
+    numDaysBefore = getNumDaysBefore(cardSelezionata, today)
 
     #print("[DEBUG SESSION (/username/idVolo/serviziAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
-    return render_template("Suggerimento.html", username = username, card=cardSelezionata)
+    return render_template("Suggerimento.html", username=username, card=cardSelezionata, numDaysBefore=numDaysBefore)
 
 
 #logout
