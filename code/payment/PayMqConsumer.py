@@ -26,7 +26,7 @@ def receiveMqBooking(logger):
     #consume queued message
     channel.basic_consume(queue='booProducer', on_message_callback=callback, auto_ack=True)
 
-    logger.info("[MESSAGE QUEUE] In attesa di messaggi da parte di Booking.")
+    logger.info("[MESSAGE QUEUE] In attesa di messaggi da parte di Booking...")
     channel.start_consuming()
 
     return retValue
