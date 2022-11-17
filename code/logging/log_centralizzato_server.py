@@ -9,6 +9,10 @@ from proto import Booking_pb2
 from proto import Booking_pb2_grpc
 from proto import Registration_pb2
 from proto import Registration_pb2_grpc
+from proto import Payment_pb2
+from proto import Payment_pb2_grpc
+from proto import Suggestions_pb2
+from proto import Suggestions_pb2_grpc
 # Aggiungi i proto per suggestions e payment
 
 from concurrent import futures
@@ -38,7 +42,7 @@ logger_warnings = None
 
 #TODO: Aggiungere il nome che si utilizza nella PUT per i microservizi di suggestions e payment
 # Questi sono i nomi con cui i microservizi si sono registrati.
-MICROSERVICES = ["booking", "management", "registration"]
+MICROSERVICES = ["booking", "management", "registration", "payment", "suggestions"]
 
 # la lista contiene tutti entrambi i discovery server.
 ALL_DISCOVERY_SERVERS = ['code_discovery_1:50060', 'code_discovery_2:50060']
@@ -173,12 +177,16 @@ def set_conn_micro():
                 channel = grpc.insecure_channel(grpc_conn.nome+':'+grpc_conn.porta)
 
                 # Creazione dello stub correto.
-                if(grpc_conn.nome ==  "booking"):
+                if(grpc_conn.nome == "booking"):
                     stub = Booking_pb2_grpc.BookingServiceStub(channel)
-                elif(grpc_conn.nome ==  "management"):
+                elif(grpc_conn.nome == "management"):
                     stub = Managment_pb2_grpc.FlightsInfoStub(channel)
-                elif(grpc_conn.nome ==  "registration"):
+                elif(grpc_conn.nome == "registration"):
                     stub = Registration_pb2_grpc.UsersInfoStub(channel)
+                elif(grpc_conn.nome == "payment"):
+                    stub = Payment_pb2_grpc.PayStub(channel)
+                elif(grpc_conn.nome == "suggestions"):
+                    stub = Suggestions_pb2_grpc.SuggestionsService(channel)
             
                 grpc_conn.conn = stub
 
@@ -223,6 +231,11 @@ def run_logger():
             man = item
         elif(item.nome=="registration"):
             reg = item
+        elif(item.nome=="payment"):
+            pay = item
+        elif(item.nome=="suggestions"):
+            sug = item
+
     while(True):
         count = count + 1
         for grpc_conn in grpc_connections:
@@ -259,8 +272,8 @@ def run_logger():
                 try:
                     for response in grpc_conn.conn.getLogFilePay(Payment_pb2.GetLogFileRequestPay(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
-                        reg.f.write(logging_info)
-                        reg.f.flush()
+                        pay.f.write(logging_info)
+                        pay.f.flush()
                         logger.info("[ LOGGING ] Richiesta al microservizio di Payment completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Payment...")
@@ -268,8 +281,8 @@ def run_logger():
                 try:
                     for response in grpc_conn.conn.getLogFileSug(Suggestions_pb2.GetLogFileRequestSug(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
-                        reg.f.write(logging_info)
-                        reg.f.flush()
+                        sug.f.write(logging_info)
+                        sug.f.flush()
                         logger.info("[ LOGGING ] Richiesta al microservizio di Suggestions completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Suggestions...")

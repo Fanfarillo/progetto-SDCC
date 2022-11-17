@@ -89,7 +89,7 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         storePayment(NewPayment.idVolo, selectedSeatsStr, NewPayment.username, NewPayment.paymentDate, NewPayment.basePrice, NewPayment.seatsPrice, NewPayment.servicesPrice, NewPayment.totalPrice, NewPayment.numStivaMedi, NewPayment.numStivaGrandi, NewPayment.numBagagliSpeciali, NewPayment.numAssicurazioni, NewPayment.numAnimali, NewPayment.numNeonati, NewPayment.email)
 
         #invio di username e lista di posti selezionati a Booking mediante una coda di messaggi
-        sendMqBooking(NewPayment.username, selectedSeatsStr, logger)
+        sendMqBooking(NewPayment.idVolo, NewPayment.username, selectedSeatsStr, logger)
 
         #ricezione di un messaggio da parte di Booking indicante se la transazione complessa è andata a buon fine o meno
         isFinalized = receiveMqBooking(logger)

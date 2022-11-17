@@ -236,6 +236,48 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
 
 
 
+def storeSelectedSeats(idVolo, username, selectedSeats, logger):
+
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
+
+    """
+    Qui viene effettuato un controllo su se i posti in selectedSeats sono effettivamente liberi.
+    Se non lo sono, allora ci ritroviamo nel caso in cui la transazione complessa non va a buon fine
+    (per cui bisognerà fare il rollback).
+    """
+    copiaPostiTotali = postiTotali.copy()
+    postiDisponibili = retrieveAvailableSeats(idVolo, copiaPostiTotali)
+    
+    for seat in selectedSeats:
+        if not seat in postiDisponibili:
+            logger.info('Impossibile portare a termine la transazione a causa del fatto che un posto selezionato non è libero.')
+            return False
+
+    """
+    Qui è necessario effettuare l'update di un oggetto conservando però le informazioni pre-esistenti. Perciò, put_item non va bene.
+    Piuttosto si usa update_item, che richiede due attributi: UpdateExpression (una stringa) ed ExpressionAttributeValues (un dizionario) che,
+    insieme, determinano i campi della tabella da aggiungere/modificare e i relativi nuovi valori. Per ottenere questi attributi,
+    viene in aiuto la funzione getUpdateInfo, che restituisce un oggetto (UpdateInfo) contenente proprio i due attributi.
+    """
+    updateInfo = getUpdateInfo(username, selectedSeats)
+
+    #update an item in 'PostiOccupati' table in DynamoDB
+    try:
+        response = table.update_item(
+            Key={'IdVolo': idVolo},
+            UpdateExpression=updateInfo.updateExpression,
+            ExpressionAttributeValues=updateInfo.expressionAttributeValues,
+            ReturnValues="UPDATED_NEW"
+        )
+    except:
+        logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
+        return False
+
+    logger.info('Transazione Saga portata a termine con successo.')
+    return True
+    
+
 
 """
 Interroga il database Dynamodb per ottenere tutti
