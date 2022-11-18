@@ -3,7 +3,7 @@ import grpc
 import time
 
 from boto3.dynamodb.conditions import Attr
-from datetime import datetime
+from datetime import datetime, date
 from decimal import *
 
 from proto import Managment_pb2
@@ -24,6 +24,7 @@ DYNAMODB = 'dynamodb'
 REGIONE = 'us-east-1'
 TABELLA_VOLO = 'Volo'
 TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
+TABELLA_STORICO_VOLO = 'StoricoVolo'
 
 
 # L'assunzione fatta sui possibili posti disponibili dell'aereo.
@@ -436,8 +437,8 @@ def getFlightsStatus():
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_VOLO)
 
-    flightsDict = {}                #dizionario in cui verrà memorizzato lo stato di tutti i voli
-    today = getCurrentDateTime()    #data di oggi - è un oggetto DATETIME
+    flightsDict = {}        #dizionario in cui verrà memorizzato lo stato di tutti i voli
+    today = date.today()    #data di oggi - è un oggetto DATE
 
     response = table.scan()
 
@@ -449,6 +450,123 @@ def getFlightsStatus():
 
     #itero sui dizionari.
     for item in items:
+        """
+        Qui vengono definite due variabili d'appoggio (che corrispondono proprio alla chiave e al valore di ogni elemento di flightsDict):
+        - flightId = ID del volo
+        - isPastFlight = booleano che indica se il volo è di oggi / del passato
+        """
+        flightId = ""
+        isPastFlight = True
+
         #itero su tutte le coppie (key, value) del dizionario fissato.
         for key, value in item.items():
-            #check su se il volo è di oggi oppure no - TODO
+            #retrieve dell'ID del volo
+            if key=='Id':
+                flightId = value
+            #check su se il volo è di oggi / del passato oppure no
+            elif key=='Data':
+                flightDateObj = datetime.strptime(value, '%d-%m-%Y').date()
+                if flightDateObj > today:   #caso in cui il volo è nel futuro; qui si associa False al volo all'interno del dizionario
+                    isPastFlight = False
+
+        flightsDict[flightId] = isPastFlight
+
+    return flightsDict
+
+
+def deleteFromVolo(idVolo):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
+
+    #delete an item from 'Volo' table in DynamoDB
+    table.delete_item(
+        TableName=TABELLA_VOLO,
+        Key={
+            'Id': idVolo,
+        }
+    )
+
+
+def deleteFromPostiOccupati(idVolo):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
+
+    #delete an item from 'PostiOccupati' table in DynamoDB
+    table.delete_item(
+        TableName=TABELLA_POSTI_OCCUPATI,
+        Key={
+            'IdVolo': idVolo,
+        }
+    )
+    
+
+def deleteFromStoricoVolo(idVolo):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_STORICO_VOLO)
+
+    #delete an item from 'StoricoVolo' table in DynamoDB
+    table.delete_item(
+        TableName=TABELLA_STORICO_VOLO,
+        Key={
+            'IdVolo': idVolo,
+        }
+    )
+
+
+"""
+Costruisce un messaggio (una stringa) in cui ciascuna riga è fatta così:
+Data_prenotazione,data_volo,aeroporto_partenza,aeroporto_arrivo,compagnia_aerea,prezzo_base
+Questo viene fatto consultando la tabella StoricoVolo.
+"""
+def getFlightHistory(idVolo):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_STORICO_VOLO)
+
+    msg = ""    #stringa di output (da inviare poi a Suggestions)
+
+    response = table.scan()
+
+    """
+    La variabile items è una lista di dizionari fatta nel seguente modo:
+    [{}, {}, ..., {}]
+    """
+    items = response['Items']
+
+    #itero sui dizionari.
+    for item in items:
+        """
+        Qui vengono definite due variabili d'appoggio:
+        idRecuperato, dataPrenotazione, dataVolo, aeroportoPartenza, aeroportoArrivo, compagniaAerea, prezzoBase
+        """
+        idRecuperato = ""
+        dataPrenotazione = ""
+        dataVolo = ""
+        aeroportoPartenza = ""
+        aeroportoArrivo = ""
+        compagniaAerea = ""
+        prezzoBase = ""
+
+        #itero su tutte le coppie (key, value) del dizionario fissato.
+        for key, value in item.items():
+            #retrieve dell'ID del volo
+            if key=='IdVolo':
+                idRecuperato = value
+            elif key=='DataPrenotazione':
+                dataPrenotazione = value
+            elif key=='DataVolo':
+                dataVolo = value
+            elif key=='AeroportoPartenza':
+                aeroportoPartenza = value
+            elif key=='AeroportoArrivo':
+                aeroportoArrivo = value
+            elif key=='CompagniaAerea':
+                compagniaAerea = value
+            elif key=='PrezzoBase':
+                prezzoBase = value
+
+        if idRecuperato==idVolo:    #chiaramente non inserisco nella stringa informazioni relative ad altri voli
+            msg = msg + dataPrenotazione + "," + dataVolo + "," + aeroportoPartenza + "," + aeroportoArrivo + "," + compagniaAerea + "," + prezzoBase + "\n"
+
+    #alla fine di tutto è opportuno togliere da msg l'ultimo '\n' che non serve a nulla
+    msg = msg[:-1]
+    return msg

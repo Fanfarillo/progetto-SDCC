@@ -30,7 +30,7 @@ public class PopulateArff {
 
         try {            
             /* Il messaggio (associato a uno specifico volo V) è composto da tante righe ciascuna delle quali è relativa a uno specifico giorno in cui si poteva
-             * prenotare V. Ciaascuna riga è fatta così:
+             * prenotare V. Ciascuna riga è fatta così:
              * Data_prenotazione,data_volo,aeroporto_partenza,aeroporto_arrivo,compagnia_aerea,prezzo_base */
             List<PastFlight> pastFlights = PastFlightUtil.instantiatePastFlights(message);
         

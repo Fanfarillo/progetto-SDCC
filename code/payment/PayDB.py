@@ -4,11 +4,12 @@ from decimal import *
 
 DYNAMODB = 'dynamodb'
 REGIONE = 'us-east-1'
+TABELLA_PAGAMENTO = 'Pagamento'
 
 
 def storePayment(idVolo, postiSelezionati, username, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, numStivaMedi, numStivaGrandi, numBagagliSpeciali, numAssicurazioni, numAnimali, numNeonati, email):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('Pagamento')
+    table = dynamodb.Table(TABELLA_PAGAMENTO)
     
     #store an item in 'Pagamento' table in DynamoDB
     table.put_item(
@@ -33,11 +34,11 @@ def storePayment(idVolo, postiSelezionati, username, dataPagamento, prezzoBase, 
 
 def deletePayment(idVolo, postiSelezionati):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('Pagamento')
+    table = dynamodb.Table(TABELLA_PAGAMENTO)
 
     #delete an item from 'Pagamento' table in DynamoDB
     table.delete_item(
-        TableName='Pagamento',
+        TableName=TABELLA_PAGAMENTO,
         Key={
             'IdVolo': idVolo,
             'PostiSelezionati': postiSelezionati

@@ -4,15 +4,16 @@ from boto3.dynamodb.conditions import Attr
 from decimal import *
 
 
-
 DYNAMODB = 'dynamodb'
 REGIONE = 'us-east-1'
-
+TABELLA_PREZZO_POSTI = 'PrezzoPosti'
+TABELLA_SERVIZI = 'Servizi'
+TABELLA_VOLO = 'Volo'
 
 
 def getAllSeatsFlight(compagnia):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('PrezzoPosti')
+    table = dynamodb.Table(TABELLA_PREZZO_POSTI)
 
     response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
     # Prezzo dei posti nella fila 1
@@ -39,7 +40,7 @@ def getAllSeatsFlight(compagnia):
 
 def getAlladditionalServicesFlight(compagnia):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('Servizi')
+    table = dynamodb.Table(TABELLA_SERVIZI)
     response = table.scan(FilterExpression=Attr('Compagnia').eq(compagnia))
 
     bagaglioSpeciale = response['Items'][0]['Bagaglio speciale']
@@ -63,7 +64,7 @@ def getAlladditionalServicesFlight(compagnia):
 
 def storeSeatsPrices(airline, price1, price2, price6, price16, price18):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('PrezzoPosti')
+    table = dynamodb.Table(TABELLA_PREZZO_POSTI)
     
     #store (actually update) an item in 'PrezzoPosti' table in DynamoDB
     table.put_item(
@@ -81,7 +82,7 @@ def storeSeatsPrices(airline, price1, price2, price6, price16, price18):
 
 def storeServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('Servizi')
+    table = dynamodb.Table(TABELLA_SERVIZI)
 
     #store (actually update) an item in 'Servizi' table in DynamoDB
     table.put_item(
@@ -100,7 +101,7 @@ def storeServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, pr
 
 def getPrice(idVolo):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table('Volo')
+    table = dynamodb.Table(TABELLA_VOLO)
 
     response = table.scan(FilterExpression=Attr('Id').eq(idVolo))
     return response['Items'][0]['Prezzo base']
