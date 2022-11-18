@@ -18,6 +18,12 @@ aws dynamodb create-table \
 --billing-mode PAY_PER_REQUEST
 
 aws dynamodb create-table \
+--table-name StoricoVolo \
+--attribute-definitions AttributeName=IdVolo,AttributeType=S AttributeName=DataPrenotazione,AttributeType=S \
+--key-schema AttributeName=IdVolo,KeyType=HASH AttributeName=DataPrenotazione,KeyType=RANGE \
+--billing-mode PAY_PER_REQUEST
+
+aws dynamodb create-table \
 --table-name PrezzoPosti \
 --attribute-definitions AttributeName=Compagnia,AttributeType=S \
 --key-schema AttributeName=Compagnia,KeyType=HASH \

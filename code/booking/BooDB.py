@@ -3,6 +3,7 @@ import grpc
 import time
 
 from boto3.dynamodb.conditions import Attr
+from datetime import datetime
 from decimal import *
 
 from proto import Managment_pb2
@@ -426,3 +427,28 @@ def retrieveArrivals():
                 arrivals.append(value)
 
     return arrivals
+
+
+"""
+Restituisce lo stato di tutti i voli (di oggi==True / del futuro==False)
+"""
+def getFlightsStatus():
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
+
+    flightsDict = {}                #dizionario in cui verrà memorizzato lo stato di tutti i voli
+    today = getCurrentDateTime()    #data di oggi - è un oggetto DATETIME
+
+    response = table.scan()
+
+    """
+    La variabile items è una lista di dizionari fatta nel seguente modo:
+    [{}, {}, ..., {}]
+    """
+    items = response['Items']
+
+    #itero sui dizionari.
+    for item in items:
+        #itero su tutte le coppie (key, value) del dizionario fissato.
+        for key, value in item.items():
+            #check su se il volo è di oggi oppure no - TODO

@@ -1,3 +1,5 @@
+from datetime import datetime, date, time
+
 class UpdateInfo:
     def __init__(self, updateExpression, expressionAttributeValues):
         self.updateExpression = updateExpression                        #string
@@ -48,3 +50,11 @@ def getUpdateInfo(username, selectedSeats):
 
     #generazione dell'oggetto UpdateInfo da restituire al chiamante storeSelectedSeats()
     return UpdateInfo(updateExpression, expressionAttributeValues)
+
+
+#restituisce un oggetto di tipo datetime relativo alla giornata di oggi; in particolare, l'orario viene impostato alle 23:59 in modo tale che
+#ciò che è relativo alla data di oggi venga considerato come del passato
+def getCurrentDateTime():
+    maxTime = datetime.datetime.strptime('23:59', '%H:%M').time()
+    currentDateTime = datetime.combine(date.today(), maxTime)
+    return currentDateTime
