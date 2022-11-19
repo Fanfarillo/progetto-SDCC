@@ -46,6 +46,68 @@ public final class SuggestionsServiceGrpc {
     return getGetSelectedFlightMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<control.proto.OldFlight,
+      control.proto.StoreOldResponse> getStoreOldFlightMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "StoreOldFlight",
+      requestType = control.proto.OldFlight.class,
+      responseType = control.proto.StoreOldResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<control.proto.OldFlight,
+      control.proto.StoreOldResponse> getStoreOldFlightMethod() {
+    io.grpc.MethodDescriptor<control.proto.OldFlight, control.proto.StoreOldResponse> getStoreOldFlightMethod;
+    if ((getStoreOldFlightMethod = SuggestionsServiceGrpc.getStoreOldFlightMethod) == null) {
+      synchronized (SuggestionsServiceGrpc.class) {
+        if ((getStoreOldFlightMethod = SuggestionsServiceGrpc.getStoreOldFlightMethod) == null) {
+          SuggestionsServiceGrpc.getStoreOldFlightMethod = getStoreOldFlightMethod =
+              io.grpc.MethodDescriptor.<control.proto.OldFlight, control.proto.StoreOldResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "StoreOldFlight"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  control.proto.OldFlight.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  control.proto.StoreOldResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SuggestionsServiceMethodDescriptorSupplier("StoreOldFlight"))
+              .build();
+        }
+      }
+    }
+    return getStoreOldFlightMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<control.proto.GetLogFileRequestSug,
+      control.proto.GetLogFileReplySug> getGetLogFileSugMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "getLogFileSug",
+      requestType = control.proto.GetLogFileRequestSug.class,
+      responseType = control.proto.GetLogFileReplySug.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+  public static io.grpc.MethodDescriptor<control.proto.GetLogFileRequestSug,
+      control.proto.GetLogFileReplySug> getGetLogFileSugMethod() {
+    io.grpc.MethodDescriptor<control.proto.GetLogFileRequestSug, control.proto.GetLogFileReplySug> getGetLogFileSugMethod;
+    if ((getGetLogFileSugMethod = SuggestionsServiceGrpc.getGetLogFileSugMethod) == null) {
+      synchronized (SuggestionsServiceGrpc.class) {
+        if ((getGetLogFileSugMethod = SuggestionsServiceGrpc.getGetLogFileSugMethod) == null) {
+          SuggestionsServiceGrpc.getGetLogFileSugMethod = getGetLogFileSugMethod =
+              io.grpc.MethodDescriptor.<control.proto.GetLogFileRequestSug, control.proto.GetLogFileReplySug>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getLogFileSug"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  control.proto.GetLogFileRequestSug.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  control.proto.GetLogFileReplySug.getDefaultInstance()))
+              .setSchemaDescriptor(new SuggestionsServiceMethodDescriptorSupplier("getLogFileSug"))
+              .build();
+        }
+      }
+    }
+    return getGetLogFileSugMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -101,6 +163,23 @@ public final class SuggestionsServiceGrpc {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetSelectedFlightMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void storeOldFlight(control.proto.OldFlight request,
+        io.grpc.stub.StreamObserver<control.proto.StoreOldResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getStoreOldFlightMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * Logging
+     * </pre>
+     */
+    public void getLogFileSug(control.proto.GetLogFileRequestSug request,
+        io.grpc.stub.StreamObserver<control.proto.GetLogFileReplySug> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetLogFileSugMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -110,6 +189,20 @@ public final class SuggestionsServiceGrpc {
                 control.proto.SelectedFlight,
                 control.proto.SelectionResponse>(
                   this, METHODID_GET_SELECTED_FLIGHT)))
+          .addMethod(
+            getStoreOldFlightMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                control.proto.OldFlight,
+                control.proto.StoreOldResponse>(
+                  this, METHODID_STORE_OLD_FLIGHT)))
+          .addMethod(
+            getGetLogFileSugMethod(),
+            io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+              new MethodHandlers<
+                control.proto.GetLogFileRequestSug,
+                control.proto.GetLogFileReplySug>(
+                  this, METHODID_GET_LOG_FILE_SUG)))
           .build();
     }
   }
@@ -135,6 +228,25 @@ public final class SuggestionsServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetSelectedFlightMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void storeOldFlight(control.proto.OldFlight request,
+        io.grpc.stub.StreamObserver<control.proto.StoreOldResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getStoreOldFlightMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * Logging
+     * </pre>
+     */
+    public void getLogFileSug(control.proto.GetLogFileRequestSug request,
+        io.grpc.stub.StreamObserver<control.proto.GetLogFileReplySug> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
+          getChannel().newCall(getGetLogFileSugMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -156,6 +268,24 @@ public final class SuggestionsServiceGrpc {
     public control.proto.SelectionResponse getSelectedFlight(control.proto.SelectedFlight request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetSelectedFlightMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public control.proto.StoreOldResponse storeOldFlight(control.proto.OldFlight request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getStoreOldFlightMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * Logging
+     * </pre>
+     */
+    public java.util.Iterator<control.proto.GetLogFileReplySug> getLogFileSug(
+        control.proto.GetLogFileRequestSug request) {
+      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
+          getChannel(), getGetLogFileSugMethod(), getCallOptions(), request);
     }
   }
 
@@ -180,9 +310,19 @@ public final class SuggestionsServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetSelectedFlightMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<control.proto.StoreOldResponse> storeOldFlight(
+        control.proto.OldFlight request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getStoreOldFlightMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_GET_SELECTED_FLIGHT = 0;
+  private static final int METHODID_STORE_OLD_FLIGHT = 1;
+  private static final int METHODID_GET_LOG_FILE_SUG = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -204,6 +344,14 @@ public final class SuggestionsServiceGrpc {
         case METHODID_GET_SELECTED_FLIGHT:
           serviceImpl.getSelectedFlight((control.proto.SelectedFlight) request,
               (io.grpc.stub.StreamObserver<control.proto.SelectionResponse>) responseObserver);
+          break;
+        case METHODID_STORE_OLD_FLIGHT:
+          serviceImpl.storeOldFlight((control.proto.OldFlight) request,
+              (io.grpc.stub.StreamObserver<control.proto.StoreOldResponse>) responseObserver);
+          break;
+        case METHODID_GET_LOG_FILE_SUG:
+          serviceImpl.getLogFileSug((control.proto.GetLogFileRequestSug) request,
+              (io.grpc.stub.StreamObserver<control.proto.GetLogFileReplySug>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -267,6 +415,8 @@ public final class SuggestionsServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new SuggestionsServiceFileDescriptorSupplier())
               .addMethod(getGetSelectedFlightMethod())
+              .addMethod(getStoreOldFlightMethod())
+              .addMethod(getGetLogFileSugMethod())
               .build();
         }
       }

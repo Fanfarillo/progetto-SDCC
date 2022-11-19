@@ -208,7 +208,6 @@ logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery se
 
 
 
-
 # Registro l'eventuale altro discovery server
 for item in discovery_servers:
     try:

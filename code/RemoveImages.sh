@@ -1,6 +1,8 @@
-docker rmi code-booking:latest
-docker rmi code-frontend:latest
-docker rmi code-management:latest
-docker rmi code-payment:latest
-docker rmi code-registration:latest
-docker rmi code-suggestions:latest
+docker rmi code_booking:latest
+docker rmi code_frontend:latest
+docker rmi code_management:latest
+docker rmi code_payment:latest
+docker rmi code_registration:latest
+docker rmi code_suggestions:latest
+docker rmi code_discovery:latest
+docker rmi code_logging:latest

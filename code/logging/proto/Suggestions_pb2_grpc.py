@@ -19,6 +19,16 @@ class SuggestionsServiceStub(object):
                 request_serializer=proto_dot_Suggestions__pb2.SelectedFlight.SerializeToString,
                 response_deserializer=proto_dot_Suggestions__pb2.SelectionResponse.FromString,
                 )
+        self.StoreOldFlight = channel.unary_unary(
+                '/proto.SuggestionsService/StoreOldFlight',
+                request_serializer=proto_dot_Suggestions__pb2.OldFlight.SerializeToString,
+                response_deserializer=proto_dot_Suggestions__pb2.StoreOldResponse.FromString,
+                )
+        self.getLogFileSug = channel.unary_stream(
+                '/proto.SuggestionsService/getLogFileSug',
+                request_serializer=proto_dot_Suggestions__pb2.GetLogFileRequestSug.SerializeToString,
+                response_deserializer=proto_dot_Suggestions__pb2.GetLogFileReplySug.FromString,
+                )
 
 
 class SuggestionsServiceServicer(object):
@@ -30,6 +40,19 @@ class SuggestionsServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def StoreOldFlight(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getLogFileSug(self, request, context):
+        """Logging
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SuggestionsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -37,6 +60,16 @@ def add_SuggestionsServiceServicer_to_server(servicer, server):
                     servicer.GetSelectedFlight,
                     request_deserializer=proto_dot_Suggestions__pb2.SelectedFlight.FromString,
                     response_serializer=proto_dot_Suggestions__pb2.SelectionResponse.SerializeToString,
+            ),
+            'StoreOldFlight': grpc.unary_unary_rpc_method_handler(
+                    servicer.StoreOldFlight,
+                    request_deserializer=proto_dot_Suggestions__pb2.OldFlight.FromString,
+                    response_serializer=proto_dot_Suggestions__pb2.StoreOldResponse.SerializeToString,
+            ),
+            'getLogFileSug': grpc.unary_stream_rpc_method_handler(
+                    servicer.getLogFileSug,
+                    request_deserializer=proto_dot_Suggestions__pb2.GetLogFileRequestSug.FromString,
+                    response_serializer=proto_dot_Suggestions__pb2.GetLogFileReplySug.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +95,39 @@ class SuggestionsService(object):
         return grpc.experimental.unary_unary(request, target, '/proto.SuggestionsService/GetSelectedFlight',
             proto_dot_Suggestions__pb2.SelectedFlight.SerializeToString,
             proto_dot_Suggestions__pb2.SelectionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StoreOldFlight(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/proto.SuggestionsService/StoreOldFlight',
+            proto_dot_Suggestions__pb2.OldFlight.SerializeToString,
+            proto_dot_Suggestions__pb2.StoreOldResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getLogFileSug(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/proto.SuggestionsService/getLogFileSug',
+            proto_dot_Suggestions__pb2.GetLogFileRequestSug.SerializeToString,
+            proto_dot_Suggestions__pb2.GetLogFileReplySug.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -1,6 +1,7 @@
 import time
 import logging
 import grpc
+
 from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 from proto import Managment_pb2
@@ -13,19 +14,15 @@ from proto import Payment_pb2
 from proto import Payment_pb2_grpc
 from proto import Suggestions_pb2
 from proto import Suggestions_pb2_grpc
-# Aggiungi i proto per suggestions e payment
 
 from concurrent import futures
 
 
-
-#TODO: Modella il microservizio a cui bisogna connettersi.
 class Microservizio:
     def __init__(self, nome, porta, conn):
         self.nome = nome
         self.porta = porta
         self.conn = conn
-
 
 
 
@@ -40,7 +37,6 @@ class LogFileMicro:
 logger = None
 logger_warnings = None
 
-#TODO: Aggiungere il nome che si utilizza nella PUT per i microservizi di suggestions e payment
 # Questi sono i nomi con cui i microservizi si sono registrati.
 MICROSERVICES = ["booking", "management", "registration", "payment", "suggestions"]
 

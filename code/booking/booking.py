@@ -198,14 +198,6 @@ server.start()
 logger.info('Server avviato con successo.')
 
 
-#creazione di un nuovo thread che si occupi delle code di messaggi collegate a Payment
-threadMq = Thread(target=defineQueues, args=(logger, ))
-threadMq.start()
-#creazione di un altro thread che si occupi di coordinarsi col microservizio Suggestions per quanto riguarda lo storico del prezzo dei voli
-threadSug = Thread(target=checkFlights, args=(logger, ))
-threadSug.start()
-
-
 # ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
 
 """
@@ -229,12 +221,21 @@ for item in discovery_servers:
         all_discovery_servers.append(item)
 
 
-logger.info('[DISCOVER SERVERS LIST] I discovery servers noti sono:\n')
+logger.info('[DISCOVERY SERVERS LIST] I discovery servers noti sono:\n')
 for item in all_discovery_servers:
     logger.info(item + '\n')
 logger.info('\n\n')
 
 # ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
+
+
+#creazione di un nuovo thread che si occupi delle code di messaggi collegate a Payment
+threadMq = Thread(target=defineQueues, args=(logger, ))
+threadMq.start()
+#creazione di un altro thread che si occupi di coordinarsi col microservizio Suggestions per quanto riguarda lo storico del prezzo dei voli
+threadSug = Thread(target=checkFlights, args=(logger, all_discovery_servers))
+threadSug.start()
+
 
 try:
     while True:

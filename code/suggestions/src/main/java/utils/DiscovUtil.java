@@ -1,7 +1,18 @@
 package utils;
 
-import utils.proto.DiscoveryServiceGrpc.DiscoveryServiceBlockingStub;
-import utils.proto.DiscoveryServiceGrpc.DiscoveryServiceStub;
+import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.grpc.StatusRuntimeException;
+import io.grpc.Channel;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
+import control.proto.*;
+
+import control.proto.DiscoveryServiceGrpc.DiscoveryServiceBlockingStub;
+import control.proto.DiscoveryServiceGrpc.DiscoveryServiceStub;
 
 public class DiscovUtil {
 
@@ -13,14 +24,14 @@ public class DiscovUtil {
         asyncStub = DiscoveryServiceGrpc.newStub(channel);
     }
 
-    public void getReply(String serviceName, String port) throws Exception {
+    public PutReply getReply(String serviceName, String port) throws Exception {
         PutRequest input = PutRequest.newBuilder().setServiceName(serviceName).setPort(port).build();
         PutReply output = blockingStub.put(input);
         return output;
 
     }
 
-    public static List<String> putDiscoveryServer(List<String> discoveryServers, LogUtil opfile) {
+    public static List<String> putDiscoveryServer(List<String> discoveryServers, LogUtil opfile) throws Exception {
         
         List<String> newDiscoveryServers = new ArrayList<>();
         PutReply res;   //risultato ottenuto dal server gRPC (il discovery server)
@@ -28,19 +39,19 @@ public class DiscovUtil {
         /* Si tenta di contattare il discovery server registrato per memorizzare la porta su cui il servizio di Suggestions è in ascolto.
          * Se le chiamate dovessero fallire, si attendono 5 secondi per poi eseguire nuovamente il tentativo di connessione. */
         boolean ok = false;
-        while(1) {
+        while(true) {
             //itero sui discovery server noti
             for(String discoveryServer : discoveryServers) {
 
-                try {
-                    //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
-                    ManagedChannel channel = ManagedChannelBuilder.forTarget(discoveryServer).usePlaintext().build();
+                //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
+                ManagedChannel channel = ManagedChannelBuilder.forTarget(discoveryServer).usePlaintext().build();
 
+                try {
                     //EQUIVALENTE DI: stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                     DiscovUtil client = new DiscovUtil(channel);
 
                     //EQUIVALENTE DI: res = stub.put(Discovery_pb2.PutRequest(serviceName="suggestions", port="50054"))
-                    res = client.getReply("suggestions", "50054");
+                    res = client.getReply("code_suggestions_1", "50054");    //ATTENZIONE: è code_suggestions_1 perché trattasi della copia primaria del servizio
 
                 }
                 catch(Exception e) {        //si va qui se si è verificato un problema nella connessione con il discovery server
@@ -60,10 +71,17 @@ public class DiscovUtil {
 
                 }
 
-                for(String server : res.getList_server().getServers()) {
+                int i=0;    //indice per i server in DiscoveryServers
+                while(true) {
+                    String server = res.getListServer().getServers(i);
+                    if(server==null)
+                        break;
+
                     newDiscoveryServers.add(server);
+                    i++;
 
                 }
+
                 ok = true;
                 opfile.writeLog("[PUT DISCOVERY REGISTRATION] Registrazione avvenuta con successo presso il discovery server " + discoveryServer + ".");
                 break;

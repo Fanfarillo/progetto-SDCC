@@ -551,7 +551,7 @@ def getFlightHistory(idVolo):
             #retrieve dell'ID del volo
             if key=='IdVolo':
                 idRecuperato = value
-            elif key=='DataPrenotazione':
+            elif key=='Prenotazione':
                 dataPrenotazione = value
             elif key=='DataVolo':
                 dataVolo = value
@@ -570,3 +570,64 @@ def getFlightHistory(idVolo):
     #alla fine di tutto è opportuno togliere da msg l'ultimo '\n' che non serve a nulla
     msg = msg[:-1]
     return msg
+
+
+#this function returns true if there is an item with the specified id and today date as booking date; it returns false otherwise
+def isTodayInStorico(flightId):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_STORICO_VOLO)
+
+    #data di oggi in formato stringa; serve a effettuare il confronto col campo Prenotazione della tabella StoricoVolo
+    todayStr = date.today().strftime("%d-%m-%Y")
+
+    #read from 'StoricoVolo' table in DynamoDB
+    response = table.get_item(
+        Key = {
+            'IdVolo': flightId,
+            'Prenotazione': todayStr
+        }
+    )
+
+    if 'Item' in response:
+        return True
+    else:
+        return False
+
+
+#this function returns date, departure airport, arrival airport, airline and base price of the specified flight
+def retrieveFlightInfo(flightId):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
+    response = table.scan(FilterExpression=Attr('Id').eq(flightId))
+
+    flightDate = response['Items'][0]['Data']
+    departureAirport = response['Items'][0]['Aeroporto partenza']
+    arrivalAirport = response['Items'][0]['Aeroporto arrivo']
+    airline = response['Items'][0]['Compagnia aerea']
+    basePrice = response['Items'][0]['Prezzo base']
+
+    #creazione di un oggetto Flight; l'orario (posto pari a None) e i posti disponibili (posti pari a 0) sono delle don't care
+    flight = Flight(flightId, airline, arrivalAirport, departureAirport, None, flightDate, basePrice, 0)
+    return flight
+
+
+#this function stores a new item in 'StoricoVolo' table; each item is associated to a specific flight and a specific day in which it was possibile to buy tickets
+def storeInStoricoVolo(flight):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_STORICO_VOLO)
+
+    #data di oggi in formato stringa;
+    todayStr = date.today().strftime("%d-%m-%Y")
+    
+    #store an item in 'StoricoVolo' table in DynamoDB
+    table.put_item(
+        Item = {
+            'IdVolo': flight.idKey,
+            'Prenotazione': todayStr,
+            'Data volo': flight.data
+            'Aeroporto partenza': flight.partenza,
+            'Aeroporto arrivo': flight.arrivo,
+            'Compagnia aerea': flight.compagnia_aerea,
+            'Prezzo base': flight.prezzo
+        }
+    )

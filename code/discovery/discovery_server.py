@@ -233,7 +233,7 @@ def periodicUpdate():
         """
         All'interno della struttura dati sono
         presenti delle informazioni che possono
-        essere inviate. Eseguo una scansioni
+        essere inviate. Eseguo una scansione
         di questi dati per poter costruire il
         parametro di input da inviare.
         """
@@ -260,7 +260,7 @@ def periodicUpdate():
             request.microservices_list.append(ms)
 
         """
-        Invio le informazioni mantenute all'interno
+        Invio le informazioni mantenute all'interno della
         cache all'altro discovery server. Inoltre, mi
         aspetto di ricevere le informazioni sui microservizi
         da lui conosciuti.
@@ -324,28 +324,20 @@ else:
     other_discovery_server = SERVER_1
 
 if other_discovery_server is None:
-    logger_warnings.warning("[ FATAL ]: Errore nella risoluzione dell'indirizzo IP del discovery server...")            
+    logger_warnings.warning("[ FATAL ]: Errore nella risoluzione dell'indirizzo IP del discovery server.")            
     sys.exit(1)
+
+
 
 # Creazione del server RPC
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Discovery_pb2_grpc.add_DiscoveryServiceServicer_to_server(DiscoveryServicer(), server)
 
-
-
-
 # Scrivo le informazioni all'interno del Logging
 logger.info('Avvio del server in ascolto sulla porta '+ PORT + '...')
-
-
-
 # Avvio del server RPC.
 server.add_insecure_port('[::]:' + PORT)
 server.start()
-
-
-
-
 # Scrivo le informazioni all'interno del Logging
 logger.info('Server avviato con successo...\n\n')
 

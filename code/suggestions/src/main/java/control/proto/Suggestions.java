@@ -24,6 +24,26 @@ public final class Suggestions {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_proto_SelectionResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_proto_OldFlight_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_proto_OldFlight_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_proto_StoreOldResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_proto_StoreOldResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_proto_GetLogFileRequestSug_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_proto_GetLogFileRequestSug_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_proto_GetLogFileReplySug_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_proto_GetLogFileReplySug_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -38,10 +58,17 @@ public final class Suggestions {
       "\002 \001(\t\022\017\n\007airline\030\003 \001(\t\022\030\n\020departureAirpo" +
       "rt\030\004 \001(\t\022\026\n\016arrivalAirport\030\005 \001(\t\"4\n\021Sele" +
       "ctionResponse\022\037\n\027numDaysBeforeConvenient" +
-      "\030\001 \001(\0052Z\n\022SuggestionsService\022D\n\021GetSelec" +
-      "tedFlight\022\025.proto.SelectedFlight\032\030.proto" +
-      ".SelectionResponseB\021\n\rcontrol.protoP\001b\006p" +
-      "roto3"
+      "\030\001 \001(\005\"\"\n\tOldFlight\022\025\n\roldFlightsMsg\030\001 \001" +
+      "(\t\" \n\020StoreOldResponse\022\014\n\004isOk\030\001 \001(\010\",\n\024" +
+      "GetLogFileRequestSug\022\024\n\014numRichiesta\030\001 \001" +
+      "(\005\";\n\022GetLogFileReplySug\022\022\n\nchunk_file\030\001" +
+      " \001(\014\022\021\n\tnum_chunk\030\002 \001(\0052\342\001\n\022SuggestionsS" +
+      "ervice\022D\n\021GetSelectedFlight\022\025.proto.Sele" +
+      "ctedFlight\032\030.proto.SelectionResponse\022;\n\016" +
+      "StoreOldFlight\022\020.proto.OldFlight\032\027.proto" +
+      ".StoreOldResponse\022I\n\rgetLogFileSug\022\033.pro" +
+      "to.GetLogFileRequestSug\032\031.proto.GetLogFi" +
+      "leReplySug0\001B\021\n\rcontrol.protoP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -67,6 +94,30 @@ public final class Suggestions {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_SelectionResponse_descriptor,
         new java.lang.String[] { "NumDaysBeforeConvenient", });
+    internal_static_proto_OldFlight_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_proto_OldFlight_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_proto_OldFlight_descriptor,
+        new java.lang.String[] { "OldFlightsMsg", });
+    internal_static_proto_StoreOldResponse_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_proto_StoreOldResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_proto_StoreOldResponse_descriptor,
+        new java.lang.String[] { "IsOk", });
+    internal_static_proto_GetLogFileRequestSug_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_proto_GetLogFileRequestSug_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_proto_GetLogFileRequestSug_descriptor,
+        new java.lang.String[] { "NumRichiesta", });
+    internal_static_proto_GetLogFileReplySug_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_proto_GetLogFileReplySug_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_proto_GetLogFileReplySug_descriptor,
+        new java.lang.String[] { "ChunkFile", "NumChunk", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

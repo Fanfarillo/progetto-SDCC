@@ -3,22 +3,27 @@ package control;
 import java.io.*;
 import java.lang.Math;
 
+import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 
 import control.proto.SuggestionsServiceGrpc.SuggestionsServiceImplBase;
 import control.proto.SelectedFlight;
 import control.proto.SelectionResponse;
+import control.proto.OldFlight;
+import control.proto.StoreOldResponse;
+import control.proto.GetLogFileRequestSug;
+import control.proto.GetLogFileReplySug;  
 
 import utils.LogUtil;
 
 public class Service extends SuggestionsServiceImplBase {
 
     @Override
-    public void getLogFileBoo(GetLogFileRequestSug req, StreamObserver<GetLogFileReplySug> responseObserver) {
+    public void getLogFileSug(GetLogFileRequestSug req, StreamObserver<GetLogFileReplySug> responseObserver) {
 
         LogUtil opfile = new LogUtil();
         opfile.createLog();             //creazione del file di log
-        opfile.writeLog("[LOGGING] richiesta dati di logging...\n\n");
+        opfile.writeLog("[LOGGING] Richiesta dati di logging...\n\n");
 
         final int chunkDim = 1000;      //in Python era una macro
         int r = -1;
@@ -43,14 +48,17 @@ public class Service extends SuggestionsServiceImplBase {
             bReader.close();
 
         }
+        catch(Exception e) {
+            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.");
+        }
 
         int dim = content.length();
-        q = Math.floor(dim/chunkDim);
+        q = (int)Math.floor(dim/chunkDim);
         r = dim % chunkDim;
 
         if(q==0) {
             //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto.encode(), num_chunk=0)
-            GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.getBytes()).setNum_chunk(0).build();
+            GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content)).setNumChunk(0).build();
             responseObserver.onNext(response);
 
         }
@@ -60,7 +68,7 @@ public class Service extends SuggestionsServiceImplBase {
             for(int i=0; i<q; i++) {
                 try {
                     //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk=i)
-                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.substring(i,i+chunkDim).getBytes()).setNum_chunk(i).build();
+                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content.substring(i,i+chunkDim))).setNumChunk(i).build();
                     responseObserver.onNext(response);
                 }
                 catch(Exception e) {
@@ -72,7 +80,7 @@ public class Service extends SuggestionsServiceImplBase {
             if(r>0) {
                 lowerBound = count*chunkDim;
                 //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk=count)
-                GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunk_file(content.substring(lowerBound,lowerBound+r).getBytes()).setNum_chunk(count).build();
+                GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content.substring(lowerBound,lowerBound+r))).setNumChunk(count).build();
                 responseObserver.onNext(response);
 
             }
@@ -82,6 +90,9 @@ public class Service extends SuggestionsServiceImplBase {
 
         try(RandomAccessFile raf = new RandomAccessFile("suggesions.log", "rw")) {
             raf.setLength(0);   //to erase all data
+        }
+        catch(Exception e) {
+            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.");
         }
 
         responseObserver.onCompleted();
@@ -124,6 +135,12 @@ public class Service extends SuggestionsServiceImplBase {
 
         //output è il numero di giorni prima del volo in cui conviene effettuare l'acquisto dei biglietti
         StoreOldResponse response = StoreOldResponse.newBuilder().setIsOk(output).build();
+
+        //se si è la copia primaria di Suggestions, bisogna invocare la copia secondaria per mantenerla allineata con gli aggiornamenti
+        if(Suggestions.ownIpAddress == Suggestions.suggestions1) {
+            SugClient.sendToSecondary(req.getOldFlightsMsg());
+            opfile.writeLog("Nuovi dati per il training set inviati anche alla replica secondaria.");
+        }
 
         //send data to the client
         responseObserver.onNext(response);

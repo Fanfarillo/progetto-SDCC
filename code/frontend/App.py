@@ -224,7 +224,6 @@ def booking(username):
         session.pop(username)
         session[username] = diz
 
-        #print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("Booking.html", items = diz['cards'], num = len(diz['cards']), username = username)
 
 
@@ -289,8 +288,6 @@ def booking(username):
             session.pop(username)
             #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
             session[username] = {'username':username, 'cards':result.cards}
-
-            #print("[DEBUG SESSIONE (/username/booking)]: key = " + username + "   value = " + str(session.get(username)))
 
             #E'necessario portarmi appresso l'informazione relativa al username che mi permette di gestire completamente la sessione
             return render_template("Booking.html", items = result.cards, num = result.num, username = username)
@@ -373,7 +370,6 @@ def resoconto(username, compagnia, idVolo):
     session.pop(username)
     session[username] = diz
 
-    #print("[DEBUG SESSIONE (/username/compagnia/idVolo/resoconto)]: key = " + username + "   value = " + str(session.get(username)))
     return render_template("resoconto.html", username = username, card = cardSelezionata)
 
 
@@ -463,7 +459,6 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     session.pop(username)
     session[username] = diz
 
-    #print("[DEBUG SESSION (/username/idVolo/servuzuAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
     return render_template("serviziAggiuntivi.html", username = username, card=cardSelezionata, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
 
@@ -611,7 +606,6 @@ def confermaRiepilogo(username, idVolo):
         session[username] = diz
         prezzo_totale = int(numBigliettiSelezionato) * Decimal(cardSelezionata.prezzoBase)
 
-        #print("[DEBUG SESSIONE (/username/idVolo/conferma)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("normale.html", username = username, card = cardSelezionata, numBigliettiSelezionato = numBigliettiSelezionato, prezzo_totale=prezzo_totale)
     
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
@@ -675,7 +669,6 @@ def personalizzato(username, idVolo):
             stringa = "È NECESSARIO SELEZIONARE UN NUMERO DI POSTI NON INFERIORE A 1 E NON SUPERIORE A 20."
             return render_template("errore.html", errore=stringa, airline=None, username=username)
 
-        #print("[DEBUG SESSIONE (/username/idVolo/personalizzato)]: key = " + username + "   value = " + str(session.get(username)))
         return render_template("personalizzato.html", prezzoTotale = prezzoTotale, username = username, card = diz['cardSelezionata'])
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
@@ -745,8 +738,7 @@ def visualizzaSuggerimento(username, compagnia, idVolo):
 
     #chiamata gRPC per sapere tra quanti giorni convenga acquistare i biglietti; tale valore dovrà essere passato come parametro a render_template()
     numDaysBefore = getNumDaysBefore(cardSelezionata, today)
-
-    #print("[DEBUG SESSION (/username/idVolo/serviziAggiuntivi)]: key = " + username + "  value = " + str(session.get(username)))    
+ 
     return render_template("Suggerimento.html", username=username, card=cardSelezionata, numDaysBefore=numDaysBefore)
 
 

@@ -19,6 +19,11 @@ class PayStub(object):
                 request_serializer=proto_dot_Payment__pb2.NewPayment.SerializeToString,
                 response_deserializer=proto_dot_Payment__pb2.PayResponse.FromString,
                 )
+        self.getLogFilePay = channel.unary_stream(
+                '/proto.Pay/getLogFilePay',
+                request_serializer=proto_dot_Payment__pb2.GetLogFileRequestPay.SerializeToString,
+                response_deserializer=proto_dot_Payment__pb2.GetLogFileReplyPay.FromString,
+                )
 
 
 class PayServicer(object):
@@ -30,6 +35,13 @@ class PayServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getLogFilePay(self, request, context):
+        """Logging
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PayServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -37,6 +49,11 @@ def add_PayServicer_to_server(servicer, server):
                     servicer.AddPayment,
                     request_deserializer=proto_dot_Payment__pb2.NewPayment.FromString,
                     response_serializer=proto_dot_Payment__pb2.PayResponse.SerializeToString,
+            ),
+            'getLogFilePay': grpc.unary_stream_rpc_method_handler(
+                    servicer.getLogFilePay,
+                    request_deserializer=proto_dot_Payment__pb2.GetLogFileRequestPay.FromString,
+                    response_serializer=proto_dot_Payment__pb2.GetLogFileReplyPay.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +79,22 @@ class Pay(object):
         return grpc.experimental.unary_unary(request, target, '/proto.Pay/AddPayment',
             proto_dot_Payment__pb2.NewPayment.SerializeToString,
             proto_dot_Payment__pb2.PayResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getLogFilePay(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/proto.Pay/getLogFilePay',
+            proto_dot_Payment__pb2.GetLogFileRequestPay.SerializeToString,
+            proto_dot_Payment__pb2.GetLogFileReplyPay.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
