@@ -624,7 +624,7 @@ def storeInStoricoVolo(flight):
         Item = {
             'IdVolo': flight.idKey,
             'Prenotazione': todayStr,
-            'Data volo': flight.data
+            'Data volo': flight.data,
             'Aeroporto partenza': flight.partenza,
             'Aeroporto arrivo': flight.arrivo,
             'Compagnia aerea': flight.compagnia_aerea,

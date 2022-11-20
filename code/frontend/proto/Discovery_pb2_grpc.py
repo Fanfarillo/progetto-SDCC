@@ -15,17 +15,17 @@ class DiscoveryServiceStub(object):
             channel: A grpc.Channel.
         """
         self.get = channel.unary_unary(
-                '/DiscoveryService/get',
+                '/proto.DiscoveryService/get',
                 request_serializer=proto_dot_Discovery__pb2.GetRequest.SerializeToString,
                 response_deserializer=proto_dot_Discovery__pb2.GetReply.FromString,
                 )
         self.put = channel.unary_unary(
-                '/DiscoveryService/put',
+                '/proto.DiscoveryService/put',
                 request_serializer=proto_dot_Discovery__pb2.PutRequest.SerializeToString,
                 response_deserializer=proto_dot_Discovery__pb2.PutReply.FromString,
                 )
         self.sendMicroserviceInfo = channel.unary_unary(
-                '/DiscoveryService/sendMicroserviceInfo',
+                '/proto.DiscoveryService/sendMicroserviceInfo',
                 request_serializer=proto_dot_Discovery__pb2.microserviceInfoRequest.SerializeToString,
                 response_deserializer=proto_dot_Discovery__pb2.microserviceInfoReply.FromString,
                 )
@@ -81,7 +81,7 @@ def add_DiscoveryServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'DiscoveryService', rpc_method_handlers)
+            'proto.DiscoveryService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -100,7 +100,7 @@ class DiscoveryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DiscoveryService/get',
+        return grpc.experimental.unary_unary(request, target, '/proto.DiscoveryService/get',
             proto_dot_Discovery__pb2.GetRequest.SerializeToString,
             proto_dot_Discovery__pb2.GetReply.FromString,
             options, channel_credentials,
@@ -117,7 +117,7 @@ class DiscoveryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DiscoveryService/put',
+        return grpc.experimental.unary_unary(request, target, '/proto.DiscoveryService/put',
             proto_dot_Discovery__pb2.PutRequest.SerializeToString,
             proto_dot_Discovery__pb2.PutReply.FromString,
             options, channel_credentials,
@@ -134,7 +134,7 @@ class DiscoveryService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DiscoveryService/sendMicroserviceInfo',
+        return grpc.experimental.unary_unary(request, target, '/proto.DiscoveryService/sendMicroserviceInfo',
             proto_dot_Discovery__pb2.microserviceInfoRequest.SerializeToString,
             proto_dot_Discovery__pb2.microserviceInfoReply.FromString,
             options, channel_credentials,

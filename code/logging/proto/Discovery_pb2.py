@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15proto/Discovery.proto\"5\n\x10infoMicroservice\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\"B\n\x11infoMicroservices\x12-\n\x12microservices_list\x18\x01 \x03(\x0b\x32\x11.infoMicroservice\"D\n\x17microserviceInfoRequest\x12)\n\rmicroservices\x18\x01 \x01(\x0b\x32\x12.infoMicroservices\"B\n\x15microserviceInfoReply\x12)\n\rmicroservices\x18\x01 \x01(\x0b\x32\x12.infoMicroservices\"<\n\nGetRequest\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x19\n\x11serviceNameTarget\x18\x02 \x01(\t\"-\n\x08GetReply\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\"/\n\nPutRequest\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\"#\n\x10\x44iscoveryServers\x12\x0f\n\x07servers\x18\x01 \x03(\t\"B\n\x08PutReply\x12\x0e\n\x06result\x18\x01 \x01(\x08\x12&\n\x0blist_server\x18\x02 \x01(\x0b\x32\x11.DiscoveryServers2\x9a\x01\n\x10\x44iscoveryService\x12\x1d\n\x03get\x12\x0b.GetRequest\x1a\t.GetReply\x12\x1d\n\x03put\x12\x0b.PutRequest\x1a\t.PutReply\x12H\n\x14sendMicroserviceInfo\x12\x18.microserviceInfoRequest\x1a\x16.microserviceInfoReplyb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15proto/Discovery.proto\x12\x05proto\"5\n\x10infoMicroservice\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\"H\n\x11infoMicroservices\x12\x33\n\x12microservices_list\x18\x01 \x03(\x0b\x32\x17.proto.infoMicroservice\"J\n\x17microserviceInfoRequest\x12/\n\rmicroservices\x18\x01 \x01(\x0b\x32\x18.proto.infoMicroservices\"H\n\x15microserviceInfoReply\x12/\n\rmicroservices\x18\x01 \x01(\x0b\x32\x18.proto.infoMicroservices\"<\n\nGetRequest\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x19\n\x11serviceNameTarget\x18\x02 \x01(\t\"-\n\x08GetReply\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\"/\n\nPutRequest\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\"#\n\x10\x44iscoveryServers\x12\x0f\n\x07servers\x18\x01 \x03(\t\"H\n\x08PutReply\x12\x0e\n\x06result\x18\x01 \x01(\x08\x12,\n\x0blist_server\x18\x02 \x01(\x0b\x32\x17.proto.DiscoveryServers2\xbe\x01\n\x10\x44iscoveryService\x12)\n\x03get\x12\x11.proto.GetRequest\x1a\x0f.proto.GetReply\x12)\n\x03put\x12\x11.proto.PutRequest\x1a\x0f.proto.PutReply\x12T\n\x14sendMicroserviceInfo\x12\x1e.proto.microserviceInfoRequest\x1a\x1c.proto.microserviceInfoReplyB\x11\n\rcontrol.protoP\x01\x62\x06proto3')
 
 
 
@@ -30,63 +30,63 @@ _PUTREPLY = DESCRIPTOR.message_types_by_name['PutReply']
 infoMicroservice = _reflection.GeneratedProtocolMessageType('infoMicroservice', (_message.Message,), {
   'DESCRIPTOR' : _INFOMICROSERVICE,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:infoMicroservice)
+  # @@protoc_insertion_point(class_scope:proto.infoMicroservice)
   })
 _sym_db.RegisterMessage(infoMicroservice)
 
 infoMicroservices = _reflection.GeneratedProtocolMessageType('infoMicroservices', (_message.Message,), {
   'DESCRIPTOR' : _INFOMICROSERVICES,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:infoMicroservices)
+  # @@protoc_insertion_point(class_scope:proto.infoMicroservices)
   })
 _sym_db.RegisterMessage(infoMicroservices)
 
 microserviceInfoRequest = _reflection.GeneratedProtocolMessageType('microserviceInfoRequest', (_message.Message,), {
   'DESCRIPTOR' : _MICROSERVICEINFOREQUEST,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:microserviceInfoRequest)
+  # @@protoc_insertion_point(class_scope:proto.microserviceInfoRequest)
   })
 _sym_db.RegisterMessage(microserviceInfoRequest)
 
 microserviceInfoReply = _reflection.GeneratedProtocolMessageType('microserviceInfoReply', (_message.Message,), {
   'DESCRIPTOR' : _MICROSERVICEINFOREPLY,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:microserviceInfoReply)
+  # @@protoc_insertion_point(class_scope:proto.microserviceInfoReply)
   })
 _sym_db.RegisterMessage(microserviceInfoReply)
 
 GetRequest = _reflection.GeneratedProtocolMessageType('GetRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETREQUEST,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:GetRequest)
+  # @@protoc_insertion_point(class_scope:proto.GetRequest)
   })
 _sym_db.RegisterMessage(GetRequest)
 
 GetReply = _reflection.GeneratedProtocolMessageType('GetReply', (_message.Message,), {
   'DESCRIPTOR' : _GETREPLY,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:GetReply)
+  # @@protoc_insertion_point(class_scope:proto.GetReply)
   })
 _sym_db.RegisterMessage(GetReply)
 
 PutRequest = _reflection.GeneratedProtocolMessageType('PutRequest', (_message.Message,), {
   'DESCRIPTOR' : _PUTREQUEST,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:PutRequest)
+  # @@protoc_insertion_point(class_scope:proto.PutRequest)
   })
 _sym_db.RegisterMessage(PutRequest)
 
 DiscoveryServers = _reflection.GeneratedProtocolMessageType('DiscoveryServers', (_message.Message,), {
   'DESCRIPTOR' : _DISCOVERYSERVERS,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:DiscoveryServers)
+  # @@protoc_insertion_point(class_scope:proto.DiscoveryServers)
   })
 _sym_db.RegisterMessage(DiscoveryServers)
 
 PutReply = _reflection.GeneratedProtocolMessageType('PutReply', (_message.Message,), {
   'DESCRIPTOR' : _PUTREPLY,
   '__module__' : 'proto.Discovery_pb2'
-  # @@protoc_insertion_point(class_scope:PutReply)
+  # @@protoc_insertion_point(class_scope:proto.PutReply)
   })
 _sym_db.RegisterMessage(PutReply)
 
@@ -94,24 +94,25 @@ _DISCOVERYSERVICE = DESCRIPTOR.services_by_name['DiscoveryService']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _INFOMICROSERVICE._serialized_start=25
-  _INFOMICROSERVICE._serialized_end=78
-  _INFOMICROSERVICES._serialized_start=80
-  _INFOMICROSERVICES._serialized_end=146
-  _MICROSERVICEINFOREQUEST._serialized_start=148
-  _MICROSERVICEINFOREQUEST._serialized_end=216
-  _MICROSERVICEINFOREPLY._serialized_start=218
-  _MICROSERVICEINFOREPLY._serialized_end=284
-  _GETREQUEST._serialized_start=286
-  _GETREQUEST._serialized_end=346
-  _GETREPLY._serialized_start=348
-  _GETREPLY._serialized_end=393
-  _PUTREQUEST._serialized_start=395
-  _PUTREQUEST._serialized_end=442
-  _DISCOVERYSERVERS._serialized_start=444
-  _DISCOVERYSERVERS._serialized_end=479
-  _PUTREPLY._serialized_start=481
-  _PUTREPLY._serialized_end=547
-  _DISCOVERYSERVICE._serialized_start=550
-  _DISCOVERYSERVICE._serialized_end=704
+  DESCRIPTOR._serialized_options = b'\n\rcontrol.protoP\001'
+  _INFOMICROSERVICE._serialized_start=32
+  _INFOMICROSERVICE._serialized_end=85
+  _INFOMICROSERVICES._serialized_start=87
+  _INFOMICROSERVICES._serialized_end=159
+  _MICROSERVICEINFOREQUEST._serialized_start=161
+  _MICROSERVICEINFOREQUEST._serialized_end=235
+  _MICROSERVICEINFOREPLY._serialized_start=237
+  _MICROSERVICEINFOREPLY._serialized_end=309
+  _GETREQUEST._serialized_start=311
+  _GETREQUEST._serialized_end=371
+  _GETREPLY._serialized_start=373
+  _GETREPLY._serialized_end=418
+  _PUTREQUEST._serialized_start=420
+  _PUTREQUEST._serialized_end=467
+  _DISCOVERYSERVERS._serialized_start=469
+  _DISCOVERYSERVERS._serialized_end=504
+  _PUTREPLY._serialized_start=506
+  _PUTREPLY._serialized_end=578
+  _DISCOVERYSERVICE._serialized_start=581
+  _DISCOVERYSERVICE._serialized_end=771
 # @@protoc_insertion_point(module_scope)
