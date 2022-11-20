@@ -39,7 +39,7 @@ all_microservices_cache_names = []
 MICROSERVICE_DISCOVERY_SERVER_LIST = []
 
 # Costanti utilizzate nel codice per accedere al DB remoto
-MICROSERVICE_TABLE = 'microservizi'
+MICROSERVICE_TABLE = 'Microservizi'
 DYNAMODB = 'dynamodb'
 REGIONE = 'us-east-1'
 
