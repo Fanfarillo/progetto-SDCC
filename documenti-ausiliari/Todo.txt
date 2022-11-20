@@ -1,3 +1,0 @@
-1) Fare in modo che nel db vengano memorizzati solo prezzi approssimati alla seconda cifra dopo la virgola.
-2) Nella navbar in alto, sostituire (OVUNQUE) la parola "Home" con la parola "Exit" ed, eventualmente, aggiungere (sempre OVUNQUE) un nuovo bottone "Home" che porti all'home page dell'utente registrato
-	(quindi o Home.html o AirlineHome.html).
