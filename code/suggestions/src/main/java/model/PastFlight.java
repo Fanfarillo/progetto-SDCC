@@ -91,7 +91,7 @@ public class PastFlight {
     }
 
     public void setConvenient(String isConvenient) {
-        if(isConvenient == "true" || isConvenient == "false") {
+        if(isConvenient.equals("true") || isConvenient.equals("false")) {
             this.isConvenient = isConvenient;
         }
     }

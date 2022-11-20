@@ -59,7 +59,7 @@ public class Suggestions {
         String otherSuggestions = null;     //nome dell'altro container (dell'altra copia di Suggestions)
 
         //identificazione del nome del container
-        if(ownIpAddress==suggestions1) {
+        if(ownIpAddress.equals(suggestions1)) {
             //qui il container ha nome SUGGESTIONS_1 e dovrà quindi contattare SUGGESTIONS_2; SUGGESTIONS_1 è la copia primaria di Suggestions
             otherSuggestions = SUGGESTIONS_2;
             opfile.writeLog("[SETUP NOME DEL CONTAINER] " + SUGGESTIONS_1 + "\t" + suggestions1 + "\n\n");
@@ -89,7 +89,7 @@ public class Suggestions {
          * Per giunta, solo la copia primaria di Suggestions si renderà disponibile ad accettare richieste di connessione da parte degli altri servizi,
          * dunque solo lei si registra al discovery service. L'altra copia, invece, rimane solo in attesa di ricevere aggiornamenti da parte della primaria.
          */
-        if(ownIpAddress==suggestions1) {
+        if(ownIpAddress.equals(suggestions1)) {
 
             allDiscoveryServers = new ArrayList<>();
             allDiscoveryServers.add("code_discovery_2:50060");

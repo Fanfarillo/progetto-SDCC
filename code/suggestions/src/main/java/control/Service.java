@@ -137,7 +137,7 @@ public class Service extends SuggestionsServiceImplBase {
         StoreOldResponse response = StoreOldResponse.newBuilder().setIsOk(output).build();
 
         //se si è la copia primaria di Suggestions, bisogna invocare la copia secondaria per mantenerla allineata con gli aggiornamenti
-        if(Suggestions.ownIpAddress == Suggestions.suggestions1) {
+        if(Suggestions.ownIpAddress.equals(Suggestions.suggestions1)) {
             SugClient.sendToSecondary(req.getOldFlightsMsg());
             opfile.writeLog("Nuovi dati per il training set inviati anche alla replica secondaria.");
         }

@@ -43,15 +43,21 @@ public class DiscovUtil {
             //itero sui discovery server noti
             for(String discoveryServer : discoveryServers) {
 
-                //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
-                ManagedChannel channel = ManagedChannelBuilder.forTarget(discoveryServer).usePlaintext().build();
-
+                ManagedChannel channel = null;
                 try {
+                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] A.");     //TO DELETE
+                    //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
+                    channel = ManagedChannelBuilder.forTarget(discoveryServer).usePlaintext().build();
+
+                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] B.");     //TO DELETE
                     //EQUIVALENTE DI: stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                     DiscovUtil client = new DiscovUtil(channel);
 
+                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] C.");     //TO DELETE
                     //EQUIVALENTE DI: res = stub.put(Discovery_pb2.PutRequest(serviceName="suggestions", port="50055"))
-                    res = client.getReply("code_suggestions_1", "50055");    //ATTENZIONE: è code_suggestions_1 perché trattasi della copia primaria del servizio
+                    res = client.getReply("suggestions", "50055");    //ATTENZIONE: è code_suggestions_1 perché trattasi della copia primaria del servizio
+                    
+                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] D.");     //TO DELETE
 
                 }
                 catch(Exception e) {        //si va qui se si è verificato un problema nella connessione con il discovery server
@@ -61,7 +67,8 @@ public class DiscovUtil {
 
                 }
                 finally {
-                    channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
+                    if(channel!=null)
+                        channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
                 }
 
                 if(!res.getResult()) {      //si va qui se si è verificato un problema con DynamoDB
