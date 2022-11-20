@@ -133,8 +133,8 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
         logger.info("Richiesta di modifica del prezzo di un volo: [" + UpdatedFlight.flightId + "," + UpdatedFlight.newPrice + "]")
 
-        isExistentFlightId = not checkFlightId(UpdatedFlight.flightId)      #condition 1)
-        isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()   #condition 2)
+        isExistentFlightId = not checkFlightId(UpdatedFlight.flightId, logger, all_discovery_servers)       #condition 1)
+        isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()                                   #condition 2)
 
         isOk = False    #isOk will be True only if ALL the conditions are satisfied
 

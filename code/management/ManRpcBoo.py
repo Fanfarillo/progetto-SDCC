@@ -1,15 +1,15 @@
 import grpc
+import time
 
 from proto import Booking_pb2
 from proto import Booking_pb2_grpc
 from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 
-# ADDR_PORT = 'booking:50053'   #server_IP_addr:port_num
+
 # -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 # -------------------------------------------------- DISCOVERY ----------------------------------------------
-
 
 
 # ----------------------------------------------------- DISCOVERY --------------------------------------------

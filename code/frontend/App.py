@@ -5,6 +5,8 @@ from decimal import *
 from FroRpcReg import *
 from FroRpcMan import *
 from FroRpcBoo import *
+from FroRpcPay import *
+from FroRpcSug import *
 from FroUtils import *
 
 

@@ -1,4 +1,5 @@
 import grpc
+import time
 
 from proto import Managment_pb2
 from proto import Managment_pb2_grpc
@@ -6,7 +7,6 @@ from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 
 
-# ADDR_PORT = 'management:50052'
 # -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_1:50060'
@@ -62,7 +62,7 @@ def discovery_management():
                 time.sleep(5)
                 continue            
             ADDR_PORT = res.serviceName + ':' + res.port
-            break;
+            break
         except:
             # Problema nella connessione con il server.
             time.sleep(5)

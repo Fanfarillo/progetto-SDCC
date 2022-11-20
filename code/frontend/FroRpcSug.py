@@ -1,10 +1,10 @@
 import grpc
+import time
 
 from proto import Suggestions_pb2
 from proto import Suggestions_pb2_grpc
 
 
-#ADDR_PORT = 'suggestions:50055'
 # -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_2:50060'
@@ -36,7 +36,7 @@ def discovery_suggestions():
                 time.sleep(5)
                 continue            
             ADDR_PORT = res.serviceName + ':' + res.port
-            break;
+            break
         except:
             # Problema nella connessione con il server.
             time.sleep(5)

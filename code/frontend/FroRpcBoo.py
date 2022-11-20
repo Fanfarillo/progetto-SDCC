@@ -77,7 +77,7 @@ def discovery_booking():
                 time.sleep(5)
                 continue
             ADDR_PORT = res.serviceName + ':' + res.port
-            break;
+            break
         except:
             # Problema nella connessione con il server.
             time.sleep(5)

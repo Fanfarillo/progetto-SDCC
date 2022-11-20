@@ -14,33 +14,33 @@ class MqChannels:
         self.logger = logger
 
 
-        def receiveMqPayment(self):
+    def receiveMqPayment(self):
 
-            def callback(ch, method, properites, body):
-                self.logger.info('[MESSAGE QUEUE] Ricevuto %r.' % body)
+        def callback(ch, method, properites, body):
+            self.logger.info('[MESSAGE QUEUE] Ricevuto %r.' % body)
 
-                #conversione del body del messaggio ricevuto nelle variabili idVolo (stringa), username (stringa) e selectedSeats (lista di stringhe)
-                idVolo = getIdFromMsg(body)
-                username = getUsernameFromMsg(body)
-                selectedSeats = getSeatsFromMsg(body)
+            #conversione del body del messaggio ricevuto nelle variabili idVolo (stringa), username (stringa) e selectedSeats (lista di stringhe)
+            idVolo = getIdFromMsg(body)
+            username = getUsernameFromMsg(body)
+            selectedSeats = getSeatsFromMsg(body)
 
-                #salvataggio nel db delle informazioni relative ai posti occupati; il valore di ritorno indica se la transazione complessa è andata a buon fine
-                isOk = storeSelectedSeats(idVolo, username, selectedSeats, this.logger)
-                msg = "False"       #body del messaggio da inviare a Payment
-                if msg==True:
-                    msg = "True"
+            #salvataggio nel db delle informazioni relative ai posti occupati; il valore di ritorno indica se la transazione complessa è andata a buon fine
+            isOk = storeSelectedSeats(idVolo, username, selectedSeats, this.logger)
+            msg = "False"       #body del messaggio da inviare a Payment
+            if msg==True:
+                msg = "True"
 
-                #invio della risposta a Payment sull'altra coda di messaggi
-                self.channelP.basic_publish(exchange='', routing_key='booProducer', body=msg)
-                self.logger.info('[MESSAGE QUEUE] Inviato un messaggio di risposta a Payment mediante la coda di messaggi.')
-                #lascio la connessione aperta perché in futuro potrebbe essere necessario di inviare altri messaggi di risposta
+            #invio della risposta a Payment sull'altra coda di messaggi
+            self.channelP.basic_publish(exchange='', routing_key='booProducer', body=msg)
+            self.logger.info('[MESSAGE QUEUE] Inviato un messaggio di risposta a Payment mediante la coda di messaggi.')
+            #lascio la connessione aperta perché in futuro potrebbe essere necessario di inviare altri messaggi di risposta
 
 
-            #consume queued messages
-            self.channelC.basic_consume(queue='payProducer', on_message_callback=callback, auto_ack=True)
+        #consume queued messages
+        self.channelC.basic_consume(queue='payProducer', on_message_callback=callback, auto_ack=True)
     
-            self.logger.info('[MESSAGE QUEUE] In attesa di messaggi da parte di Payment...')
-            self.channelC.start_consuming()
+        self.logger.info('[MESSAGE QUEUE] In attesa di messaggi da parte di Payment...')
+        self.channelC.start_consuming()
 
 
 
