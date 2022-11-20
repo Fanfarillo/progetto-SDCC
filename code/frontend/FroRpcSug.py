@@ -4,7 +4,7 @@ from proto import Suggestions_pb2
 from proto import Suggestions_pb2_grpc
 
 
-#ADDR_PORT = 'suggestions:50054'
+#ADDR_PORT = 'suggestions:50055'
 # -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_2:50060'

@@ -22,7 +22,7 @@ def put_discovery_server(discovery_servers, logger):
                 channel = grpc.insecure_channel(discovery_server)
                 stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                 # Memorizzo il servizio
-                res = stub.put(Discovery_pb2.PutRequest(serviceName="payment" , port="50055"))
+                res = stub.put(Discovery_pb2.PutRequest(serviceName="payment" , port="50054"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
                 logger.info('[ PUT DISCOVERY REGISTRATION ] Problema connessione con il discovery server ' + discovery_server + '.')

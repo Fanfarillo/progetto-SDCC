@@ -27,7 +27,7 @@ RUN apt-get install -y dnsutils
 # Devo modificare i permessi di accesso per poter eseguire il file bash
 RUN chmod a+x setup.sh
 
-EXPOSE 50054
+EXPOSE 50055
 
 # Lancio il file di configurazione.
 CMD ["./setup.sh"]

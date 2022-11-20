@@ -4,7 +4,7 @@ from proto import Payment_pb2
 from proto import Payment_pb2_grpc
 
 
-#ADDR_PORT = 'payment:50055'
+#ADDR_PORT = 'payment:50054'
 # -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_2:50060'

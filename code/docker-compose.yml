@@ -49,18 +49,18 @@ services:
     depends_on:
       - rabbitmq
 
-  suggestions:
-    build: ./suggestions
-    user: root
-    ports:
-      - 50054:50054
-
   payment:
     build: ./payment
     user: root
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=15'
     ports:
-      - 50055:50055
+      - 50054:50054
     depends_on:
       - rabbitmq
+
+  suggestions:
+    build: ./suggestions
+    user: root
+    ports:
+      - "50055-50056:50055"

@@ -118,8 +118,8 @@ server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Payment_pb2_grpc.add_PayServicer_to_server(PayServicer(), server)
 
 
-logger.info('Avvio del server in ascolto sulla porta 50055...')
-server.add_insecure_port('[::]:50055')
+logger.info('Avvio del server in ascolto sulla porta 50054...')
+server.add_insecure_port('[::]:50054')
 server.start()
 logger.info('Server avviato con successo.')
 

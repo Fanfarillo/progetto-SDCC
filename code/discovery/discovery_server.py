@@ -32,10 +32,10 @@ all_microservices_cache = []
 all_microservices_cache_names = []
 
 # Indirizzo dell'altro Discovery Server
-# ADDR_PORT = 'localhost:50054'
+# ADDR_PORT = 'localhost:50055'
 
 # Lista degli altri Discovery Servers
-#MICROSERVICE_DISCOVERY_SERVER_LIST = ['localhost:50054']
+#MICROSERVICE_DISCOVERY_SERVER_LIST = ['localhost:50055']
 MICROSERVICE_DISCOVERY_SERVER_LIST = []
 
 # Costanti utilizzate nel codice per accedere al DB remoto

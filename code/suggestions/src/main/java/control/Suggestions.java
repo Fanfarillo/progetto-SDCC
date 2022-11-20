@@ -12,7 +12,7 @@ import utils.DiscovUtil;
 
 public class Suggestions {
 
-    private static final int PORT = 50054;
+    private static final int PORT = 50055;
     private static final String SUGGESTIONS_1 = "code_suggestions_1";
     private static final String SUGGESTIONS_2 = "code_suggestions_2";
 
@@ -79,7 +79,7 @@ public class Suggestions {
 
         //avvio del server RPC
         Suggestions server = new Suggestions();
-        opfile.writeLog("Avvio del server in ascolto sulla porta 50054...");
+        opfile.writeLog("Avvio del server in ascolto sulla porta 50055...");
         server.start();
         opfile.writeLog("Server avviato con successo.");
 

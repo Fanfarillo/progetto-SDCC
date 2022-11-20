@@ -29,7 +29,7 @@ public class SugClient {
 
     public static void sendToSecondary(String msg) {
         //open gRPC channel
-        String target = "code_suggestions_2:50054";
+        String target = "code_suggestions_2:50055";
         ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
 
         try {           
