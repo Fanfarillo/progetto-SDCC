@@ -1,12 +1,19 @@
-import pika, os, sys
+import pika, os, sys, time
 
 retValue = False
 
 def receiveMqBooking(logger):
-    amqpUrl = os.environ['AMQP_URL']
-    parameters = pika.URLParameters(amqpUrl)
-    connection = pika.BlockingConnection(parameters)
-    channel = connection.channel()
+    while(True):
+        try:
+            amqpUrl = os.environ['AMQP_URL']
+            parameters = pika.URLParameters(amqpUrl)
+            connection = pika.BlockingConnection(parameters)
+            channel = connection.channel()
+            logger.info('[MESSAGE QUEUE] Connessione con RabbitMQ riuscita.')
+            break
+        except:
+            time.sleep(2)
+            logger.info('[MESSAGE QUEUE ERROR] Errore connessione RabbitMQ')
 
     channel.queue_declare(queue='booProducer')
 
@@ -18,7 +25,7 @@ def receiveMqBooking(logger):
         receiveMqBooking() restituirà True se e solo se il body del messaggio ricevuto è "True",
         ovvero se e solo se la porzione del pattern Saga riguardante Booking è andata a buon fine
         """
-        if body == "True":
+        if body.decode("utf-8") == "True":
             retValue = True
         channel.stop_consuming()
         

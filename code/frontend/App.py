@@ -508,7 +508,7 @@ def pagamentoNormale(username):
 
             serviziSelezionati = ServiziSelezionati(0, 0, 0, 0, 0, 0)   #in questo flusso di esecuzione non è stato selezionato alcun servizio aggiuntivo
 
-            isOk = sendPayment(username, cardSelezionata, postiPresi, dataPagamento, prezzoTotale, '0', '0', prezzoTotale, serviziSelezionati, email)
+            isOk = sendPayment(username, cardSelezionata, postiPresi, dataPagamento, str(prezzoTotale), '0', '0', str(prezzoTotale), serviziSelezionati, email)
             #se il pagamento è andato a buon fine, mostra all'utente la ricevuta di pagamento; altrimenti mostra un messaggio di errore
             if isOk:
                 return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiSelezionato, paymentDate=dataPagamento, basePrice=prezzoTotale, selectedSeats=postiPresi, seatsPrice='0', selectedServices=serviziSelezionati, servicesPrice='0', totalPrice=prezzoTotale, email=email)

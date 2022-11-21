@@ -1,10 +1,17 @@
-import pika, os
+import pika, os, time
 
 def sendMqBooking(idVolo, username, selectedSeatsStr, logger):
-    amqpUrl = os.environ['AMQP_URL']
-    parameters = pika.URLParameters(amqpUrl)
-    connection = pika.BlockingConnection(parameters)
-    channel = connection.channel()
+    while(True):
+        try:
+            amqpUrl = os.environ['AMQP_URL']
+            parameters = pika.URLParameters(amqpUrl)
+            connection = pika.BlockingConnection(parameters)
+            channel = connection.channel()
+            logger.info('[MESSAGE QUEUE] Connessione con RabbitMQ riuscita.')
+            break
+        except:
+            time.sleep(2)
+            logger.info('[MESSAGE QUEUE ERROR] Errore connessione RabbitMQ')
 
     channel.queue_declare(queue='payProducer')
 

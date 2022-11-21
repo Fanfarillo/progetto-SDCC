@@ -1,5 +1,6 @@
 package utils;
 
+import java.lang.Thread;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class DiscovUtil {
             //itero sui discovery server noti
             for(String discoveryServer : discoveryServers) {
 
+                Thread.sleep(2000);     //2 seconds of sleep
                 ManagedChannel channel = null;
                 try {
                     opfile.writeLog("[PUT DISCOVERY REGISTRATION] A.");     //TO DELETE

@@ -6,3 +6,4 @@ docker rmi code_registration:latest
 docker rmi code_suggestions:latest
 docker rmi code_discovery:latest
 docker rmi code_logging:latest
+docker rmi rabbitmq:3.6-management-alpine
