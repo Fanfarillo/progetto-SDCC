@@ -96,7 +96,10 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
 
         #se la transazione NON è andata a buon fine, allora si effettua il rollback della porzione di transazione già effettuata in Payment
         if not isFinalized:
+            logger.info("Il microservizio Booking ha risposto False, per cui la transazione NON è andata a buon fine.")
             deletePayment(NewPayment.idVolo, selectedSeatsStr)
+        else:
+            logger.info("Il microservizio Booking ha risposto True, per cui la transazione è andata a buon fine.")
 
         output = Payment_pb2.PayResponse(isOk=isFinalized)
         return output

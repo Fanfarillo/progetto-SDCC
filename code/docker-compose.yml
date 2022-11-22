@@ -64,4 +64,4 @@ services:
     build: ./suggestions
     user: root
     ports:
-      - "50055-50056:50055"
+      - "50057-50058:50055"

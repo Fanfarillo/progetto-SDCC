@@ -2,8 +2,6 @@ FROM ubuntu
 USER root
 
 WORKDIR /app
-COPY . .
-COPY ./credentials /root/.aws/
 
 # Install OpenJDK-8
 RUN apt-get update && apt-get install -y openjdk-8-jdk && apt-get install -y ant && apt-get clean
@@ -23,6 +21,9 @@ RUN apt-get update && apt install -y protobuf-compiler
 
 # Mi consente di poter utilizzare il comando DIG per risolvere gli indirizzi IP necessari.
 RUN apt-get install -y dnsutils
+
+COPY . .
+COPY ./credentials /root/.aws/
 
 # Devo modificare i permessi di accesso per poter eseguire il file bash
 RUN chmod a+x setup.sh

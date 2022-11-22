@@ -568,12 +568,12 @@ def pagamentoPersonalizzato(username):
 
         session[username] = diz
 
-        isOk = sendPayment(username, cardSelezionata, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email)
+        isOk = sendPayment(username, cardSelezionata, postiSelezionati, dataPagamento, str(prezzoBase), str(prezzoSelezionePosti), str(prezzoServiziAggiuntivi), str(prezzoTotale), serviziSelezionati, email)
         #se il pagamento è andato a buon fine, mostra all'utente la ricevuta di pagamento; altrimenti mostra un messaggio di errore
         if isOk:
             return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiAcquistati, paymentDate=dataPagamento, basePrice=prezzoBase, selectedSeats=postiSelezionati, seatsPrice=prezzoSelezionePosti, selectedServices=serviziSelezionati, servicesPrice=prezzoServiziAggiuntivi, totalPrice=prezzoTotale, email=email)
         else:
-            stringa = "SI È VERIFICATO UN ERRORE NELLA FINALIZZAZIONE DEL PAGAMENTO\nRIPROVARE PIÙ TARDI."
+            stringa = "SI È VERIFICATO UN ERRORE NELLA FINALIZZAZIONE DEL PAGAMENTO.\nRIPROVARE PIÙ TARDI."
             return render_template("errore.html", errore=stringa, airline=None, username=username)
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente

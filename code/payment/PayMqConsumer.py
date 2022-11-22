@@ -19,13 +19,15 @@ def receiveMqBooking(logger):
 
 
     def callback(ch, method, properties, body):
-        logger.info("[MESSAGE QUEUE] Ricevuto %r." % body)
+        global retValue       #impone che il retValue che utilizziamo in questa funzione è proprio la variabile globale e non una nuova variabile locale
+        bodyStr = body.decode("utf-8")
+        logger.info("[MESSAGE QUEUE] Ricevuto %s da parte di Booking." % bodyStr)
 
         """
         receiveMqBooking() restituirà True se e solo se il body del messaggio ricevuto è "True",
         ovvero se e solo se la porzione del pattern Saga riguardante Booking è andata a buon fine
         """
-        if body.decode("utf-8") == "True":
+        if bodyStr == 'True':
             retValue = True
         channel.stop_consuming()
         
@@ -36,4 +38,5 @@ def receiveMqBooking(logger):
     logger.info("[MESSAGE QUEUE] In attesa di messaggi da parte di Booking...")
     channel.start_consuming()
 
+    logger.info("[MESSAGE QUEUE] Restituisco l'esito della transazione saga al frontend.")
     return retValue
