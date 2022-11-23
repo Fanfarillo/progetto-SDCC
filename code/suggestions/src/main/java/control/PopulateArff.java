@@ -37,8 +37,7 @@ public class PopulateArff {
             try(FileWriter wr = new FileWriter("Train.arff", true)) {   //true == sto aprendo il FileWriter in append; in tal modo non sovrascrivo i dati esistenti
                for(PastFlight pastFlight : pastFlights) {
                 
-                    wr.write(Long.toString(pastFlight.getRemainingDays()) + "," + pastFlight.getAirline() + "," + pastFlight.getDepartureAirport() + "," + pastFlight.getArrivalAirport() +
-                        "," + pastFlight.isConvenient() + "\n");
+                    wr.write(Long.toString(pastFlight.getRemainingDays()) + "," + pastFlight.getAirline() + "," + pastFlight.isConvenient() + "\n");
 
                 }
                 return true;
@@ -109,7 +108,7 @@ public class PopulateArff {
 
     }
 
-    public static int createTestingSet(String bookingDateStr, String flightDateStr, String airline, String departureAirport, String arrivalAirport) {
+    public static int createTestingSet(String bookingDateStr, String flightDateStr, String airline) {
 
         try {
             Date bookingDate = DateUtil.getDateObject(bookingDateStr);
@@ -120,15 +119,13 @@ public class PopulateArff {
 
                 wr.write("@relation Test\n");
                 wr.write("@attribute REM_DAYS numeric\n");
-                wr.write("@attribute AIRLINE {Ryanair, EasyJet, ITA}\n");
-                wr.write("@attribute DEP_AIRPORT nominal\n");
-                wr.write("@attribute ARR_AIRPORT nominal\n");
-                wr.write("@attribute IS_CONVENIENT {true, false}\n");
+                wr.write("@attribute AIRLINE {'Ryanair', 'EasyJet', 'ITA'}\n");
+                wr.write("@attribute IS_CONVENIENT {'true', 'false'}\n");
                 wr.write("@data\n");
 
                 //inseriremo un'istanza nel testing set per ogni giorno rimanente al volo
                 for(long i=remainingDays; i>0; i--) {       //stiamo andando dalla data più vicina a oggi alla data più lontana da oggi
-                    wr.write(Long.toString(i)+ "," + airline + "," + departureAirport + "," + arrivalAirport + ",?\n");
+                    wr.write(Long.toString(i)+ "," + airline + ",?\n");
                 }
 
             }
