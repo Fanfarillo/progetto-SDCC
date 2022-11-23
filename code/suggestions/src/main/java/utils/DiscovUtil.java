@@ -47,19 +47,14 @@ public class DiscovUtil {
                 Thread.sleep(2000);     //2 seconds of sleep
                 ManagedChannel channel = null;
                 try {
-                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] A.");     //TO DELETE
                     //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
                     channel = ManagedChannelBuilder.forAddress("discovery", 50060).usePlaintext().build();
 
-                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] B.");     //TO DELETE
                     //EQUIVALENTE DI: stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                     DiscovUtil client = new DiscovUtil(channel);
 
-                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] C.");     //TO DELETE
                     //EQUIVALENTE DI: res = stub.put(Discovery_pb2.PutRequest(serviceName="suggestions", port="50055"))
                     res = client.getReply("suggestions", "50055");    //ATTENZIONE: è code_suggestions_1 perché trattasi della copia primaria del servizio
-                    
-                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] D.");     //TO DELETE
 
                 }
                 catch(Exception e) {        //si va qui se si è verificato un problema nella connessione con il discovery server

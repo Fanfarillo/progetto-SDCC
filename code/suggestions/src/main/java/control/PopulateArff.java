@@ -120,10 +120,10 @@ public class PopulateArff {
 
                 wr.write("@relation Test\n");
                 wr.write("@attribute REM_DAYS numeric\n");
-                wr.write("@attribute AIRLINE {'Ryanair', 'EasyJet', 'ITA'}\n");
-                wr.write("@attribute DEP_AIRPORT string\n");
-                wr.write("@attribute ARR_AIRPORT string\n");
-                wr.write("@attribute IS_CONVENIENT {'true', 'false'}\n");
+                wr.write("@attribute AIRLINE {Ryanair, EasyJet, ITA}\n");
+                wr.write("@attribute DEP_AIRPORT nominal\n");
+                wr.write("@attribute ARR_AIRPORT nominal\n");
+                wr.write("@attribute IS_CONVENIENT {true, false}\n");
                 wr.write("@data\n");
 
                 //inseriremo un'istanza nel testing set per ogni giorno rimanente al volo
@@ -143,6 +143,7 @@ public class PopulateArff {
 
         }
         catch(Exception e) {
+            e.printStackTrace();
             return -1;      //se viene sollevata un'eccezione, restituisci un valore negativo al client, in modo tale da notificargli una condizione di errore
         }
 

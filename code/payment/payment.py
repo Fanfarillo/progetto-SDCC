@@ -46,18 +46,18 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         r = dim % CHUNK_DIM
         
         if(q==0):
-        	yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto.encode(), num_chunk  =0)
+        	yield Registration_pb2.GetLogFileReplyPay(chunk_file = contenuto.encode(), num_chunk  =0)
         else:
         	count = 0        
         	for i in range(0, q):
         		try:
-        			yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
+        			yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
         			logger.info("[LOGGING] Dati di logging inviati senza successo...")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
-        		yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
+        		yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
         logger.info("[LOGGING] Dati di logging inviati con successo...")
         # open file 
         f.close()

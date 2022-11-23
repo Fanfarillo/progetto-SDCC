@@ -3,6 +3,8 @@ import time
 
 from proto import Suggestions_pb2
 from proto import Suggestions_pb2_grpc
+from proto import Discovery_pb2
+from proto import Discovery_pb2_grpc
 
 
 # -------------------------------------------------- DISCOVERY ----------------------------------------------

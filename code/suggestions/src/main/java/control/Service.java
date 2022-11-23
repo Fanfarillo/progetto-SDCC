@@ -68,7 +68,7 @@ public class Service extends SuggestionsServiceImplBase {
             for(int i=0; i<q; i++) {
                 try {
                     //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk=i)
-                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content.substring(i,i+chunkDim))).setNumChunk(i).build();
+                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content.substring(i*chunkDim,i*chunkDim+chunkDim))).setNumChunk(i).build();
                     responseObserver.onNext(response);
                 }
                 catch(Exception e) {

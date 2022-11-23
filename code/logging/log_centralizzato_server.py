@@ -182,7 +182,7 @@ def set_conn_micro():
                 elif(grpc_conn.nome == "payment"):
                     stub = Payment_pb2_grpc.PayStub(channel)
                 elif(grpc_conn.nome == "suggestions"):
-                    stub = Suggestions_pb2_grpc.SuggestionsService(channel)
+                    stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
             
                 grpc_conn.conn = stub
 
