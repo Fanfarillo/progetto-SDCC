@@ -50,7 +50,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         	count = 0        
         	for i in range(0, q):
         		try:
-        			yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk  =i)
+        			yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
         			logger.info("[LOGGING] Dati di logging inviati senza successo...")
         		count = count + 1
@@ -59,14 +59,6 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         		yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
         logger.info("[LOGGING] Dati di logging inviati con successo...")
         # open file 
-        f.close()
-        f = open("registration.log", "r+") 
-  
-        # absolute file positioning
-        f.seek(0) 
-  
-        # to erase all data 
-        f.truncate()
         f.close()
 
 

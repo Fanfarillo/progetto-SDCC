@@ -55,7 +55,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         	count = 0        
         	for i in range(0, q):
         		try:
-        			yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk  =i)
+        			yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
         			logger.info("[LOGGING] Dati di logging inviati senza successo...")
         		count = count + 1
@@ -64,14 +64,6 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         		yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
         logger.info("[LOGGING] Dati di logging inviati con successo...")
         # open file 
-        f.close()
-        f = open("managment.log", "r+") 
-  
-        # absolute file positioning
-        f.seek(0) 
-  
-        # to erase all data 
-        f.truncate()
         f.close()
 
 
