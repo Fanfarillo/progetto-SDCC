@@ -49,7 +49,7 @@ public class DiscovUtil {
                 try {
                     opfile.writeLog("[PUT DISCOVERY REGISTRATION] A.");     //TO DELETE
                     //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
-                    channel = ManagedChannelBuilder.forTarget(discoveryServer).usePlaintext().build();
+                    channel = ManagedChannelBuilder.forAddress("discovery", 50060).usePlaintext().build();
 
                     opfile.writeLog("[PUT DISCOVERY REGISTRATION] B.");     //TO DELETE
                     //EQUIVALENTE DI: stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
@@ -64,6 +64,7 @@ public class DiscovUtil {
                 }
                 catch(Exception e) {        //si va qui se si è verificato un problema nella connessione con il discovery server
                     opfile.writeLog("[PUT DISCOVERY REGISTRATION] Problema connessione con il discovery server " + discoveryServer + ".");
+                    e.printStackTrace();
                     Thread.sleep(2000);     //2 seconds sleep
                     continue;
 
@@ -82,12 +83,14 @@ public class DiscovUtil {
 
                 int i=0;    //indice per i server in DiscoveryServers
                 while(true) {
-                    String server = res.getListServer().getServers(i);
-                    if(server==null)
+                    try{
+                        String server = res.getListServer().getServers(i);
+                        newDiscoveryServers.add(server);
+                        i++;
+                    }
+                    catch(Exception e) {    //IndexOutOfBoundsException --> la lista dei server ricevuta da Discovery è stata già iterata del tutto
                         break;
-
-                    newDiscoveryServers.add(server);
-                    i++;
+                    }
 
                 }
 
