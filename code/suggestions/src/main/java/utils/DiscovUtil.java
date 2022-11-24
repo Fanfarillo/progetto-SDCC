@@ -29,7 +29,16 @@ public class DiscovUtil {
         PutRequest input = PutRequest.newBuilder().setServiceName(serviceName).setPort(port).build();
         PutReply output = blockingStub.put(input);
         return output;
+    }
 
+    public static String getServerToContact(String discoveryServer) {
+        String[] parts = discoveryServer.split(":");
+        return parts[0];
+    }
+
+    public static int getPortNum(String discoveryServer) {
+        String[] parts = discoveryServer.split(":");
+        return Integer.parseInt(parts[1]);
     }
 
     public static List<String> putDiscoveryServer(List<String> discoveryServers, LogUtil opfile) throws Exception {
@@ -43,12 +52,15 @@ public class DiscovUtil {
         while(true) {
             //itero sui discovery server noti
             for(String discoveryServer : discoveryServers) {
-
                 Thread.sleep(2000);     //2 seconds of sleep
+
+                String serverToContact = getServerToContact(discoveryServer);
+                int portNum = getPortNum(discoveryServer);
+
                 ManagedChannel channel = null;
                 try {
                     //EQUIVALENTE DI: channel = grpc.insecure_channel(discovery_server)
-                    channel = ManagedChannelBuilder.forAddress("discovery", 50060).usePlaintext().build();
+                    channel = ManagedChannelBuilder.forAddress(serverToContact, portNum).usePlaintext().build();
 
                     //EQUIVALENTE DI: stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                     DiscovUtil client = new DiscovUtil(channel);

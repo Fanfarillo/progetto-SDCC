@@ -738,10 +738,21 @@ def visualizzaSuggerimento(username, compagnia, idVolo):
 
     today = getCurrentDateStr()
 
-    #chiamata gRPC per sapere tra quanti giorni convenga acquistare i biglietti; tale valore dovrà essere passato come parametro a render_template()
+    #chiamata gRPC per sapere quanti giorni prima del volo convenga acquistare i biglietti
     numDaysBefore = getNumDaysBefore(cardSelezionata, today)
- 
-    return render_template("Suggerimento.html", username=username, card=cardSelezionata, numDaysBefore=numDaysBefore)
+
+    if numDaysBefore > 0:   #caso OK
+        #conversione tra numero di giorni prima del volo e data 'assoluta' (che comunque deve essere una stringa)
+        convenientDate = getConvenientDate(cardSelezionata.data, numDaysBefore)
+        return render_template("Suggerimento.html", username=username, card=cardSelezionata, convenientDate=convenientDate)
+
+    elif numDaysBefore == -1:   #caso in cui non c'era il training set nel microservizio Suggestions; in tal caso verrà indicata all'utente la data odierna
+        convenientDate = getCurrentDateStr()
+        return render_template("Suggerimento.html", username=username, card=cardSelezionata, convenientDate=convenientDate)
+
+    else:       #caso in cui si è sollevata un'eccezione inaspettata
+        stringa = "SI È VERIFICATO UN ERRORE INTERNO DEL SISTEMA.\nRIPROVARE PIÙ TARDI."
+        return render_template("errore.html", errore=stringa, airline=None, username=username)
 
 
 #logout

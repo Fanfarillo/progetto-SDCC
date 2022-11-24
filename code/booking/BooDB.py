@@ -161,21 +161,21 @@ def discovery_management_micro(all_discovery_servers, logger):
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="management"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery + '.\n')
+                logger.info('[ GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery + '.')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery + ' riprovare.\n')
+                logger.info('[ GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery + ' riprovare.')
                 time.sleep(2)
                 continue
             # Non ho avuto problemi di connsessione e la porta restituita è valida.
             ok = True
-            logger.info('[ GET DISCOVERY MANAGEMENT] porta del servizio di management recuperata: ' + res.port + '.\n')
+            logger.info('[ GET DISCOVERY MANAGEMENT] porta del servizio di management recuperata: ' + res.port + '.')
             ADDR_PORT = res.serviceName + ':' + res.port
             break
         if(ok):
             break
-        logger.info('[ GET DISCOVERY MANAGEMENT ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.\n')
+        logger.info('[ GET DISCOVERY MANAGEMENT ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
         time.sleep(5)
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 
@@ -252,7 +252,7 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
     
     for seat in selectedSeats:
         if not seat in postiDisponibili:
-            logger.info('Impossibile portare a termine la transazione a causa del fatto che un posto selezionato non è libero.\n')
+            logger.info('Impossibile portare a termine la transazione a causa del fatto che un posto selezionato non è libero.')
             return False
 
     """
@@ -272,10 +272,10 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
             ReturnValues="UPDATED_NEW"
         )
     except:
-        logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.\n')
+        logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
         return False
 
-    logger.info('Transazione Saga portata a termine con successo.\n')
+    logger.info('Transazione Saga portata a termine con successo.')
     return True
     
 

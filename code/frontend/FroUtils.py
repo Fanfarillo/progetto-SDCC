@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 class ServiziSelezionati:
     def __init__(self, bagaglioSpeciale, bagaglioStivaMedio, bagaglioStivaGrande, assicurazioneBagagli, animaleDomestico, neonato):
@@ -110,3 +110,9 @@ def checkFutureDate(dateStr):
     else:
         return False
 
+#this function converts the number of days before a specific flight in the associated date (represented by a string)
+def getConvenientDate(flightDate, numDaysBefore):
+    flightDateObj = datetime.strptime(flightDate, '%d-%m-%Y')       #datetime object
+    convenientDateObj = flightDateObj - timedelta(days=numDaysBefore)  #datetime object associated to the date in which is convenient to buy the tickets
+    convenientDateStr = convenientDateObj.strftime('%d-%m-%Y')
+    return convenientDateStr

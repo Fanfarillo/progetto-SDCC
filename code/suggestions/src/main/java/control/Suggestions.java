@@ -91,7 +91,7 @@ public class Suggestions {
         if(ownIpAddress.equals(suggestions1)) {
 
             allDiscoveryServers = new ArrayList<>();
-            allDiscoveryServers.add("code_discovery_2:50060");      //TODO: sistema' sta roba
+            allDiscoveryServers.add("discovery:50060");
             opfile.writeLog("[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n");
             List<String> discoveryServers = DiscovUtil.putDiscoveryServer(allDiscoveryServers, opfile);
             opfile.writeLog("[DISCOVERY SERVER] Registrazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.\n");

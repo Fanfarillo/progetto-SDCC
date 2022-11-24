@@ -57,7 +57,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             all_microservices_cache_names.index(request.serviceNameTarget)
 
             # Logging
-            logger.info('[GET] Richiesta di GET servita con successo.\nIl microservizio richiesto è effettivamente registrato.\n{serviceName:'+ request.serviceName + '\t\t\tserviceNameTarget:'+ request.serviceNameTarget +'}\n\n')
+            logger.info('[GET] Richiesta di GET servita con successo.\nIl microservizio richiesto è effettivamente registrato.\n{serviceName:'+ request.serviceName + '\t\t\tserviceNameTarget:'+ request.serviceNameTarget +'}\n')
 
             # Cerco la porta relativa al microservizio richiesto.
             for m in all_microservices_cache:
@@ -71,7 +71,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             """
 
             # Logging
-            logger_warnings.warning('[GET] Non è possibile servire la richiesta di GET poichè non si dispone delle informazioni richieste.\n{serviceName:'+ request.serviceName + '\t\t\serviceNameTarget:'+ request.serviceNameTarget +'}\n\n')
+            logger_warnings.warning('[GET] Non è possibile servire la richiesta di GET poichè non si dispone delle informazioni richieste.\n{serviceName:'+ request.serviceName + '\t\t\serviceNameTarget:'+ request.serviceNameTarget +'}\n')
             
             return Discovery_pb2.GetReply(serviceName=request.serviceNameTarget, port='-1')
      
@@ -91,7 +91,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             inserito in precedenza.
             """
             all_microservices_cache_names.index(request.serviceName)
-            logger.info('[PUT] Richiesta di PUT ma il servizio è stato già registrato.\n{serviceName:'+ request.serviceName + '\t\t\port:'+ request.port +'}\n')
+            logger.info('[PUT] Richiesta di PUT ma il servizio è stato già registrato.\n{serviceName:'+ request.serviceName + '\t\t\port:'+ request.port +'}')
         except ValueError:
 
             """
@@ -112,7 +112,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
                 )
             except Exception:
                 # Avviso il microservizio che si è verificato un errore nella PUT
-                logger_warnings.warning('[PUT] Registrazione del servizio terminata senza successo.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}\n\n')
+                logger_warnings.warning('[PUT] Registrazione del servizio terminata senza successo.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}\n')
                 return Discovery_pb2.PutReply(result=False)
 
             # Creazione della nuova istanza di microservizio
@@ -120,7 +120,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             # Registrazione nella cache della nuova istanza di microservizio            
             all_microservices_cache.append(microservice)
             all_microservices_cache_names.append(microservice.serviceName)
-            logger.info('[PUT] Registrazione del servizio conclusa con successo.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}\n')
+            logger.info('[PUT] Registrazione del servizio conclusa con successo.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}')
 
         # Comunico al microservizio gli altri Discovery Servers
         discovery_servers = Discovery_pb2.DiscoveryServers()
@@ -128,7 +128,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             discovery_servers.servers.append(server)
         
         # Logging
-        logger.info('[PUT] Comunicazione degli altri Discovery Server al servizio.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}\n\n')
+        logger.info('[PUT] Comunicazione degli altri Discovery Server al servizio.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}\n')
       
         return Discovery_pb2.PutReply(result=True, list_server=discovery_servers)
 
@@ -142,7 +142,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
     """
     def sendMicroserviceInfo(self, request, context):
         microservice_info_ricevute = []
-        logger.info("[SENDMICROSERVICEINFO] Ricezione informazioni relative ai microservizi conosciuti dall'altro server...\n")
+        logger.info("[SENDMICROSERVICEINFO] Ricezione informazioni relative ai microservizi conosciuti dall'altro server...")
         for microservizio in request.microservices.microservices_list:            
             try:
                 # Verifico se l'informazione è già presente all'interno della cache.
@@ -155,7 +155,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             microservice_info_ricevute.append(microservizio.serviceName)
 
         # Logging
-        logger.info("[SENDMICROSERVICEINFO] microservizi ricevuti: " + str(microservice_info_ricevute) + ".\n")
+        logger.info("[SENDMICROSERVICEINFO] microservizi ricevuti: " + str(microservice_info_ricevute) + ".")
 
         """
         Rispondo al server inviando le informazioni
@@ -174,7 +174,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
         
         # Restituisco i servizi da me conosciuti.
         ret = Discovery_pb2.microserviceInfoReply(microservices=response)
-        logger.info("[SENDMICROSERVICEINFO] Invio delle informazioni relative ai microservizi da me conosciuti.\n\n ")
+        logger.info("[SENDMICROSERVICEINFO] Invio delle informazioni relative ai microservizi da me conosciuti...\n")
         return ret
 
 
@@ -189,7 +189,7 @@ def periodicUpdate():
     while(1):
 
         # Logging
-        logger.info('[AGGIORNAMENTO PERIODICO]: aggiornamento numero ' + str(contatore) + ".\n")
+        logger.info('[AGGIORNAMENTO PERIODICO]: aggiornamento numero ' + str(contatore) + ".")
 
         all_microservices_cache = []
         all_microservices_cache_names = []
@@ -219,7 +219,7 @@ def periodicUpdate():
             informazione da inviare all'altro discovery
             server.
             """
-            logger.info('[AGGIORNAMENTO PERIODICO]: tentativo di aggiornamento numero ' + str(contatore) + ' fallito poiché non si ha alcuna informazione.\n\n')
+            logger.info('[AGGIORNAMENTO PERIODICO]: tentativo di aggiornamento numero ' + str(contatore) + ' fallito poiché non si ha alcuna informazione.\n')
 
             """
             Blocco il thread aspettando di ricevere 
@@ -245,7 +245,7 @@ def periodicUpdate():
         request = Discovery_pb2.infoMicroservices()
 
         # Logging
-        logger.info('[AGGIORNAMENTO PERIODICO]: microservizi attualmente conosciuti\n' + str(all_microservices_cache_names) + "\n")
+        logger.info('[AGGIORNAMENTO PERIODICO]: microservizi attualmente conosciuti\n' + str(all_microservices_cache_names))
 
         """
         Costruisco il parametro da passare
@@ -267,9 +267,9 @@ def periodicUpdate():
         """
         try:
             output = stub.sendMicroserviceInfo(Discovery_pb2.microserviceInfoRequest(microservices=request))
-            logger.info('[AGGIORNAMENTO PERIODICO]: scambio informazioni con il discovery server avvenuto con successo.\n' + str(all_microservices_cache_names)+"\n\n")
+            logger.info('[AGGIORNAMENTO PERIODICO]: scambio informazioni con il discovery server avvenuto con successo.\n' + str(all_microservices_cache_names)+"\n")
         except:
-            logger_warnings.warning('[AGGIORNAMENTO PERIODICO]: ci sono delle informazioni da comunicare ma il server non è attulmente raggiungibile.\n\n')
+            logger_warnings.warning('[AGGIORNAMENTO PERIODICO]: ci sono delle informazioni da comunicare ma il server non è attulmente raggiungibile.\n')
             contatore = contatore + 1
         """
         Blocco il thread per evitare di comunicare
@@ -318,9 +318,9 @@ other_discovery_server = None
 if(own_ip_address==server_1):
     # Il container ha nome SERVER_1 e dovrà quindi contattare SERVER_2
     other_discovery_server = SERVER_2
-    logger.info('[SETUP NOME DEL CONTAINER]:' + SERVER_1 +"\t"+ server_1 +"\n\n")
+    logger.info('[SETUP NOME DEL CONTAINER]:' + SERVER_1 +"\t"+ server_1 +"\n")
 else:
-    logger.info('[SETUP NOME DEL CONTAINER]:' + SERVER_2 +"\t"+ server_2 +"\n\n")
+    logger.info('[SETUP NOME DEL CONTAINER]:' + SERVER_2 +"\t"+ server_2 +"\n")
     other_discovery_server = SERVER_1
 
 if other_discovery_server is None:
@@ -334,12 +334,12 @@ server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Discovery_pb2_grpc.add_DiscoveryServiceServicer_to_server(DiscoveryServicer(), server)
 
 # Scrivo le informazioni all'interno del Logging
-logger.info('Avvio del server in ascolto sulla porta '+ PORT + '...\n')
+logger.info('Avvio del server in ascolto sulla porta '+ PORT + '...')
 # Avvio del server RPC.
 server.add_insecure_port('[::]:' + PORT)
 server.start()
 # Scrivo le informazioni all'interno del Logging
-logger.info('Server avviato con successo...\n\n')
+logger.info('Server avviato con successo.\n')
 
 
 

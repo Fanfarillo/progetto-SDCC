@@ -31,7 +31,7 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
 
     def getLogFilePay(self, request, context):
     	# Logging.
-        logger.info("[LOGGING] richiesta dati di logging...\n\n")
+        logger.info("[LOGGING] richiesta dati di logging...\n")
         r = -1
         q = -1
         
@@ -46,26 +46,26 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         r = dim % CHUNK_DIM
         
         if(q==0):
-        	yield Registration_pb2.GetLogFileReplyPay(chunk_file = contenuto.encode(), num_chunk  =0)
+        	yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto.encode(), num_chunk  =0)
         else:
         	count = 0        
         	for i in range(0, q):
         		try:
         			yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
-        			logger.info("[LOGGING] Dati di logging inviati senza successo.\n")
+        			logger.info("[LOGGING] Dati di logging inviati senza successo.")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
         		yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
-        logger.info("[LOGGING] Dati di logging inviati con successo.\n")
+        logger.info("[LOGGING] Dati di logging inviati con successo.")
         # open file 
         f.close()
 
 
 
     def AddPayment(self, NewPayment, context):
-        logger.info("Richiesta di pagamento per il volo " + NewPayment.idVolo + " da parte di " + NewPayment.username + ".\n")
+        logger.info("Richiesta di pagamento per il volo " + NewPayment.idVolo + " da parte di " + NewPayment.username + ".")
 
         """
         Per prima cosa, bisogna memorizzare le informazioni strettamente legate al pagamento nell'apposita tabella;
@@ -88,10 +88,10 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
 
         #se la transazione NON è andata a buon fine, allora si effettua il rollback della porzione di transazione già effettuata in Payment
         if not isFinalized:
-            logger.info("Il microservizio Booking ha risposto False, per cui la transazione NON è andata a buon fine.\n")
+            logger.info("Il microservizio Booking ha risposto False, per cui la transazione NON è andata a buon fine.")
             deletePayment(NewPayment.idVolo, selectedSeatsStr)
         else:
-            logger.info("Il microservizio Booking ha risposto True, per cui la transazione è andata a buon fine.\n")
+            logger.info("Il microservizio Booking ha risposto True, per cui la transazione è andata a buon fine.")
 
         output = Payment_pb2.PayResponse(isOk=isFinalized)
         return output
@@ -113,10 +113,10 @@ server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Payment_pb2_grpc.add_PayServicer_to_server(PayServicer(), server)
 
 
-logger.info('Avvio del server in ascolto sulla porta 50054...\n')
+logger.info('Avvio del server in ascolto sulla porta 50054...')
 server.add_insecure_port('[::]:50054')
 server.start()
-logger.info('Server avviato con successo.\n')
+logger.info('Server avviato con successo.')
 
 
 # ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
@@ -126,9 +126,9 @@ Registrazione del microservizio al Discovery Server di default.
 Inizialmente il microservizio di registration è a conoscenza solamente
 del discovery server 2
 """
-logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n')
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...')
 discovery_servers = put_discovery_server(all_discovery_servers, logger)
-logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.\n')
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.')
 
 
 

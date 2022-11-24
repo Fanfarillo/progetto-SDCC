@@ -35,7 +35,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
     def getLogFileMan(self, request, context):
     	# Logging.
-        logger.info("[LOGGING] richiesta dati di logging...\n\n")
+        logger.info("[LOGGING] richiesta dati di logging...\n")
         r = -1
         q = -1
         
@@ -57,12 +57,12 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         		try:
         			yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
-        			logger.info("[LOGGING] Dati di logging inviati senza successo.\n")
+        			logger.info("[LOGGING] Dati di logging inviati senza successo.")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
         		yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
-        logger.info("[LOGGING] Dati di logging inviati con successo.\n")
+        logger.info("[LOGGING] Dati di logging inviati con successo.")
         # open file 
         f.close()
 
@@ -78,7 +78,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         #   6) Price should be a number and it should be greater than zero
         #   7) Seats should be greater than zero
 
-        logger.info("Richiesta di aggiunta di un nuovo volo: [" + NewFlight.id + "," + NewFlight.date + "," + NewFlight.departureAirport + "," + NewFlight.arrivalAirport + "," + NewFlight.departureTime + "," + NewFlight.arrivalTime + "," + NewFlight.airline + "," + NewFlight.price + "]\n")
+        logger.info("Richiesta di aggiunta di un nuovo volo: [" + NewFlight.id + "," + NewFlight.date + "," + NewFlight.departureAirport + "," + NewFlight.arrivalAirport + "," + NewFlight.departureTime + "," + NewFlight.arrivalTime + "," + NewFlight.airline + "," + NewFlight.price + "]")
 
         isNewFlightId = checkFlightId(NewFlight.id, logger, all_discovery_servers)                 #condition 1)
         isExistentDate = checkDateExistance(NewFlight.date)         #condition 2)
@@ -123,7 +123,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         #   1) Flight id should already exist
         #   2) Price should be a number and it should be greater than zero
 
-        logger.info("Richiesta di modifica del prezzo di un volo: [" + UpdatedFlight.flightId + "," + UpdatedFlight.newPrice + "]\n")
+        logger.info("Richiesta di modifica del prezzo di un volo: [" + UpdatedFlight.flightId + "," + UpdatedFlight.newPrice + "]")
 
         isExistentFlightId = not checkFlightId(UpdatedFlight.flightId, logger, all_discovery_servers)       #condition 1)
         isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()                                   #condition 2)
@@ -150,7 +150,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
     def ModifySeats(self, UpdatedSeats, context):
 
-        logger.info("Richiesta di modifica del prezzo dei posti a sedere: [" + UpdatedSeats.airline + ", fila 1: €" + UpdatedSeats.price1 + ", file 2-5: €" + UpdatedSeats.price2 + ", file 6-15: €" + UpdatedSeats.price6 + ", file 16-17: €" + UpdatedSeats.price16 + ", file 18-25: €" + UpdatedSeats.price18 + "]\n")
+        logger.info("Richiesta di modifica del prezzo dei posti a sedere: [" + UpdatedSeats.airline + ", fila 1: €" + UpdatedSeats.price1 + ", file 2-5: €" + UpdatedSeats.price2 + ", file 6-15: €" + UpdatedSeats.price6 + ", file 16-17: €" + UpdatedSeats.price16 + ", file 18-25: €" + UpdatedSeats.price18 + "]")
 
         #all the prices should be numbers and should be greater than zero
         isOk = (UpdatedSeats.price1.replace('.','',1).isdigit() and UpdatedSeats.price2.replace('.','',1).isdigit() and UpdatedSeats.price6.replace('.','',1).isdigit() and UpdatedSeats.price16.replace('.','',1).isdigit() and UpdatedSeats.price18.replace('.','',1).isdigit())
@@ -174,7 +174,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
     def ModifyServices(self, UpdatedServices, context):
 
-        logger.info("Richiesta di modifica del prezzo dei servizi aggiuntivi: [" + UpdatedServices.airline + ", stiva medio: €" + UpdatedServices.priceBM + ", stiva grande: €" + UpdatedServices.priceBG + ", bagaglio speciale: €" + UpdatedServices.priceBS + ", animale: €" + UpdatedServices.priceAD + ", assicurazione: €" + UpdatedServices.priceAB + ", neonato: €" + UpdatedServices.priceTN + "]\n")
+        logger.info("Richiesta di modifica del prezzo dei servizi aggiuntivi: [" + UpdatedServices.airline + ", stiva medio: €" + UpdatedServices.priceBM + ", stiva grande: €" + UpdatedServices.priceBG + ", bagaglio speciale: €" + UpdatedServices.priceBS + ", animale: €" + UpdatedServices.priceAD + ", assicurazione: €" + UpdatedServices.priceAB + ", neonato: €" + UpdatedServices.priceTN + "]")
 
         #all the prices should be numbers and should be greater than zero
         isOk = (UpdatedServices.priceBM.replace('.','',1).isdigit() and UpdatedServices.priceBG.replace('.','',1).isdigit() and UpdatedServices.priceBS.replace('.','',1).isdigit() and UpdatedServices.priceAD.replace('.','',1).isdigit() and UpdatedServices.priceAB.replace('.','',1).isdigit() and UpdatedServices.priceTN.replace('.','',1).isdigit())
@@ -198,7 +198,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
     def GetPriceFlight(self, request, context):
 
-        logger.info("Richiesta del prezzo del volo " + request.idVolo + ".\n")
+        logger.info("Richiesta del prezzo del volo " + request.idVolo + ".")
 
         response = getPrice(request.idVolo)
         return Managment_pb2.PriceReply(price=str(response))
@@ -219,7 +219,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         4. 16-17
         5. 18-26
         """
-        logger.info("Richiesta del prezzo dei posti per la compagnia area " + request.compagnia + ".\n")
+        logger.info("Richiesta del prezzo dei posti per la compagnia area " + request.compagnia + ".")
         prezzi = getAllSeatsFlight(request.compagnia)
 
         for item in prezzi:
@@ -244,7 +244,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         5. animaleDomestico
         6. neonato
         """
-        logger.info("Richiesta del prezzo dei servizi aggiuntivi offerti dalla compagnia area " + request.compagnia + ".\n")
+        logger.info("Richiesta del prezzo dei servizi aggiuntivi offerti dalla compagnia area " + request.compagnia + ".")
         prezzi = getAlladditionalServicesFlight(request.compagnia)
 
         for item in prezzi:
@@ -271,10 +271,10 @@ Managment_pb2_grpc.add_FlightsInfoServicer_to_server(FlightsInfoServicer(), serv
 
 
 
-logger.info('Avvio del server in ascolto sulla porta 50052...\n')
+logger.info('Avvio del server in ascolto sulla porta 50052...')
 server.add_insecure_port('[::]:50052')
 server.start()
-logger.info('Server avviato con successo.\n')
+logger.info('Server avviato con successo.')
 
 
 
@@ -286,9 +286,9 @@ Registrazione del microservizio al Discovery Server di default.
 Inizialmente il microservizio di management è a conoscenza solamente
 del discovery server 1
 """
-logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n')
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...')
 discovery_servers = put_discovery_server(all_discovery_servers, logger)
-logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.\n')
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.')
 
 
 

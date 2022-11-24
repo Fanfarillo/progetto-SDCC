@@ -30,7 +30,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
 
     def getLogFileReg(self, request, context):
     	# Logging.
-        logger.info("[LOGGING] richiesta dati di logging...\n\n")
+        logger.info("[LOGGING] richiesta dati di logging...\n")
         r = -1
         q = -1
         
@@ -52,12 +52,12 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         		try:
         			yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
-        			logger.info("[LOGGING] Dati di logging inviati senza successo.\n")
+        			logger.info("[LOGGING] Dati di logging inviati senza successo.")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
         		yield Registration_pb2.GetLogFileReplyReg(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
-        ("[LOGGING] Dati di logging inviati con successo.\n")
+        ("[LOGGING] Dati di logging inviati con successo.")
         # open file 
         f.close()
 
@@ -101,7 +101,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
             isOk = True
             err = None
 
-        logger.info("Richiesta procedura di iscrizione: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "," + cartaDiCredito_d + "]\n")
+        logger.info("Richiesta procedura di iscrizione: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "," + cartaDiCredito_d + "]")
         
         if isOk:
             """
@@ -115,7 +115,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
                 err = "SI È VERIFICATO UN PROBLEMA INTERNO AL SERVER DURANTE LA REGISTRAZIONE.\nRIPROVARE PIÙ TARDI."
                 logger_warnings.warning("Procedura di iscrizione conclusa senza successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
             else:
-                logger.info("Procedura di iscrizione conclusa con successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]\n")
+                logger.info("Procedura di iscrizione conclusa con successo: [" + username_d + "," + password_d + "," + passwordConfirm_d + "," + userType_d + "]")
         
         else:
             ret = False
@@ -139,7 +139,7 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         username_d = (cipher.decryptData(Credentials.username)).decode()
         password_d = (cipher.decryptData(Credentials.password)).decode()
 
-        logger.info("Richiesta procedura di accesso: [" + username_d + "," + password_d + "]\n")
+        logger.info("Richiesta procedura di accesso: [" + username_d + "," + password_d + "]")
 
         """
         Verifico se l'utente che sta tentando di eseguire
@@ -149,11 +149,11 @@ class UsersInfoServicer(Registration_pb2_grpc.UsersInfoServicer):
         user = retrieveUser(Credentials.username, Credentials.password)
 
         if user.isCorrect:
-            logger.info("Procedura di accesso conclusa con successo: [" + username_d + "," + password_d + "]\n")
+            logger.info("Procedura di accesso conclusa con successo: [" + username_d + "," + password_d + "]")
             value = user.storedType.__bytes__()
             output = Registration_pb2.SignInResponse(storedType=value, isCorrect=user.isCorrect)
         else:
-            logger_warnings.warning("Procedura di accesso conclusa senza successo: [" + username_d + "," + password_d + "]\n")
+            logger_warnings.warning("Procedura di accesso conclusa senza successo: [" + username_d + "," + password_d + "]")
             output = Registration_pb2.SignInResponse(storedType=bytes(0), isCorrect=False)
         
         return output
@@ -180,10 +180,10 @@ Registration_pb2_grpc.add_UsersInfoServicer_to_server(UsersInfoServicer(), serve
 
 
 
-logger.info('Avvio del server in ascolto sulla porta 50051...\n')
+logger.info('Avvio del server in ascolto sulla porta 50051...')
 server.add_insecure_port('[::]:50051')
 server.start()
-logger.info('Server avviato con successo.\n')
+logger.info('Server avviato con successo.')
 
 
 
@@ -194,9 +194,9 @@ Registrazione del microservizio al Discovery Server di default.
 Inizialmente il microservizio di registration è a conoscenza solamente
 del discovery server 2
 """
-logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n')
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...')
 discovery_servers = put_discovery_server(all_discovery_servers, logger)
-logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.\n')
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.')
 
 
 

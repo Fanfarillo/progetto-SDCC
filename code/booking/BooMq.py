@@ -15,7 +15,7 @@ class MqChannels:
     def receiveMqPayment(self):
 
         def callback(ch, method, properites, body):
-            self.logger.info('[MESSAGE QUEUE] Ricevuto %r.\n' % body)
+            self.logger.info('[MESSAGE QUEUE] Ricevuto %r.' % body)
             bodyStr = body.decode("utf-8")      #conversione del body da binario a stringa
 
             #conversione del body del messaggio ricevuto nelle variabili idVolo (stringa), username (stringa) e selectedSeats (lista di stringhe)
@@ -32,21 +32,21 @@ class MqChannels:
 
             #invio della risposta a Payment sull'altra coda di messaggi
             self.channel.basic_publish(exchange='', routing_key='booProducer', body=msg)
-            self.logger.info('[MESSAGE QUEUE] Inviato un messaggio di risposta a Payment mediante la coda di messaggi.\n')
+            self.logger.info('[MESSAGE QUEUE] Inviato un messaggio di risposta a Payment mediante la coda di messaggi.')
             #lascio la connessione aperta perché in futuro potrebbe essere necessario di inviare altri messaggi di risposta
 
 
         #consume queued messages
         self.channel.basic_consume(queue='payProducer', on_message_callback=callback, auto_ack=True)
     
-        self.logger.info('[MESSAGE QUEUE] In attesa di messaggi da parte di Payment...\n')
+        self.logger.info('[MESSAGE QUEUE] In attesa di messaggi da parte di Payment...')
         self.channel.start_consuming()
 
 
 
 
 def defineQueues(logger):
-    logger.info('Thread associato alle code di messaggi creato con successo.\n')
+    logger.info('Thread associato alle code di messaggi creato con successo.')
 
     while(True):
         try:
@@ -54,11 +54,11 @@ def defineQueues(logger):
             parameters = pika.URLParameters(amqpUrl)
             connection = pika.BlockingConnection(parameters)
             channel = connection.channel()
-            logger.info('[MESSAGE QUEUE] Connessione con RabbitMQ riuscita.\n')
+            logger.info('[MESSAGE QUEUE] Connessione con RabbitMQ riuscita.')
             break
         except:
             time.sleep(2)
-            logger.info('[MESSAGE QUEUE ERROR] Errore connessione RabbitMQ.\n')
+            logger.info('[MESSAGE QUEUE ERROR] Errore connessione RabbitMQ.')
 
     channel.queue_declare(queue='payProducer')
     channel.queue_declare(queue='booProducer')

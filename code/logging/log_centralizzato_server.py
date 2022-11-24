@@ -110,7 +110,7 @@ def set_conn_micro():
                 stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
             except:
                 # Si è verificato un problema nella connessione con il discovery server e passo al discovery server successivo
-                logger.info('[ GET DISCOVERY SERVICE] Problema connessione con il discovery server ' + discovery + '.\n')
+                logger.info('[ GET DISCOVERY SERVICE] Problema connessione con il discovery server ' + discovery + '.')
                 time.sleep(2)
                 continue
             """
@@ -123,7 +123,7 @@ def set_conn_micro():
                 try:
                     res = stub.get(Discovery_pb2.GetRequest(serviceName="log server" , serviceNameTarget=service))
                 except:
-                    logger.info('[ GET DISCOVERY SERVICE] errore nel recupero della porta del microservizio '+ service + ' dal discovery server ' + discovery + ' riprovare...\n')
+                    logger.info('[ GET DISCOVERY SERVICE] errore nel recupero della porta del microservizio '+ service + ' dal discovery server ' + discovery + ' riprovare.')
                     time.sleep(2)
                     # Passo al discovery server successivo poiché ho avuto un problema con questo discovery server.
                     break
@@ -133,11 +133,11 @@ def set_conn_micro():
                 Faccio un controllo sul valore della porta che mi è stato ritornato.
                 """
                 if (res.port == '-1'):
-                    logger.info('[ GET DISCOVERY SERVICE] porta del micoroservizio '+ service +' ancora non registrata nel discovery server ' + discovery + ' riprovare...\n')
+                    logger.info('[ GET DISCOVERY SERVICE] porta del micoroservizio '+ service +' ancora non registrata nel discovery server ' + discovery + ' riprovare.')
                     time.sleep(2)
                     # Passo al servizio successivo.
                     continue
-                logger.info('[ GET DISCOVERY SERVICE] porta del servizio di '+ service +'recuperata: ' + res.port + ' dal discovery server '+ discovery +'.\n')
+                logger.info('[ GET DISCOVERY SERVICE] porta del servizio di '+ service +'recuperata: ' + res.port + ' dal discovery server '+ discovery +'.')
                 # Aggiungo il microservizio alla lista in modo da connettermi successivamente.
                 grpc_connections.append(Microservizio(res.serviceName, res.port, None))
                 # Registro il fatto che il servizio che è stato recuperato con successo.
@@ -149,7 +149,7 @@ def set_conn_micro():
                 try:
                     microservizi_rimanenti.remove(service)
                 except:
-                    logger.info("[ GET DISCOVERY SERVICE] Errore nella rimozione del servizio " + service + ".\n")
+                    logger.info("[ GET DISCOVERY SERVICE] Errore nella rimozione del servizio " + service + ".")
     
     # Ho recuperato tutte quante le porte dei microservizi.
 
@@ -166,7 +166,7 @@ def set_conn_micro():
                 # la connessione è stata già stabilita e passo alla successiva.
                 continue
             except:
-                logger.info("[ CONNESSIONI ] Tentativo di connessione al microservizio di " + grpc_conn.nome + "...\n")
+                logger.info("[ CONNESSIONI ] Tentativo di connessione al microservizio di " + grpc_conn.nome + "...")
             
             try:
                 # Creazione del canale.
@@ -187,7 +187,7 @@ def set_conn_micro():
                 grpc_conn.conn = stub
 
                 # Registro il fatto che questa connessione si è conclusa con successo.
-                logger.info("[ CONNESSIONI ] Tentativo di connessione al microservizio di " + grpc_conn.nome + " avvenuta con successo.\n")
+                logger.info("[ CONNESSIONI ] Tentativo di connessione al microservizio di " + grpc_conn.nome + " avvenuta con successo.")
                 count = count + 1
                 conn_concluse.append(grpc_conn.nome)
             except:
@@ -243,45 +243,45 @@ def run_logger():
                         logging_info = response.chunk_file.decode()
                         boo.f.write(logging_info)
                         boo.f.flush()
-                        logger.info("[ LOGGING ] Richiesta al microservizio di Booking completata con successo.\n")
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Booking completata con successo.")
                 except:
-                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Booking.\n")
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Booking.")
             elif(grpc_conn.nome ==  "management"):
                 try:
                     for response in grpc_conn.conn.getLogFileMan(Managment_pb2.GetLogFileRequestMan(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
                         man.f.write(logging_info)
                         man.f.flush()
-                        logger.info("[ LOGGING ] Richiesta al microservizio di Management completata con successo.\n")
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Management completata con successo.")
                 except:
-                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Management.\n")
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Management.")
             elif(grpc_conn.nome ==  "registration"):
                 try:
                     for response in grpc_conn.conn.getLogFileReg(Registration_pb2.GetLogFileRequestReg(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
                         reg.f.write(logging_info)
                         reg.f.flush()
-                        logger.info("[ LOGGING ] Richiesta al microservizio di Registration completata con successo.\n")
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Registration completata con successo.")
                 except:
-                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Registration.\n")
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Registration.")
             elif(grpc_conn.nome ==  "payment"):
                 try:
                     for response in grpc_conn.conn.getLogFilePay(Payment_pb2.GetLogFileRequestPay(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
                         pay.f.write(logging_info)
                         pay.f.flush()
-                        logger.info("[ LOGGING ] Richiesta al microservizio di Payment completata con successo.\n")
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Payment completata con successo.")
                 except:
-                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Payment.\n")
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Payment.")
             elif(grpc_conn.nome ==  "code_suggestions_1"):
                 try:
                     for response in grpc_conn.conn.getLogFileSug(Suggestions_pb2.GetLogFileRequestSug(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
                         sug.f.write(logging_info)
                         sug.f.flush()
-                        logger.info("[ LOGGING ] Richiesta al microservizio di Suggestions completata con successo.\n")
+                        logger.info("[ LOGGING ] Richiesta al microservizio di Suggestions completata con successo.")
                 except:
-                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Suggestions.\n")
+                    logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Suggestions.")
         
         time.sleep(10)
 

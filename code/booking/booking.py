@@ -41,7 +41,7 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
     def getLogFileBoo(self, request, context):
     	# Logging.
-        logger.info("[LOGGING] richiesta dati di logging...\n\n")
+        logger.info("[LOGGING] richiesta dati di logging...\n")
         r = -1
         q = -1
         
@@ -63,12 +63,12 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
         		try:
         			yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
-        			logger.info("[LOGGING] Dati di logging inviati senza successo.\n")
+        			logger.info("[LOGGING] Dati di logging inviati senza successo.")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
         		yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
-        logger.info("[LOGGING] Dati di logging inviati con successo.\n")
+        logger.info("[LOGGING] Dati di logging inviati con successo.")
         # open file 
         f.close()
 
@@ -81,7 +81,7 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
     come parametri.
     """
     def getAllFlights(self, request, context):
-        logger.info("Richiesta dei voli disponibili: [" + str(request.giorno) + "," + str(request.mese) + "," + str(request.anno) + "," + request.aeroporto_arrivo + "," + request.aeroporto_partenza + "]\n")
+        logger.info("Richiesta dei voli disponibili: [" + str(request.giorno) + "," + str(request.mese) + "," + str(request.anno) + "," + request.aeroporto_arrivo + "," + request.aeroporto_partenza + "]")
         
         """
         Recupero tutti i voli relativi ai parametri
@@ -123,12 +123,12 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
     def GetAirports(self, AirportsRequest, context):
         if AirportsRequest.isDummy:
-            logger.info("Recupero dummy degli aeroporti.\n")
+            logger.info("Recupero dummy degli aeroporti.")
             departures = ["Fiumicino (Roma)", "Heathrow (Londra)", "Charles De Gaulle (Parigi)"]
             arrivals = ["Fiumicino (Roma)", "Heathrow (Londra)", "Charles De Gaulle (Parigi)"]
 
         else:
-            logger.info("Recupero degli aeroporti coinvolti nei voli disponibili.\n")
+            logger.info("Recupero degli aeroporti coinvolti nei voli disponibili.")
             departures = retrieveDepartures()
             arrivals = retrieveArrivals()
 
@@ -141,9 +141,9 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
         #check if the id was not used for an other available flight
         isNew = isNewId(IdMessage.id)
         if isNew:
-            logger.info("[REGISTRAZIONE DI UN NUOVO VOLO] L'ID del nuovo volo non è ancora presenta all'interno del sistema, per cui il volo potrà essere aggiunto correttamente.\n")
+            logger.info("[REGISTRAZIONE DI UN NUOVO VOLO] L'ID del nuovo volo non è ancora presenta all'interno del sistema, per cui il volo potrà essere aggiunto correttamente.")
         else:
-            logger.info("[REGISTRAZIONE DI UN NUOVO VOLO] L'ID del nuovo volo è già presente all'interno del sistema, per cui il volo non potrà essere aggiunto.\n")
+            logger.info("[REGISTRAZIONE DI UN NUOVO VOLO] L'ID del nuovo volo è già presente all'interno del sistema, per cui il volo non potrà essere aggiunto.")
         output = Booking_pb2.IdResponse(isOk=isNew)
         return output
 
@@ -151,7 +151,7 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
 
     def RegisterFlight(self, NewFlight2, context):
-        logger.info("Registrazione del nuovo volo in corso...\n")
+        logger.info("Registrazione del nuovo volo in corso...")
         storeFlight(NewFlight2.id, NewFlight2.date, NewFlight2.departureAirport, NewFlight2.arrivalAirport, NewFlight2.departureTime, NewFlight2.arrivalTime, NewFlight2.airline, NewFlight2.price, NewFlight2.seats)
         output = Booking_pb2.RegisterResponse(isOk=True)
         return output
@@ -160,7 +160,7 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
 
     def UpdateFlightPrice(self, UpdatedFlight2, context):
-        logger.info("Aggiornamento del prezzo del volo in corso...\n")
+        logger.info("Aggiornamento del prezzo del volo in corso...")
         storeUpdatedFlight(UpdatedFlight2.flightId, UpdatedFlight2.newPrice)
         output = Booking_pb2.UpdateResponse(isOk=True)
         return output
@@ -184,10 +184,10 @@ logger_warnings.setLevel(logging.WARNING)
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Booking_pb2_grpc.add_BookingServiceServicer_to_server(BookingInfoServicer(), server)
 
-logger.info('Avvio del server in ascolto sulla porta 50053...\n')
+logger.info('Avvio del server in ascolto sulla porta 50053...')
 server.add_insecure_port('[::]:50053')
 server.start()
-logger.info('Server avviato con successo.\n')
+logger.info('Server avviato con successo.')
 
 
 # ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
@@ -197,9 +197,9 @@ Registrazione del microservizio al Discovery Server di default.
 Inizialmente il microservizio di booking è a conoscenza solamente
 del discovery server 1
 """
-logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n')
+logger.info('[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...')
 discovery_servers = put_discovery_server(all_discovery_servers, logger)
-logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.\n')
+logger.info('[DISCOVERY SERVER] Registrazione del microservizio sul discovery server ' + all_discovery_servers[0] + ' avvenuta con successo.')
 
 
 

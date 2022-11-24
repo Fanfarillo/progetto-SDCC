@@ -87,12 +87,13 @@ public class Service extends SuggestionsServiceImplBase {
         }
         opfile.writeLog("[LOGGING] Dati di logging inviati con successo.\n");
 
-        try(RandomAccessFile raf = new RandomAccessFile("suggestions.log", "rw")) {
+        //DA DECOMMENTARE
+        /*try(RandomAccessFile raf = new RandomAccessFile("suggestions.log", "rw")) {
             raf.setLength(0);   //to erase all data
         }
         catch(Exception e) {
             opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.\n");
-        }
+        }*/
 
         responseObserver.onCompleted();
 

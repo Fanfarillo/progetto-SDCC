@@ -19,6 +19,7 @@ import java.util.List;
 
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
+import weka.core.WekaException;
 
 import model.PastFlight;
 import utils.PastFlightUtil;
@@ -139,9 +140,13 @@ public class PopulateArff {
             return getNumDaysBeforeConv(remainingDays);
 
         }
-        catch(Exception e) {
-            e.printStackTrace();
-            return -1;      //se viene sollevata un'eccezione, restituisci un valore negativo al client, in modo tale da notificargli una condizione di errore
+        catch(WekaException e1) {
+            return -1;  //se viene sollevata una WekaException, significa che il training set è vuoto; in tal caso, verrà detto al client che conviene prenotare oggi
+                        //NB: il valore di ritorno -1 verrà convertito correttamente nella data odierna dal frontend.
+        }
+        catch(Exception e2) {
+            e2.printStackTrace();
+            return -2;  //se viene sollevata un'eccezione diversa, restituisci -2 al client, in modo tale da notificargli una condizione di errore
         }
 
     }
