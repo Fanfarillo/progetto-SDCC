@@ -8,9 +8,11 @@ import java.util.logging.SimpleFormatter;
 
 public class LogUtil {
 
-    private FileHandler fh;
+    private static LogUtil instance = null;     //logUtil è una classe SINGLETON
+    private FileHandler fh = null;
 
-    public void createLog() {
+    //il costruttore delle classi singleton non può essere pubblico
+    protected LogUtil() {
         try {
             this.fh = new FileHandler("suggestions.log", true);
 
@@ -18,9 +20,19 @@ public class LogUtil {
         catch(Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    public void writeLog(String message) {
+    //getInstance è il metodo pubblico per l'istanziazione delle classi singleton
+    public static synchronized LogUtil getInstance() {
+        if(LogUtil.instance==null)
+            LogUtil.instance = new LogUtil();
+        
+        return LogUtil.instance;
+
+    }
+
+    public synchronized void writeLog(String message) {
         try {
             Logger logger = Logger.getLogger("BookLog");
             logger.addHandler(this.fh);

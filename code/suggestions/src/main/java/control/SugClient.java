@@ -28,11 +28,11 @@ public class SugClient {
     }
 
     public static void sendToSecondary(String msg) {
-        //open gRPC channel
-        String target = "code_suggestions_2:50055";
-        ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
-
-        try {           
+        
+        ManagedChannel channel = null;
+        try {     
+            //open gRPC channel
+            channel = ManagedChannelBuilder.forAddress("suggestions", 50056).usePlaintext().build();      
             //create client stub
             SugClient client = new SugClient(channel);
             //send message

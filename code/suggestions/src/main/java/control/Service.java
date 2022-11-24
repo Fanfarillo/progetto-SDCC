@@ -21,8 +21,7 @@ public class Service extends SuggestionsServiceImplBase {
     @Override
     public void getLogFileSug(GetLogFileRequestSug req, StreamObserver<GetLogFileReplySug> responseObserver) {
 
-        LogUtil opfile = new LogUtil();
-        opfile.createLog();             //creazione del file di log
+        LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
         opfile.writeLog("[LOGGING] Richiesta dati di logging...\n\n");
 
         final int chunkDim = 1000;      //in Python era una macro
@@ -88,7 +87,7 @@ public class Service extends SuggestionsServiceImplBase {
         }
         opfile.writeLog("[LOGGING] Dati di logging inviati con successo.");
 
-        try(RandomAccessFile raf = new RandomAccessFile("suggesions.log", "rw")) {
+        try(RandomAccessFile raf = new RandomAccessFile("suggestions.log", "rw")) {
             raf.setLength(0);   //to erase all data
         }
         catch(Exception e) {
@@ -109,12 +108,12 @@ public class Service extends SuggestionsServiceImplBase {
         //questa funzione genera il testing set in base al volo selezionato dall'utente e al numero di giorni rimanenti al volo;
         //in particolare, vengono prese in considerazione le istanze relative a una compagnia aerea;
         //tali istanze avranno come 'numero di giorni rimanenti al volo' un valore compreso tra 1 e il numero ATTUALE di giorni rimanenti al volo
-        LogUtil opfile = new LogUtil();
-        opfile.createLog();                 //creazione del file di log
+        LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
         opfile.writeLog("Richiesta di suggerimenti riguardanti un volo.");
 
         //i metodi get() applicati a req sono propri di gRPC; non c'entrano nulla con i getter di PastFlight
         int output = PopulateArff.createTestingSet(req.getBookingDate(), req.getFlightDate(), req.getAirline());
+        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo completata.");
 
         //output è il numero di giorni prima del volo in cui conviene effettuare l'acquisto dei biglietti
         SelectionResponse response = SelectionResponse.newBuilder().setNumDaysBeforeConvenient(output).build();
@@ -133,8 +132,7 @@ public class Service extends SuggestionsServiceImplBase {
          *non sono in grado di trattare le stringhe come attributi delle istanze. */
 
         //questa funzione riceve nuovi dati da aggiungere poi al training set
-        LogUtil opfile = new LogUtil();
-        opfile.createLog();                 //creazione del file di log
+        LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
         opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.");
 
         boolean output = PopulateArff.storeNewData(req.getOldFlightsMsg());

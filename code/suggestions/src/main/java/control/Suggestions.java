@@ -43,8 +43,7 @@ public class Suggestions {
 
     public static void main(String[] args) throws Exception {
 
-        LogUtil opfile = new LogUtil();
-        opfile.createLog();     //creazione del file di log
+        LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
 
         //--------------------------------------- INIZIO CODICE CHE GESTISCE LE REPLICAZIONE DI SUGGESTIONS -------------------------------------------------
 
@@ -92,10 +91,10 @@ public class Suggestions {
         if(ownIpAddress.equals(suggestions1)) {
 
             allDiscoveryServers = new ArrayList<>();
-            allDiscoveryServers.add("code_discovery_2:50060");
+            allDiscoveryServers.add("code_discovery_2:50060");      //TODO: sistema' sta roba
             opfile.writeLog("[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...");
             List<String> discoveryServers = DiscovUtil.putDiscoveryServer(allDiscoveryServers, opfile);
-            opfile.writeLog("[DISCOVERY SERVER] Registazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.");
+            opfile.writeLog("[DISCOVERY SERVER] Registrazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.");
 
             //registro l'eventuale altro discovery server
             for(String item : discoveryServers) {

@@ -53,8 +53,8 @@ public class DiscovUtil {
                     //EQUIVALENTE DI: stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                     DiscovUtil client = new DiscovUtil(channel);
 
-                    //EQUIVALENTE DI: res = stub.put(Discovery_pb2.PutRequest(serviceName="suggestions", port="50055"))
-                    res = client.getReply("suggestions", "50055");    //ATTENZIONE: è code_suggestions_1 perché trattasi della copia primaria del servizio
+                    //EQUIVALENTE DI: res = stub.put(Discovery_pb2.PutRequest(serviceName="code_suggestions_1", port="50055"))
+                    res = client.getReply("code_suggestions_1", "50055");    //ATTENZIONE: è code_suggestions_1 perché trattasi della copia primaria del servizio
 
                 }
                 catch(Exception e) {        //si va qui se si è verificato un problema nella connessione con il discovery server

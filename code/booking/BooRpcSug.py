@@ -28,7 +28,7 @@ def discovery_suggestions_micro(all_discovery_servers, logger):
                 channel = grpc.insecure_channel(discovery)
                 stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                 # Ottengo la porta su cui è in ascolto il microservizio di Booking
-                res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="suggestions"))
+                res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="code_suggestions_1"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
                 logger.info('[ GET DISCOVERY SUGGESTIONS ] Problema connessione con il discovery server ' + discovery_server + '.')

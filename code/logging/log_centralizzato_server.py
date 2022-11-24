@@ -38,7 +38,7 @@ logger = None
 logger_warnings = None
 
 # Questi sono i nomi con cui i microservizi si sono registrati.
-MICROSERVICES = ["booking", "management", "registration", "payment", "suggestions"]
+MICROSERVICES = ["booking", "management", "registration", "payment", "code_suggestions_1"]
 
 # la lista contiene tutti entrambi i discovery server.
 ALL_DISCOVERY_SERVERS = ['code_discovery_1:50060', 'code_discovery_2:50060']
@@ -181,7 +181,7 @@ def set_conn_micro():
                     stub = Registration_pb2_grpc.UsersInfoStub(channel)
                 elif(grpc_conn.nome == "payment"):
                     stub = Payment_pb2_grpc.PayStub(channel)
-                elif(grpc_conn.nome == "suggestions"):
+                elif(grpc_conn.nome == "code_suggestions_1"):
                     stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
             
                 grpc_conn.conn = stub
@@ -229,7 +229,7 @@ def run_logger():
             reg = item
         elif(item.nome=="payment"):
             pay = item
-        elif(item.nome=="suggestions"):
+        elif(item.nome=="code_suggestions_1"):
             sug = item
 
     while(True):
@@ -273,7 +273,7 @@ def run_logger():
                         logger.info("[ LOGGING ] Richiesta al microservizio di Payment completata con successo...")
                 except:
                     logger.info("[ LOGGING ] Errore nella ricezione dei dati da parte del servizio di Payment...")
-            elif(grpc_conn.nome ==  "suggestions"):
+            elif(grpc_conn.nome ==  "code_suggestions_1"):
                 try:
                     for response in grpc_conn.conn.getLogFileSug(Suggestions_pb2.GetLogFileRequestSug(numRichiesta=count)):
                         logging_info = response.chunk_file.decode()
