@@ -30,20 +30,20 @@ def discovery_booking_micro(all_discovery_servers, logger):
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="management" , serviceNameTarget="booking"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ GET DISCOVERY BOOKING] Problema connessione con il discovery server ' + discovery_server + '.')
+                logger.info('[ GET DISCOVERY BOOKING] Problema connessione con il discovery server ' + discovery_server + '.\n')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ GET DISCOVERY BOOKING] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare...')
+                logger.info('[ GET DISCOVERY BOOKING] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare.\n')
                 time.sleep(2)
                 continue
             ok = True
-            logger.info('[ GET DISCOVERY BOOKING] porta del servizio di management recuperata: ' + res.port + '.')
+            logger.info('[ GET DISCOVERY BOOKING] porta del servizio di management recuperata: ' + res.port + '.\n')
             ADDR_PORT = res.serviceName + ':' + res.port
             break
         if(ok):
             break
-        logger.info('[ GET DISCOVERY BOOKING ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers...')
+        logger.info('[ GET DISCOVERY BOOKING ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.\n')
         time.sleep(5)
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 

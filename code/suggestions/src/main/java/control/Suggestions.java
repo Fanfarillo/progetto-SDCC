@@ -48,7 +48,7 @@ public class Suggestions {
         //--------------------------------------- INIZIO CODICE CHE GESTISCE LE REPLICAZIONE DI SUGGESTIONS -------------------------------------------------
 
         if(args.length != 3) {
-            opfile.writeLog("[ERROR] È richiesto il passaggio di 3 parametri da linea di comando.");
+            opfile.writeLog("[ERROR] È richiesto il passaggio di 3 parametri da linea di comando.\n");
             System.exit(1);
         }
 
@@ -70,7 +70,7 @@ public class Suggestions {
         }
 
         if(otherSuggestions==null) {
-            opfile.writeLog("[FATAL] Errore nella risoluzione dell'indirizzo IP del discovery server.");
+            opfile.writeLog("[FATAL] Errore nella risoluzione dell'indirizzo IP del discovery server.\n");
             System.exit(1);
         }
 
@@ -78,9 +78,9 @@ public class Suggestions {
 
         //avvio del server RPC
         Suggestions server = new Suggestions();
-        opfile.writeLog("Avvio del server in ascolto sulla porta 50055...");
+        opfile.writeLog("Avvio del server in ascolto sulla porta 50055...\n");
         server.start();
-        opfile.writeLog("Server avviato con successo.");
+        opfile.writeLog("Server avviato con successo.\n");
 
         //--------------------------------------- DISCOVERY -------------------------------------------------
 
@@ -92,9 +92,9 @@ public class Suggestions {
 
             allDiscoveryServers = new ArrayList<>();
             allDiscoveryServers.add("code_discovery_2:50060");      //TODO: sistema' sta roba
-            opfile.writeLog("[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...");
+            opfile.writeLog("[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n");
             List<String> discoveryServers = DiscovUtil.putDiscoveryServer(allDiscoveryServers, opfile);
-            opfile.writeLog("[DISCOVERY SERVER] Registrazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.");
+            opfile.writeLog("[DISCOVERY SERVER] Registrazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.\n");
 
             //registro l'eventuale altro discovery server
             for(String item : discoveryServers) {

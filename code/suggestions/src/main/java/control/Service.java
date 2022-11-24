@@ -48,7 +48,7 @@ public class Service extends SuggestionsServiceImplBase {
 
         }
         catch(Exception e) {
-            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.");
+            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.\n");
         }
 
         int dim = content.length();
@@ -71,7 +71,7 @@ public class Service extends SuggestionsServiceImplBase {
                     responseObserver.onNext(response);
                 }
                 catch(Exception e) {
-                    opfile.writeLog("[LOGGING] Dati di logging inviati senza successo.");
+                    opfile.writeLog("[LOGGING] Dati di logging inviati senza successo.\n");
                 }
                 count++;
 
@@ -85,13 +85,13 @@ public class Service extends SuggestionsServiceImplBase {
             }
 
         }
-        opfile.writeLog("[LOGGING] Dati di logging inviati con successo.");
+        opfile.writeLog("[LOGGING] Dati di logging inviati con successo.\n");
 
         try(RandomAccessFile raf = new RandomAccessFile("suggestions.log", "rw")) {
             raf.setLength(0);   //to erase all data
         }
         catch(Exception e) {
-            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.");
+            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.\n");
         }
 
         responseObserver.onCompleted();
@@ -109,11 +109,11 @@ public class Service extends SuggestionsServiceImplBase {
         //in particolare, vengono prese in considerazione le istanze relative a una compagnia aerea;
         //tali istanze avranno come 'numero di giorni rimanenti al volo' un valore compreso tra 1 e il numero ATTUALE di giorni rimanenti al volo
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
-        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo.");
+        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo.\n");
 
         //i metodi get() applicati a req sono propri di gRPC; non c'entrano nulla con i getter di PastFlight
         int output = PopulateArff.createTestingSet(req.getBookingDate(), req.getFlightDate(), req.getAirline());
-        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo completata.");
+        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo completata.\n");
 
         //output è il numero di giorni prima del volo in cui conviene effettuare l'acquisto dei biglietti
         SelectionResponse response = SelectionResponse.newBuilder().setNumDaysBeforeConvenient(output).build();
@@ -133,7 +133,7 @@ public class Service extends SuggestionsServiceImplBase {
 
         //questa funzione riceve nuovi dati da aggiungere poi al training set
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
-        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.");
+        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.\n");
 
         boolean output = PopulateArff.storeNewData(req.getOldFlightsMsg());
 
@@ -143,7 +143,7 @@ public class Service extends SuggestionsServiceImplBase {
         //se si è la copia primaria di Suggestions, bisogna invocare la copia secondaria per mantenerla allineata con gli aggiornamenti
         if(Suggestions.ownIpAddress.equals(Suggestions.suggestions1)) {
             SugClient.sendToSecondary(req.getOldFlightsMsg());
-            opfile.writeLog("Nuovi dati per il training set inviati anche alla replica secondaria.");
+            opfile.writeLog("Nuovi dati per il training set inviati anche alla replica secondaria.\n");
         }
 
         //send data to the client

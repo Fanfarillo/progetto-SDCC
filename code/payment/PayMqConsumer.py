@@ -9,11 +9,11 @@ def receiveMqBooking(logger):
             parameters = pika.URLParameters(amqpUrl)
             connection = pika.BlockingConnection(parameters)
             channel = connection.channel()
-            logger.info('[MESSAGE QUEUE] Connessione con RabbitMQ riuscita.')
+            logger.info('[MESSAGE QUEUE] Connessione con RabbitMQ riuscita.\n')
             break
         except:
             time.sleep(2)
-            logger.info('[MESSAGE QUEUE ERROR] Errore connessione RabbitMQ')
+            logger.info('[MESSAGE QUEUE ERROR] Errore connessione RabbitMQ.\n')
 
     channel.queue_declare(queue='booProducer')
 
@@ -21,7 +21,7 @@ def receiveMqBooking(logger):
     def callback(ch, method, properties, body):
         global retValue       #impone che il retValue che utilizziamo in questa funzione è proprio la variabile globale e non una nuova variabile locale
         bodyStr = body.decode("utf-8")
-        logger.info("[MESSAGE QUEUE] Ricevuto %s da parte di Booking." % bodyStr)
+        logger.info("[MESSAGE QUEUE] Ricevuto %s da parte di Booking.\n" % bodyStr)
 
         """
         receiveMqBooking() restituirà True se e solo se il body del messaggio ricevuto è "True",
@@ -35,8 +35,8 @@ def receiveMqBooking(logger):
     #consume queued message
     channel.basic_consume(queue='booProducer', on_message_callback=callback, auto_ack=True)
 
-    logger.info("[MESSAGE QUEUE] In attesa di messaggi da parte di Booking...")
+    logger.info("[MESSAGE QUEUE] In attesa di messaggi da parte di Booking...\n")
     channel.start_consuming()
 
-    logger.info("[MESSAGE QUEUE] Restituisco l'esito della transazione saga al frontend.")
+    logger.info("[MESSAGE QUEUE] Restituisco l'esito della transazione saga al frontend.\n")
     return retValue

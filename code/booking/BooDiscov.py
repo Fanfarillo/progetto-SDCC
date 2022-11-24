@@ -25,12 +25,12 @@ def put_discovery_server(discovery_servers, logger):
                 res = stub.put(Discovery_pb2.PutRequest(serviceName="booking" , port="50053"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ PUT DISCOVERY BOOKING ] Problema connessione con il discovery server ' + discovery_server + '.')
+                logger.info('[ PUT DISCOVERY BOOKING ] Problema connessione con il discovery server ' + discovery_server + '.\n')
                 time.sleep(2)
                 continue
             if(not res.result):
                 # Si è verificato un problema con la richesta DynamoDB
-                logger.info('[ PUT DISCOVERY BOOKING ] Problema DynamoDB con il discovery server ' + discovery_server + '.')
+                logger.info('[ PUT DISCOVERY BOOKING ] Problema DynamoDB con il discovery server ' + discovery_server + '.\n')
                 time.sleep(2)
                 continue
                 
@@ -38,11 +38,11 @@ def put_discovery_server(discovery_servers, logger):
                 # Recupero i discovery servers nel messaggio di risposta
                 new_discovery_servers.append(server)
             ok = True
-            logger.info('[ PUT DISCOVERY BOOKING ] Registrazione avvenuta con successo presso il discovery server ' + discovery_server + '.')
+            logger.info('[ PUT DISCOVERY BOOKING ] Registrazione avvenuta con successo presso il discovery server ' + discovery_server + '.\n')
             break
         if(ok):
             break
-        logger.info('[ PUT DISCOVERY BOOKING ] Registrazione avvenuta con insuccesso presso tutti i discovery servers...')        
+        logger.info('[ PUT DISCOVERY BOOKING ] Registrazione avvenuta con insuccesso presso tutti i discovery servers.\n')        
         time.sleep(5)       
 
     return new_discovery_servers

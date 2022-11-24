@@ -91,7 +91,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             inserito in precedenza.
             """
             all_microservices_cache_names.index(request.serviceName)
-            logger.info('[PUT] Richiesta di PUT ma il servizio è stato già registrato.\n{serviceName:'+ request.serviceName + '\t\t\port:'+ request.port +'}')
+            logger.info('[PUT] Richiesta di PUT ma il servizio è stato già registrato.\n{serviceName:'+ request.serviceName + '\t\t\port:'+ request.port +'}\n')
         except ValueError:
 
             """
@@ -120,7 +120,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             # Registrazione nella cache della nuova istanza di microservizio            
             all_microservices_cache.append(microservice)
             all_microservices_cache_names.append(microservice.serviceName)
-            logger.info('[PUT] Registrazione del servizio conclusa con successo.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}')
+            logger.info('[PUT] Registrazione del servizio conclusa con successo.\n{serviceName:'+ request.serviceName + '\t\t\tport:'+ request.port +'}\n')
 
         # Comunico al microservizio gli altri Discovery Servers
         discovery_servers = Discovery_pb2.DiscoveryServers()
@@ -142,7 +142,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
     """
     def sendMicroserviceInfo(self, request, context):
         microservice_info_ricevute = []
-        logger.info("[SENDMICROSERVICEINFO] Ricezione informazioni relative ai microservizi conosciuti dall'altro server...")
+        logger.info("[SENDMICROSERVICEINFO] Ricezione informazioni relative ai microservizi conosciuti dall'altro server...\n")
         for microservizio in request.microservices.microservices_list:            
             try:
                 # Verifico se l'informazione è già presente all'interno della cache.
@@ -155,7 +155,7 @@ class DiscoveryServicer(Discovery_pb2_grpc.DiscoveryServiceServicer):
             microservice_info_ricevute.append(microservizio.serviceName)
 
         # Logging
-        logger.info("[SENDMICROSERVICEINFO] microservizi ricevuti: " + str(microservice_info_ricevute))
+        logger.info("[SENDMICROSERVICEINFO] microservizi ricevuti: " + str(microservice_info_ricevute) + ".\n")
 
         """
         Rispondo al server inviando le informazioni
@@ -189,7 +189,7 @@ def periodicUpdate():
     while(1):
 
         # Logging
-        logger.info('[AGGIORNAMENTO PERIODICO]: aggiornamento numero ' + str(contatore))
+        logger.info('[AGGIORNAMENTO PERIODICO]: aggiornamento numero ' + str(contatore) + ".\n")
 
         all_microservices_cache = []
         all_microservices_cache_names = []
@@ -219,7 +219,7 @@ def periodicUpdate():
             informazione da inviare all'altro discovery
             server.
             """
-            logger.info('[AGGIORNAMENTO PERIODICO]: tentativo di aggiornamento numero ' + str(contatore) + ' fallito poiché non si ha alcuna informazione\n\n')
+            logger.info('[AGGIORNAMENTO PERIODICO]: tentativo di aggiornamento numero ' + str(contatore) + ' fallito poiché non si ha alcuna informazione.\n\n')
 
             """
             Blocco il thread aspettando di ricevere 
@@ -245,7 +245,7 @@ def periodicUpdate():
         request = Discovery_pb2.infoMicroservices()
 
         # Logging
-        logger.info('[AGGIORNAMENTO PERIODICO]: microservizi attualmente conosciuti\n' + str(all_microservices_cache_names))
+        logger.info('[AGGIORNAMENTO PERIODICO]: microservizi attualmente conosciuti\n' + str(all_microservices_cache_names) + "\n")
 
         """
         Costruisco il parametro da passare
@@ -334,7 +334,7 @@ server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 Discovery_pb2_grpc.add_DiscoveryServiceServicer_to_server(DiscoveryServicer(), server)
 
 # Scrivo le informazioni all'interno del Logging
-logger.info('Avvio del server in ascolto sulla porta '+ PORT + '...')
+logger.info('Avvio del server in ascolto sulla porta '+ PORT + '...\n')
 # Avvio del server RPC.
 server.add_insecure_port('[::]:' + PORT)
 server.start()

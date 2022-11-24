@@ -31,20 +31,20 @@ def discovery_suggestions_micro(all_discovery_servers, logger):
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="code_suggestions_1"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ GET DISCOVERY SUGGESTIONS ] Problema connessione con il discovery server ' + discovery_server + '.')
+                logger.info('[ GET DISCOVERY SUGGESTIONS ] Problema connessione con il discovery server ' + discovery_server + '.\n')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ GET DISCOVERY SUGGESTIONS ] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare...')
+                logger.info('[ GET DISCOVERY SUGGESTIONS ] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare.\n')
                 time.sleep(2)
                 continue
             ok = True
-            logger.info('[ GET DISCOVERY SUGGESTIONS ] porta del servizio di booking recuperata: ' + res.port + '.')
+            logger.info('[ GET DISCOVERY SUGGESTIONS ] porta del servizio di booking recuperata: ' + res.port + '.\n')
             ADDR_PORT = res.serviceName + ':' + res.port
             break
         if(ok):
             break
-        logger.info('[ GET DISCOVERY SUGGESTIONS ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers...')
+        logger.info('[ GET DISCOVERY SUGGESTIONS ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.\n')
         time.sleep(5)
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 
@@ -58,26 +58,26 @@ Questa funzione controlla la tabella Volo periodicamente. Per ciascun controllo 
     2.2) Altrimenti si aggiungono le informazioni per quel volo relative alla giornata di oggi all'interno di StoricoVolo.
 """
 def checkFlights(logger, all_discovery_servers):
-    logger.info('Thread associato al coordinamento con Suggestions creato con successo.')
+    logger.info('Thread associato al coordinamento con Suggestions creato con successo.\n')
 
     while(True):
         #flightsDict è un dizionario che, a ogni volo (i.e. idVolo), associa lo stato di quel volo (True se è di oggi / del passato, False altrimenti)
         flightsDict = getFlightsStatus()
-        logger.info('[COORDINAMENTO CON SUGGESTIONS] Classificazioni voli del passato vs del futuro completata.')
+        logger.info('[COORDINAMENTO CON SUGGESTIONS] Classificazioni voli del passato vs del futuro completata.\n')
 
         #questa non è altro che un'iterazione sui voli
         for key, value in flightsDict.items():
 
             if value==True:                     #caso in cui il volo è di oggi o del passato
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Il volo ' + key + ' è di oggi (o del passato).')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Il volo ' + key + ' è di oggi (o del passato).\n')
                 deleteFromVolo(key)             #eliminazione del volo dalla tabella Volo
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella Volo.')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella Volo.\n')
                 deleteFromPostiOccupati(key)    #eliminazione del volo dalla tabella PostiOccupati
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella PostiOccupati.')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella PostiOccupati.\n')
                 msg = getFlightHistory(key)     #generazione del messaggio contenente lo storico del prezzo del volo da inviare a Sugggestions tramite gRPC
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Generato il messaggio da inviare a Suggestions relativo al volo ' + key + '.')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Generato il messaggio da inviare a Suggestions relativo al volo ' + key + '.\n')
                 deleteFromStoricoVolo(key)      #eliminazione del volo dalla tabella StoricoVolo
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella StoricoVolo.')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella StoricoVolo.\n')
                 
                 """ Comunicazione gRPC (lato client) con Suggestions """
                 # -------------------------------- DISCOVERY -------------------------------------------------------------------
@@ -90,21 +90,21 @@ def checkFlights(logger, all_discovery_servers):
                 #create client stub
                 stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
                 stub.StoreOldFlight(Suggestions_pb2.OldFlight(oldFlightsMsg=msg))   #non possiamo invocare una return perché il ciclo while deve essere infinito
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.\n')
 
             else:           #caso in cui il volo è del futuro
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Il volo ' + key + ' è del futuro.')
+                logger.info('[COORDINAMENTO CON SUGGESTIONS] Il volo ' + key + ' è del futuro.\n')
                 isInStorico = isTodayInStorico(key)         #check su se il prezzo di oggi del volo 'key' è stato registrato in StoricoVolo o meno
 
                 #se isInStorico==True, non è necessario fare nulla; altrimenti si procede a memorizzare le nuove informazioni in StoricoVolo
                 if isInStorico==False:
-                    logger.info('[COORDINAMENTO CON SUGGESTIONS] È ancora necessario registrare il prezzo di oggi del volo ' + key + ' in StoricoVolo.')
+                    logger.info('[COORDINAMENTO CON SUGGESTIONS] È ancora necessario registrare il prezzo di oggi del volo ' + key + ' in StoricoVolo.\n')
                     flight = retrieveFlightInfo(key)        #ottenimento di DataVolo, AeroportoPartenza, AeroportoArrivo, CompagniaAerea e PrezzoBase del volo
                     storeInStoricoVolo(flight)              #aggiunta delle informazioni incapsulate in flight nella tabella StoricoVolo
-                    logger.info('[COORDINAMENTO CON SUGGESTIONS] Il prezzo di oggi del volo ' + key + ' è stato registrato in StoricoVolo.')
+                    logger.info('[COORDINAMENTO CON SUGGESTIONS] Il prezzo di oggi del volo ' + key + ' è stato registrato in StoricoVolo.\n')
 
                 else:
-                    logger.info('[COORDINAMENTO CON SUGGESTIONS] È stato già registrato il prezzo di oggi del volo ' + key + ' in StoricoVolo.')
+                    logger.info('[COORDINAMENTO CON SUGGESTIONS] È stato già registrato il prezzo di oggi del volo ' + key + ' in StoricoVolo.\n')
 
         #terminate le iterazioni sui voli all'interno del ciclo for, si mette il thread in pausa per 6 ore (=21600 secondi), così da non sovraccaricare la CPU
         time.sleep(21600)
