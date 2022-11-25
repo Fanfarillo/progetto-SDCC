@@ -105,7 +105,7 @@ def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime,
 
 
 
-def storeUpdatedFlight(flightId, newPrice):
+def storeUpdatedFlight(flightId, newPrice, airline):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_VOLO)
 
@@ -123,12 +123,13 @@ def storeUpdatedFlight(flightId, newPrice):
     arrivalAirport = item['Aeroporto arrivo']
     departureTime = item['Orario partenza']
     arrivalTime = item['Orario arrivo']
-    airline = item['Compagnia aerea']
+    retrievedAirline = item['Compagnia aerea']
     seats = item['Posti liberi']
 
-    #update selected flight by adding a new instance with same id in DynamoDB database
-    table.put_item(
-	    Item = {
+    if retrievedAirline == airline:
+        #update selected flight by adding a new instance with same id in DynamoDB database
+        table.put_item(
+	        Item = {
                 'Id': flightId,
                 'Data': date,
                 'Aeroporto partenza': departureAirport,
@@ -138,8 +139,13 @@ def storeUpdatedFlight(flightId, newPrice):
                 'Compagnia aerea': airline,
                 'Prezzo base': Decimal(newPrice),
                 'Posti liberi': seats
-	    }
-    )
+	        }
+        )
+
+        return True
+
+    else:
+        return False    #in questo caso l'utente stava cercando di modificare il prezzo di un volo relativo a una compagnia aerea NON di sua competenza
 
 
 

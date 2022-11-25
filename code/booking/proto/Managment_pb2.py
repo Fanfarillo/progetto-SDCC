@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15proto/Managment.proto\x12\x05proto\"$\n\x0fSeatCostRequest\x12\x11\n\tcompagnia\x18\x01 \x01(\t\"\x1f\n\rSeatCostReply\x12\x0e\n\x06prezzo\x18\x01 \x01(\t\"1\n\x1c\x41\x64\x64itionalServiceCostRequest\x12\x11\n\tcompagnia\x18\x01 \x01(\t\",\n\x1a\x41\x64\x64itionalServiceCostReply\x12\x0e\n\x06prezzo\x18\x01 \x01(\t\"\x1e\n\x0cPriceRequest\x12\x0e\n\x06idVolo\x18\x01 \x01(\t\"\x1b\n\nPriceReply\x12\r\n\x05price\x18\x01 \x01(\t\"\xb2\x01\n\tNewFlight\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\"*\n\x0b\x41\x64\x64Response\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"3\n\rUpdatedFlight\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\"0\n\x11ModFlightResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"q\n\x0cUpdatedSeats\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0e\n\x06price1\x18\x02 \x01(\t\x12\x0e\n\x06price2\x18\x03 \x01(\t\x12\x0e\n\x06price6\x18\x04 \x01(\t\x12\x0f\n\x07price16\x18\x05 \x01(\t\x12\x0f\n\x07price18\x18\x06 \x01(\t\"/\n\x10ModSeatsResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"\x88\x01\n\x0fUpdatedServices\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0f\n\x07priceBM\x18\x02 \x01(\t\x12\x0f\n\x07priceBG\x18\x03 \x01(\t\x12\x0f\n\x07priceBS\x18\x04 \x01(\t\x12\x0f\n\x07priceAD\x18\x05 \x01(\t\x12\x0f\n\x07priceAB\x18\x06 \x01(\t\x12\x0f\n\x07priceTN\x18\x07 \x01(\t\"2\n\x13ModServicesResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\",\n\x14GetLogFileRequestMan\x12\x14\n\x0cnumRichiesta\x18\x01 \x01(\x05\";\n\x12GetLogFileReplyMan\x12\x12\n\nchunk_file\x18\x01 \x01(\x0c\x12\x11\n\tnum_chunk\x18\x02 \x01(\x05\x32\xb9\x04\n\x0b\x46lightsInfo\x12\x31\n\tAddFlight\x12\x10.proto.NewFlight\x1a\x12.proto.AddResponse\x12>\n\x0cModifyFlight\x12\x14.proto.UpdatedFlight\x1a\x18.proto.ModFlightResponse\x12;\n\x0bModifySeats\x12\x13.proto.UpdatedSeats\x1a\x17.proto.ModSeatsResponse\x12\x44\n\x0eModifyServices\x12\x16.proto.UpdatedServices\x1a\x1a.proto.ModServicesResponse\x12\x38\n\x0eGetPriceFlight\x12\x13.proto.PriceRequest\x1a\x11.proto.PriceReply\x12\x43\n\x11GetAllSeatsFlight\x12\x16.proto.SeatCostRequest\x1a\x14.proto.SeatCostReply0\x01\x12j\n\x1eGetAlladditionalServicesFlight\x12#.proto.AdditionalServiceCostRequest\x1a!.proto.AdditionalServiceCostReply0\x01\x12I\n\rgetLogFileMan\x12\x1b.proto.GetLogFileRequestMan\x1a\x19.proto.GetLogFileReplyMan0\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15proto/Managment.proto\x12\x05proto\"$\n\x0fSeatCostRequest\x12\x11\n\tcompagnia\x18\x01 \x01(\t\"\x1f\n\rSeatCostReply\x12\x0e\n\x06prezzo\x18\x01 \x01(\t\"1\n\x1c\x41\x64\x64itionalServiceCostRequest\x12\x11\n\tcompagnia\x18\x01 \x01(\t\",\n\x1a\x41\x64\x64itionalServiceCostReply\x12\x0e\n\x06prezzo\x18\x01 \x01(\t\"\x1e\n\x0cPriceRequest\x12\x0e\n\x06idVolo\x18\x01 \x01(\t\"\x1b\n\nPriceReply\x12\r\n\x05price\x18\x01 \x01(\t\"\xb2\x01\n\tNewFlight\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x18\n\x10\x64\x65partureAirport\x18\x03 \x01(\t\x12\x16\n\x0e\x61rrivalAirport\x18\x04 \x01(\t\x12\x15\n\rdepartureTime\x18\x05 \x01(\t\x12\x13\n\x0b\x61rrivalTime\x18\x06 \x01(\t\x12\x0f\n\x07\x61irline\x18\x07 \x01(\t\x12\r\n\x05price\x18\x08 \x01(\t\x12\r\n\x05seats\x18\t \x01(\x05\"*\n\x0b\x41\x64\x64Response\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"D\n\rUpdatedFlight\x12\x10\n\x08\x66lightId\x18\x01 \x01(\t\x12\x10\n\x08newPrice\x18\x02 \x01(\t\x12\x0f\n\x07\x61irline\x18\x03 \x01(\t\"0\n\x11ModFlightResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"q\n\x0cUpdatedSeats\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0e\n\x06price1\x18\x02 \x01(\t\x12\x0e\n\x06price2\x18\x03 \x01(\t\x12\x0e\n\x06price6\x18\x04 \x01(\t\x12\x0f\n\x07price16\x18\x05 \x01(\t\x12\x0f\n\x07price18\x18\x06 \x01(\t\"/\n\x10ModSeatsResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"\x88\x01\n\x0fUpdatedServices\x12\x0f\n\x07\x61irline\x18\x01 \x01(\t\x12\x0f\n\x07priceBM\x18\x02 \x01(\t\x12\x0f\n\x07priceBG\x18\x03 \x01(\t\x12\x0f\n\x07priceBS\x18\x04 \x01(\t\x12\x0f\n\x07priceAD\x18\x05 \x01(\t\x12\x0f\n\x07priceAB\x18\x06 \x01(\t\x12\x0f\n\x07priceTN\x18\x07 \x01(\t\"2\n\x13ModServicesResponse\x12\x0c\n\x04isOk\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\",\n\x14GetLogFileRequestMan\x12\x14\n\x0cnumRichiesta\x18\x01 \x01(\x05\";\n\x12GetLogFileReplyMan\x12\x12\n\nchunk_file\x18\x01 \x01(\x0c\x12\x11\n\tnum_chunk\x18\x02 \x01(\x05\x32\xb9\x04\n\x0b\x46lightsInfo\x12\x31\n\tAddFlight\x12\x10.proto.NewFlight\x1a\x12.proto.AddResponse\x12>\n\x0cModifyFlight\x12\x14.proto.UpdatedFlight\x1a\x18.proto.ModFlightResponse\x12;\n\x0bModifySeats\x12\x13.proto.UpdatedSeats\x1a\x17.proto.ModSeatsResponse\x12\x44\n\x0eModifyServices\x12\x16.proto.UpdatedServices\x1a\x1a.proto.ModServicesResponse\x12\x38\n\x0eGetPriceFlight\x12\x13.proto.PriceRequest\x1a\x11.proto.PriceReply\x12\x43\n\x11GetAllSeatsFlight\x12\x16.proto.SeatCostRequest\x1a\x14.proto.SeatCostReply0\x01\x12j\n\x1eGetAlladditionalServicesFlight\x12#.proto.AdditionalServiceCostRequest\x1a!.proto.AdditionalServiceCostReply0\x01\x12I\n\rgetLogFileMan\x12\x1b.proto.GetLogFileRequestMan\x1a\x19.proto.GetLogFileReplyMan0\x01\x62\x06proto3')
 
 
 
@@ -167,21 +167,21 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _ADDRESPONSE._serialized_start=442
   _ADDRESPONSE._serialized_end=484
   _UPDATEDFLIGHT._serialized_start=486
-  _UPDATEDFLIGHT._serialized_end=537
-  _MODFLIGHTRESPONSE._serialized_start=539
-  _MODFLIGHTRESPONSE._serialized_end=587
-  _UPDATEDSEATS._serialized_start=589
-  _UPDATEDSEATS._serialized_end=702
-  _MODSEATSRESPONSE._serialized_start=704
-  _MODSEATSRESPONSE._serialized_end=751
-  _UPDATEDSERVICES._serialized_start=754
-  _UPDATEDSERVICES._serialized_end=890
-  _MODSERVICESRESPONSE._serialized_start=892
-  _MODSERVICESRESPONSE._serialized_end=942
-  _GETLOGFILEREQUESTMAN._serialized_start=944
-  _GETLOGFILEREQUESTMAN._serialized_end=988
-  _GETLOGFILEREPLYMAN._serialized_start=990
-  _GETLOGFILEREPLYMAN._serialized_end=1049
-  _FLIGHTSINFO._serialized_start=1052
-  _FLIGHTSINFO._serialized_end=1621
+  _UPDATEDFLIGHT._serialized_end=554
+  _MODFLIGHTRESPONSE._serialized_start=556
+  _MODFLIGHTRESPONSE._serialized_end=604
+  _UPDATEDSEATS._serialized_start=606
+  _UPDATEDSEATS._serialized_end=719
+  _MODSEATSRESPONSE._serialized_start=721
+  _MODSEATSRESPONSE._serialized_end=768
+  _UPDATEDSERVICES._serialized_start=771
+  _UPDATEDSERVICES._serialized_end=907
+  _MODSERVICESRESPONSE._serialized_start=909
+  _MODSERVICESRESPONSE._serialized_end=959
+  _GETLOGFILEREQUESTMAN._serialized_start=961
+  _GETLOGFILEREQUESTMAN._serialized_end=1005
+  _GETLOGFILEREPLYMAN._serialized_start=1007
+  _GETLOGFILEREPLYMAN._serialized_end=1066
+  _FLIGHTSINFO._serialized_start=1069
+  _FLIGHTSINFO._serialized_end=1638
 # @@protoc_insertion_point(module_scope)

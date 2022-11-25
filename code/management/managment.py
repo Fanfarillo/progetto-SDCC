@@ -98,7 +98,7 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         elif NewFlight.departureAirport==NewFlight.arrivalAirport:
             err = "L'AEROPORTO DI PARTENZA COINCIDE CON QUELLO DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
         elif not isValidAirline:
-            err = "LA COMPAGNIA AEREA SELEZIONATA NON È VALIDA.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+            err = "LA COMPAGNIA AEREA NON È VALIDA.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
         elif not isValidPrice:
             err = "IL PREZZO DEL VOLO NON È STATO SCRITTO CORRETTAMENTE.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
         elif NewFlight.seats<=0:
@@ -122,11 +122,13 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         #sanity checks are the following:
         #   1) Flight id should already exist
         #   2) Price should be a number and it should be greater than zero
+        #   3) Airline should be either EasyJet or ITA or Ryanair
 
         logger.info("Richiesta di modifica del prezzo di un volo: [" + UpdatedFlight.flightId + "," + UpdatedFlight.newPrice + "]")
 
-        isExistentFlightId = not checkFlightId(UpdatedFlight.flightId, logger, all_discovery_servers)       #condition 1)
-        isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()                                   #condition 2)
+        isExistentFlightId = not checkFlightId(UpdatedFlight.flightId, logger, all_discovery_servers)                               #condition 1)
+        isValidPrice = UpdatedFlight.newPrice.replace('.','',1).isdigit()                                                           #condition 2)
+        isValidAirline = (UpdatedFlight.airline=='EasyJet' or UpdatedFlight.airline=='ITA' or UpdatedFlight.airline=='Ryanair')     #condition 3)
 
         isOk = False    #isOk will be True only if ALL the conditions are satisfied
 
@@ -134,14 +136,20 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
             err = "NON ESISTE UN VOLO CON QUESTO ID.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
         elif not isValidPrice:
             err = "IL PREZZO DEL VOLO NON È STATO SCRITTO CORRETTAMENTE.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
+        elif not isValidAirline:
+            err = "LA COMPAGNIA AEREA NON È VALIDA.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
         else:
             isOk = True
-            err = None
 
         if isOk:
             roundedPrice = roundPrice(UpdatedFlight.newPrice)
-            #we can decide to do something with return value of registerFlight; at the moment we will not use it
-            updateFlightPrice(UpdatedFlight.flightId, roundedPrice, logger, all_discovery_servers)
+            #now isOk is True if the update is actually possibile, False otherwise
+            isOk = updateFlightPrice(UpdatedFlight.flightId, roundedPrice, UpdatedFlight.airline, logger, all_discovery_servers)
+
+            if isOk:
+                err = None
+            else:
+                err = "IL VOLO SELEZIONATO APPARTIENE A UN'ALTRA COMPAGNIA AEREA.\nPROVA A INSERIRE NUOVAMENTE I DATI DEL VOLO."
 
         output = Managment_pb2.ModFlightResponse(isOk=isOk, error=err)
         return output

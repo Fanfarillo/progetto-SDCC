@@ -161,7 +161,7 @@ def sendNewFlight(id, date, departureAirport, arrivalAirport, departureTime, arr
 
 
 
-def sendNewPrice(flightId, newPrice):
+def sendNewPrice(flightId, newPrice, airline):
  # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
@@ -178,7 +178,7 @@ def sendNewPrice(flightId, newPrice):
     stub = Managment_pb2_grpc.FlightsInfoStub(channel)
 
     #get response from Flights Management service
-    output = stub.ModifyFlight(Managment_pb2.UpdatedFlight(flightId=flightId, newPrice=newPrice))
+    output = stub.ModifyFlight(Managment_pb2.UpdatedFlight(flightId=flightId, newPrice=newPrice, airline=airline))
     return output
 
 

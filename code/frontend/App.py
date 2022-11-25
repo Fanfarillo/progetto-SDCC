@@ -822,7 +822,7 @@ def modifyFlight(airline, username):
         flightId = request.form['inputId']
         newPrice = request.form['inputPrice']
 
-        response = sendNewPrice(flightId, newPrice)
+        response = sendNewPrice(flightId, newPrice, airline)
 
         if response.isOk:
             return redirect("/"+airline+"/"+username+"/Prezzi modificati")

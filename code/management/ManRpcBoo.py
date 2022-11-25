@@ -84,7 +84,7 @@ def registerFlight(id, date, departureAirport, arrivalAirport, departureTime, ar
     #we need to return the boolean value
     return output.isOk
 
-def updateFlightPrice(flightId, newPrice, logger, all_discovery_servers):
+def updateFlightPrice(flightId, newPrice, airline, logger, all_discovery_servers):
 # -------------------------------- DISCOVERY -------------------------------------------------------------------
     if (ADDR_PORT == ''):
         discovery_booking_micro(all_discovery_servers, logger)
@@ -97,6 +97,6 @@ def updateFlightPrice(flightId, newPrice, logger, all_discovery_servers):
     stub = Booking_pb2_grpc.BookingServiceStub(channel)
 
     #get response from Flights Management service
-    output = stub.UpdateFlightPrice(Booking_pb2.UpdatedFlight2(flightId=flightId, newPrice=newPrice))
+    output = stub.UpdateFlightPrice(Booking_pb2.UpdatedFlight2(flightId=flightId, newPrice=newPrice, airline=airline))
     #we need to return the boolean value
     return output.isOk

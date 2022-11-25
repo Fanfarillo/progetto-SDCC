@@ -161,8 +161,8 @@ class BookingInfoServicer(Booking_pb2_grpc.BookingServiceServicer):
 
     def UpdateFlightPrice(self, UpdatedFlight2, context):
         logger.info("Aggiornamento del prezzo del volo in corso...")
-        storeUpdatedFlight(UpdatedFlight2.flightId, UpdatedFlight2.newPrice)
-        output = Booking_pb2.UpdateResponse(isOk=True)
+        isOk = storeUpdatedFlight(UpdatedFlight2.flightId, UpdatedFlight2.newPrice, UpdatedFlight2.airline)
+        output = Booking_pb2.UpdateResponse(isOk=isOk)
         return output
     
 

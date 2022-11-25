@@ -58,6 +58,7 @@ message AddResponse {
 message UpdatedFlight {
     string flightId = 1;
     string newPrice = 2;
+    string airline = 3;
 }
 
 message ModFlightResponse {

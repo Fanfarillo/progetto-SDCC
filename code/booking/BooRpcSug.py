@@ -1,5 +1,6 @@
 import grpc
 import time
+import traceback
 
 from proto import Suggestions_pb2
 from proto import Suggestions_pb2_grpc
@@ -100,6 +101,8 @@ def checkFlights(logger, all_discovery_servers):
                     logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.')
 
                 except:
+                    # printing stack trace
+                    traceback.print_exc()
                     logger.info("[COORDINAMENTO CON SUGGESTIONS] Il volo " +  key + " già non era presente di suo all'interno della tabella Storico volo.")
 
             else:           #caso in cui il volo è del futuro
