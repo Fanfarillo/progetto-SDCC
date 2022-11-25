@@ -31,20 +31,20 @@ def discovery_suggestions_micro(all_discovery_servers, logger):
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="code_suggestions_1"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ GET DISCOVERY SUGGESTIONS ] Problema connessione con il discovery server ' + discovery_server + '.')
+                logger.info('[GET DISCOVERY SUGGESTIONS] Problema connessione con il discovery server ' + discovery_server + '.')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ GET DISCOVERY SUGGESTIONS ] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare.')
+                logger.info('[GET DISCOVERY SUGGESTIONS] porta ancora non conosciuta dal discovery server ' + discovery_server + ' riprovare.')
                 time.sleep(2)
                 continue
             ok = True
-            logger.info('[ GET DISCOVERY SUGGESTIONS ] porta del servizio di booking recuperata: ' + res.port + '.')
+            logger.info('[GET DISCOVERY SUGGESTIONS] porta del servizio di booking recuperata: ' + res.port + '.')
             ADDR_PORT = res.serviceName + ':' + res.port
             break
         if(ok):
             break
-        logger.info('[ GET DISCOVERY SUGGESTIONS ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
+        logger.info('[GET DISCOVERY SUGGESTIONS] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
         time.sleep(5)
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 
@@ -76,21 +76,31 @@ def checkFlights(logger, all_discovery_servers):
                 logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella PostiOccupati.')
                 msg = getFlightHistory(key)     #generazione del messaggio contenente lo storico del prezzo del volo da inviare a Sugggestions tramite gRPC
                 logger.info('[COORDINAMENTO CON SUGGESTIONS] Generato il messaggio da inviare a Suggestions relativo al volo ' + key + '.')
-                deleteFromStoricoVolo(key)      #eliminazione del volo dalla tabella StoricoVolo
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella StoricoVolo.')
                 
-                """ Comunicazione gRPC (lato client) con Suggestions """
-                # -------------------------------- DISCOVERY -------------------------------------------------------------------
-                if (ADDR_PORT == ''):
-                    discovery_suggestions_micro(all_discovery_servers, logger)
-                # -------------------------------- DISCOVERY -------------------------------------------------------------------
+                #è necessario ottenere tutte le date in cui era possibile prenotare il volo per rimuovere correttamente il volo dalla tabella StoricoVolo
+                bookingDates = getBookingDates(key)
                 
-                #open gRPC channel
-                channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num    
-                #create client stub
-                stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
-                stub.StoreOldFlight(Suggestions_pb2.OldFlight(oldFlightsMsg=msg))   #non possiamo invocare una return perché il ciclo while deve essere infinito
-                logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.')
+                #non è detto che il volo si trovi effettivamente anche nella tabella StoricoVolo;
+                #il blocco try-except serve ad evitare che un'eccezione dovuta a questo blocchi il coordinamento tra Booking e Suggestions.
+                try:
+                    deleteFromStoricoVolo(key, bookingDates)      #eliminazione del volo dalla tabella StoricoVolo
+                    logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella StoricoVolo.')
+                
+                    """ Comunicazione gRPC (lato client) con Suggestions """
+                    # -------------------------------- DISCOVERY -------------------------------------------------------------------
+                    if (ADDR_PORT == ''):
+                        discovery_suggestions_micro(all_discovery_servers, logger)
+                    # -------------------------------- DISCOVERY -------------------------------------------------------------------
+                
+                    #open gRPC channel
+                    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num    
+                    #create client stub
+                    stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
+                    stub.StoreOldFlight(Suggestions_pb2.OldFlight(oldFlightsMsg=msg))   #non possiamo invocare una return perché il ciclo while deve essere infinito
+                    logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.')
+
+                except:
+                    logger.info("[COORDINAMENTO CON SUGGESTIONS] Il volo " +  key + " già non era presente di suo all'interno della tabella Storico volo.")
 
             else:           #caso in cui il volo è del futuro
                 logger.info('[COORDINAMENTO CON SUGGESTIONS] Il volo ' + key + ' è del futuro.')

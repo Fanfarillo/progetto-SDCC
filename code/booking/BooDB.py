@@ -161,21 +161,21 @@ def discovery_management_micro(all_discovery_servers, logger):
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="management"))
             except:
                 # Si è verificato un problema nella connessione con il discovery server
-                logger.info('[ GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery + '.')
+                logger.info('[GET DISCOVERY MANAGEMENT] Problema connessione con il discovery server ' + discovery + '.')
                 time.sleep(2)
                 continue
             if (res.port == '-1'):
-                logger.info('[ GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery + ' riprovare.')
+                logger.info('[GET DISCOVERY MANAGEMENT] porta ancora non registrata dal discovery server ' + discovery + ' riprovare.')
                 time.sleep(2)
                 continue
             # Non ho avuto problemi di connsessione e la porta restituita è valida.
             ok = True
-            logger.info('[ GET DISCOVERY MANAGEMENT] porta del servizio di management recuperata: ' + res.port + '.')
+            logger.info('[GET DISCOVERY MANAGEMENT] porta del servizio di management recuperata: ' + res.port + '.')
             ADDR_PORT = res.serviceName + ':' + res.port
             break
         if(ok):
             break
-        logger.info('[ GET DISCOVERY MANAGEMENT ] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
+        logger.info('[GET DISCOVERY MANAGEMENT] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
         time.sleep(5)
 # ----------------------------------------------------- DISCOVERY --------------------------------------------
 
@@ -408,7 +408,7 @@ def retrieveArrivals():
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_VOLO)
 
-    arrivals = []     #la lista degli aeroporti di partenza da restituire al chiamante
+    arrivals = []     #la lista degli aeroporti di arrivo da restituire al chiamante
 
     response = table.scan()
 
@@ -499,17 +499,59 @@ def deleteFromPostiOccupati(idVolo):
     )
     
 
-def deleteFromStoricoVolo(idVolo):
+def deleteFromStoricoVolo(idVolo, bookingDates):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_STORICO_VOLO)
 
-    #delete an item from 'StoricoVolo' table in DynamoDB
-    table.delete_item(
-        TableName=TABELLA_STORICO_VOLO,
-        Key={
-            'IdVolo': idVolo,
-        }
-    )
+    for date in bookingDates:
+        #delete an item from 'StoricoVolo' table in DynamoDB
+        table.delete_item(
+            TableName=TABELLA_STORICO_VOLO,
+            Key={
+                'IdVolo': idVolo,
+                'Prenotazione': date
+            }
+        )
+
+
+"""
+Restituisce tutte le date in cui era possibile prenotare un determinato volo. Per far ciò, sfrutta la tabella StoricoVolo.
+"""
+def getBookingDates(idVolo):
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_STORICO_VOLO)
+
+    bookingDates = []     #la lista delle date da restituire al chiamante
+
+    response = table.scan()
+
+    """
+    La variabile items è una lista di dizionari fatta nel seguente modo:
+    [{}, {}, ..., {}]
+    """
+    items = response['Items']
+
+    #itero sui dizionari.
+    for item in items:
+        """
+        Qui vengono definite due variabili d'appoggio:
+        idRecuperato, dataPrenotazione
+        """
+        idRecuperato = ""
+        dataPrenotazione = ""
+
+        #itero su tutte le coppie (key, value) del dizionario fissato.
+        for key, value in item.items():
+            #retrieve dell'ID del volo
+            if key=='IdVolo':
+                idRecuperato = value
+            elif key=='Prenotazione':
+                dataPrenotazione = value
+
+        if idRecuperato==idVolo:    #chiaramente non inserisco nella lista informazioni relative ad altri voli
+            bookingDates.append(dataPrenotazione)
+
+    return bookingDates
 
 
 """
@@ -534,7 +576,7 @@ def getFlightHistory(idVolo):
     #itero sui dizionari.
     for item in items:
         """
-        Qui vengono definite due variabili d'appoggio:
+        Qui vengono definite alcune variabili d'appoggio:
         idRecuperato, dataPrenotazione, dataVolo, aeroportoPartenza, aeroportoArrivo, compagniaAerea, prezzoBase
         """
         idRecuperato = ""

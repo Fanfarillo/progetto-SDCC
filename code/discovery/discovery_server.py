@@ -324,7 +324,7 @@ else:
     other_discovery_server = SERVER_1
 
 if other_discovery_server is None:
-    logger_warnings.warning("[ FATAL ]: Errore nella risoluzione dell'indirizzo IP del discovery server.")            
+    logger_warnings.warning("[FATAL]: Errore nella risoluzione dell'indirizzo IP del discovery server.")            
     sys.exit(1)
 
 
