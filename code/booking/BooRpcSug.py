@@ -1,6 +1,5 @@
 import grpc
 import time
-import traceback
 
 from proto import Suggestions_pb2
 from proto import Suggestions_pb2_grpc
@@ -23,10 +22,10 @@ def discovery_suggestions_micro(all_discovery_servers, logger):
         Itero sui discovery servers noti al microservizio
         per ottenere la porta ricercata.
         """
-        for discovery in all_discovery_servers:
+        for discovery_server in all_discovery_servers:
             try:
                 # Provo a connettermi al server.
-                channel = grpc.insecure_channel(discovery)
+                channel = grpc.insecure_channel(discovery_server)
                 stub = Discovery_pb2_grpc.DiscoveryServiceStub(channel)
                 # Ottengo la porta su cui è in ascolto il microservizio di Booking
                 res = stub.get(Discovery_pb2.GetRequest(serviceName="booking" , serviceNameTarget="code_suggestions_1"))
@@ -81,29 +80,41 @@ def checkFlights(logger, all_discovery_servers):
                 #è necessario ottenere tutte le date in cui era possibile prenotare il volo per rimuovere correttamente il volo dalla tabella StoricoVolo
                 bookingDates = getBookingDates(key)
                 
-                #non è detto che il volo si trovi effettivamente anche nella tabella StoricoVolo;
-                #il blocco try-except serve ad evitare che un'eccezione dovuta a questo blocchi il coordinamento tra Booking e Suggestions.
+                """
+                Non è detto che il volo si trovi effettivamente anche nella tabella StoricoVolo.
+                Il blocco try-except serve ad evitare che un'eccezione dovuta a questo blocchi il coordinamento tra Booking e Suggestions.
+                La variabile rpc, a tal proposito, indica se deve essere effettuata la chiamata gRPC al microservizio Suggestions.
+                """
+                rpc = True
                 try:
                     deleteFromStoricoVolo(key, bookingDates)      #eliminazione del volo dalla tabella StoricoVolo
                     logger.info('[COORDINAMENTO CON SUGGESTIONS] Eliminato il volo ' + key + ' dalla tabella StoricoVolo.')
-                
-                    """ Comunicazione gRPC (lato client) con Suggestions """
+                except:
+                    logger.info("[COORDINAMENTO CON SUGGESTIONS] Il volo " +  key + " già non era presente di suo all'interno della tabella StoricoVolo.")
+                    rpc = False
+
+                if rpc == True:
                     # -------------------------------- DISCOVERY -------------------------------------------------------------------
                     if (ADDR_PORT == ''):
                         discovery_suggestions_micro(all_discovery_servers, logger)
                     # -------------------------------- DISCOVERY -------------------------------------------------------------------
-                
-                    #open gRPC channel
-                    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num    
-                    #create client stub
-                    stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
-                    stub.StoreOldFlight(Suggestions_pb2.OldFlight(oldFlightsMsg=msg))   #non possiamo invocare una return perché il ciclo while deve essere infinito
-                    logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.')
 
-                except:
-                    # printing stack trace
-                    traceback.print_exc()
-                    logger.info("[COORDINAMENTO CON SUGGESTIONS] Il volo " +  key + " già non era presente di suo all'interno della tabella Storico volo.")
+                    while(True):
+                        try:
+                            """ Comunicazione gRPC (lato client) con Suggestions """               
+                            #open gRPC channel
+                            channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num    
+                            #create client stub
+                            stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
+                            #non possiamo invocare una return perché il ciclo while deve essere infinito
+                            stub.StoreOldFlight(Suggestions_pb2.OldFlight(oldFlightsMsg=msg))
+                            logger.info('[COORDINAMENTO CON SUGGESTIONS] Inviato il messaggio a Suggestions mediante chiamata gRPC.')
+                            break
+                        except:
+                            #se entriamo qui, vuol dire che il microservizio Suggestions non è ancora sveglio
+                            logger.info('[COORDINAMENTO CON SUGGESTIONS] Ancora non è possibile inviare il messaggio a Suggestions mediante chiamata gRPC.')
+                            time.sleep(5)
+                            continue
 
             else:           #caso in cui il volo è del futuro
                 logger.info('[COORDINAMENTO CON SUGGESTIONS] Il volo ' + key + ' è del futuro.')

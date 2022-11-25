@@ -58,3 +58,62 @@ TESTING SET TIPO
 3	hh	RM	MI	no
 2	hh	RM	MI	no
 1	hh	RM	MI	no
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+{
+  "IdVolo": {
+    "S": "prova1"
+  },
+  "Prenotazione": {
+    "S": "24-11-2022"
+  },
+  "Aeroporto arrivo": {
+    "S": "Charles De Gaulle (Parigi)"
+  },
+  "Aeroporto partenza": {
+    "S": "Fiumicino (Roma)"
+  },
+  "Compagnia aerea": {
+    "S": "ITA"
+  },
+  "Data volo": {
+    "S": "25-11-2022"
+  },
+  "Prezzo base": {
+    "N": "120"
+  }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+{
+  "Id": {
+    "S": "prova1"
+  },
+  "Aeroporto arrivo": {
+    "S": "Charles De Gaulle (Parigi)"
+  },
+  "Aeroporto partenza": {
+    "S": "Fiumicino (Roma)"
+  },
+  "Compagnia aerea": {
+    "S": "ITA"
+  },
+  "Data": {
+    "S": "25-11-2022"
+  },
+  "Orario arrivo": {
+    "S": "03:17PM"
+  },
+  "Orario partenza": {
+    "S": "01:43PM"
+  },
+  "Posti liberi": {
+    "N": "156"
+  },
+  "Prezzo base": {
+    "N": "120"
+  }
+}
+

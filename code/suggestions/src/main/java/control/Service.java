@@ -134,7 +134,8 @@ public class Service extends SuggestionsServiceImplBase {
 
         //questa funzione riceve nuovi dati da aggiungere poi al training set
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
-        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.\n");
+        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.\n\n");
+        opfile.writeLog("Il messaggio ricevuto è:\n" + req.getOldFlightsMsg() + "\n\n");
 
         boolean output = PopulateArff.storeNewData(req.getOldFlightsMsg());
 

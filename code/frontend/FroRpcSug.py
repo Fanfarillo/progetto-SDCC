@@ -63,7 +63,7 @@ def getNumDaysBefore(card, today):
     #create client stub
     stub = Suggestions_pb2_grpc.SuggestionsServiceStub(channel)
 
-    #get response from Payment service
+    #get response from Suggestions service
     output = stub.GetSelectedFlight(Suggestions_pb2.SelectedFlight(bookingDate=today, flightDate=card.data, airline=card.compagnia, departureAirport=card.partenza, arrivalAirport=card.arrivo))
     #we need to return the numeric value
     return output.numDaysBeforeConvenient
