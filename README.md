@@ -1,4 +1,4 @@
-# PROGETTO SDCC - TIPOLOGIA A2
+# Progetto SDCC - tipologia A2
 Per poter utilizzare l'applicazione, pensata per essere eseguita in un sistema Unix (in particolare noi abbiamo utilizzato Ubuntu), è necessario aver installato nel proprio PC:
 - Git
 - Python 3
