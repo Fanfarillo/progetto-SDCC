@@ -7,7 +7,7 @@ Per poter utilizzare l'applicazione, pensata per essere eseguita in un sistema U
 - Docker
 - Docker Compose
 
-##Installazione dell'applicazione
+## Installazione dell'applicazione
 Per installare l'applicazione all'interno del proprio PC, è sufficiente eseguire il seguente comando: git clone https://github.com/Fanfarillo/progetto-SDCC.git.
 
 ## Configurazione dell'applicazione
