@@ -27,7 +27,7 @@ all_discovery_servers = ['code_discovery_2:50060']
 CHUNK_DIM = 1000
 numByteTrasmessiMod = 0
 numIterazioniMassimo = 0
-MAX = 1000
+MAX = 100000
 
 
 class PayServicer(Payment_pb2_grpc.PayServicer):
