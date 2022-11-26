@@ -7,13 +7,12 @@ from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_2:50060'
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 
 
-# --------------------------------------DISCOVERY -----------------------------
+
+
 """
 Ha il compito di recuperare la porta su cui
 il microservizio payment è in ascolto.
@@ -44,18 +43,16 @@ def discovery_payment():
             # Problema nella connessione con il server.
             time.sleep(5)
             continue
-# --------------------------------------DISCOVERY -----------------------------
+
 
 
 def sendPayment(username, card, postiSelezionati, dataPagamento, prezzoBase, prezzoSelezionePosti, prezzoServiziAggiuntivi, prezzoTotale, serviziSelezionati, email):
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di payment.
     """
     if (ADDR_PORT == ''):
         discovery_payment()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
 

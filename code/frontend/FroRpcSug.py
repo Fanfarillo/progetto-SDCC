@@ -7,13 +7,11 @@ from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_2:50060'
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 
 
-# --------------------------------------DISCOVERY -----------------------------
+
 """
 Ha il compito di recuperare la porta su cui
 il microservizio suggestions è in ascolto.
@@ -43,19 +41,18 @@ def discovery_suggestions():
             # Problema nella connessione con il server.
             time.sleep(5)
             continue
-# --------------------------------------DISCOVERY -----------------------------
+
+
 
 
 def getNumDaysBefore(card, today):
 
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di payment.
     """
     if (ADDR_PORT == ''):
         discovery_suggestions()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num

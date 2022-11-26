@@ -7,19 +7,14 @@ from proto import Discovery_pb2_grpc
 import time
 
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_1:50060'
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
-
 
 
 class CardResult:
     def __init__(self, cards, num):
         self.cards = cards
         self.num = num
-
-
 
 
 
@@ -45,6 +40,7 @@ class Card:
         self.numPosti = numPosti
 
 
+
 class AirportResult:
     def __init__(self, departures, arrivals):
         self.departures = departures    #tutti gli aeroporti di partenza
@@ -52,7 +48,6 @@ class AirportResult:
 
 
 
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 """
 Ha il compito di recuperare la porta su cui
 il microservizio booking è in ascolto.
@@ -82,8 +77,6 @@ def discovery_booking():
             # Problema nella connessione con il server.
             time.sleep(5)
             continue
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
-
 
 
 
@@ -91,22 +84,18 @@ def discovery_booking():
 """
 Ha il compito di costruire la lista di Card contenenti
 le informazioni relative ai voli che corrispondono ai
-dati inseriti dall'utente. Bisogna tener conto anche del
-fatto che l'utente ha richiesto di prenotare un certo
-numero N di biglietti. I voli che devono essere restituiti
-hanno la disponibilità richiesta dall'utente (i.e., Disponibilità >= N)
+dati inseriti dall'utente.
 """
 def sendBookingInfo(giorno, mese, anno, aeroporto_partenza, aeroporto_arrivo):
     cards = []
     count = 0
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
+
     """
     Verifico se il frontend già è a conoscenza della porta
     su cui contattare il micorservizio di booking.
     """
     if (ADDR_PORT == ''):
         discovery_booking()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     #with grpc.insecure_channel(ADDR_PORT) as channel: #server_IP_addr:port_num
     channel = grpc.insecure_channel(ADDR_PORT)
@@ -120,6 +109,8 @@ def sendBookingInfo(giorno, mese, anno, aeroporto_partenza, aeroporto_arrivo):
     return result
 
 
+
+
 """
 Ha il compito di costruire un oggetto composto da due liste di aeroporti.
 La prima lista contiene gli aeroporti di partenza di tutti i voli,
@@ -128,10 +119,9 @@ mentre la seconda contiene gli aeroporti di arrivo di tutti i voli.
 def retrieveAirports():
     departures = []
     arrivals = []
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
+
     if (ADDR_PORT == ''):
         discovery_booking()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Booking_pb2_grpc.BookingServiceStub(channel)

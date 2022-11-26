@@ -25,6 +25,9 @@ discovery server.
 all_discovery_servers = ['code_discovery_1:50060']
 
 CHUNK_DIM = 1000
+numByteTrasmessiMod = 0
+numIterazioniMassimo = 0
+MAX = 10
 
 
 
@@ -34,6 +37,9 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
 
 
     def getLogFileMan(self, request, context):
+        global numByteTrasmessiMod
+        global numIterazioniMassimo
+
     	# Logging.
         logger.info("[LOGGING] richiesta dati di logging...\n")
         r = -1
@@ -43,29 +49,39 @@ class FlightsInfoServicer(Managment_pb2_grpc.FlightsInfoServicer):
         f = open("managment.log","r")
         
         contenuto = f.read()
+
+        low = numByteTrasmessiMod + (numIterazioniMassimo*MAX)
+
+        contenutoDaTrasferire = contenuto[low:]
         
-        dim = len(contenuto)
+        dim = len(contenutoDaTrasferire)
         
         q = dim // CHUNK_DIM
         r = dim % CHUNK_DIM
         
         if(q==0):
-        	yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto.encode(), num_chunk  =0)
+        	yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenutoDaTrasferire.encode(), num_chunk  =0)
         else:
         	count = 0        
         	for i in range(0, q):
         		try:
-        			yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
+        			yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenutoDaTrasferire[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
         			logger.info("[LOGGING] Dati di logging inviati senza successo.")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
-        		yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
+        		yield Managment_pb2.GetLogFileReplyMan(chunk_file = contenutoDaTrasferire[lower_bound:lower_bound+r].encode(), num_chunk  =count)
         logger.info("[LOGGING] Dati di logging inviati con successo.")
         # open file 
         f.close()
 
+        # Gestione Overflow
+        if(numByteTrasmessiMod + dim > MAX):
+            numIterazioniMassimo = numIterazioniMassimo + ((numByteTrasmessiMod + dim) // MAX)
+            numByteTrasmessiMod = numByteTrasmessiMod + dim - (((numByteTrasmessiMod + dim) // MAX) * MAX)
+        else:
+            numByteTrasmessiMod = numByteTrasmessiMod + dim
 
 
     def AddFlight(self, NewFlight, context):
@@ -287,7 +303,6 @@ logger.info('Server avviato con successo.')
 
 
 
-# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
 
 """
 Registrazione del microservizio al Discovery Server di default.
@@ -314,7 +329,6 @@ for item in all_discovery_servers:
     logger.info(item + '\n')
 logger.info('\n\n')
 
-# ------------------------------------------- DISCOVERY -------------------------------------------------------------------------------------------
 
 
 try:

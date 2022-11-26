@@ -10,12 +10,8 @@ from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_2:50060'
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
-
-
 
 
 class Output:
@@ -25,7 +21,7 @@ class Output:
 
 
 
-# --------------------------------------DISCOVERY -----------------------------
+
 """
 Ha il compito di recuperare la porta su cui
 il microservizio registration è in ascolto.
@@ -55,7 +51,7 @@ def discovery_registration():
             # Problema nella connessione con il server.
             time.sleep(5)
             continue
-# --------------------------------------DISCOVERY -----------------------------
+
 
 
 
@@ -67,24 +63,19 @@ messaggio contenente tutte le informazioni
 necessarie per l'iscrizione.
 """
 def sendSignUpInfo(username, password, passwordConfirm, userType, airline, cartaDiCredito):
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
-    Verifico se il fronted già è a conoscenza della porta
+    Verifico se il frontend già è a conoscenza della porta
     su cui contattare il micorservizio di registration.
     """
     if (ADDR_PORT == ''):
         discovery_registration()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
+
     channel = grpc.insecure_channel(ADDR_PORT)
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
     """
     Implemento meccanismi di sicurezza:
-    - Integrità del messaggio
-    - Cifratura
-    
-    1. Calcolo del digest del messaggio utilizando SHA-256
-    2. Cifratura dei dati utilizzando AES-128
+    - Cifratura: Cifratura dei dati utilizzando AES-128
     """
     cipher = Security(b"mysecretpassword")
 
@@ -130,6 +121,7 @@ def sendSignUpInfo(username, password, passwordConfirm, userType, airline, carta
 
 
 
+
 """
 Instanzia un canale di comunicazione con il
 microservizio che gestisce il login per
@@ -138,24 +130,19 @@ messaggio contenente tutte le informazioni
 necessarie per effettuare il login.
 """
 def sendCredentials(username, password):
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di registration.
     """
     if (ADDR_PORT == ''):
         discovery_registration()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
-    channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
+
+    channel = grpc.insecure_channel(ADDR_PORT)
     stub = Registration_pb2_grpc.UsersInfoStub(channel)
 
     """
     Implemento meccanismi di sicurezza:
-    - Integrità del messaggio
-    - Cifratura
-    
-    1. Calcolo del digest del messaggio utilizando SHA-256
-    2. Cifratura dei dati utilizzando AES-128
+    - Cifratura: Cifratura dei dati utilizzando AES-128
     """
     cipher = Security(b"mysecretpassword")
 

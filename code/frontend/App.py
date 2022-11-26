@@ -108,7 +108,6 @@ def accesso():
         # Password
         password = request.form['inputPassword']
 
-
         """
         Verifico le credenziali inserite dall'utente.
         Il campo isCorrect vale TRUE nel momento in
@@ -160,7 +159,6 @@ def home(username):
     #qui è necessario fare una query a Booking per recuperare gli aeroporti da inserire nelle scrollbar "Aeroporto di partenza" e "Aeroporto di destinazione"
     airportsLists = retrieveAirports()
 
-    print("[DEBUG SESSIONE (/username/home)]: key = " + username + "   value = " + str(session.get(username)))
     return render_template("Home.html", username=username, airportsLists=airportsLists)
 
 
@@ -249,11 +247,6 @@ def booking(username):
             date = getDate(giorno, mese, anno)
 
             #non è possibile avere gli aeroporti non selezionati
-            """
-            if partenza=="Selezionare un aeroporto" or arrivo=="Selezionare un aeroporto":
-                stringa = "È NECESSARIO SELEZIONARE GLI AEROPORTI DI PARTENZA E DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
-                return render_template("errore.html", errore=stringa, airline=None, username=username)
-            """
 
             #sanity checks are the following:
             #   1) Date should exist (e.g. it cannot be '31-04-2023')
@@ -280,12 +273,6 @@ def booking(username):
             """
             result = sendBookingInfo(giorno, mese, anno, arrivo, partenza)
 
-            """
-            Questo pezzo di codice si dovrebbe levare poiché il numero di persone
-            viene scelto successivamente...
-            for card in result.cards:
-                card.prezzoBase = float(card.prezzoBase) * float(persone)
-            """
             #aggiorno la sessione per questo nuovo utente in modo da portarmi appresso dati necessari per la gestione
             session.pop(username)
             #Mi porto appresso le informazioni relative al numero di persone specficate dall'utente e ai voli che corrispondono alle richieste dell'utente
@@ -304,6 +291,8 @@ def booking(username):
         return redirect("/accedi", 401)
 
 
+
+
 @app.route("/<string:username>/<string:compagnia>/<string:idVolo>/resoconto", methods=('GET','POST'))
 def resoconto(username, compagnia, idVolo):
     """
@@ -314,8 +303,7 @@ def resoconto(username, compagnia, idVolo):
 
     """
     Non solo devo controllare se esiste la chiave ma devo anche verificare se 
-    il dizionario è configurato correttamente per la sessione:
-    {'username':value1, 'cards':value3}
+    il dizionario è configurato correttamente per la sessione.
     """
     diz = session.get(username)
 
@@ -326,7 +314,6 @@ def resoconto(username, compagnia, idVolo):
         """
         session.pop(username)
         return redirect("/accedi", 401)
-
 
     cardSelezionata = None
 
@@ -345,15 +332,6 @@ def resoconto(username, compagnia, idVolo):
                 """
                 check = True
                 cardSelezionata = card
-                """
-                partenza = card.partenza
-                arrivo = card.arrivo
-                compagnia = card.compagnia
-                orario = card.orario
-                data = card.data
-                prezzoBase = card.prezzoBase
-                numPosti = card.numPosti
-                """
 
         if(not check):
             """
@@ -373,6 +351,8 @@ def resoconto(username, compagnia, idVolo):
     session[username] = diz
 
     return render_template("resoconto.html", username = username, card = cardSelezionata)
+
+
 
 
 @app.route("/<string:username>/<string:compagnia>/<string:idVolo>/serviziAggiuntivi")
@@ -464,6 +444,8 @@ def serviziAggiuntivi(username, compagnia, idVolo):
     return render_template("serviziAggiuntivi.html", username = username, card=cardSelezionata, seatsFlight = seatsFlight, additionalServices = additionalServices, postiDisponibiliVolo = postiDisponibiliVolo)
 
 
+
+
 @app.route("/<string:username>/pagamento", methods=('GET','POST'))
 def pagamentoNormale(username):
 
@@ -525,6 +507,7 @@ def pagamentoNormale(username):
             
 
 
+
 @app.route("/<string:username>/personalizzato", methods=('GET','POST'))
 def pagamentoPersonalizzato(username):
 
@@ -580,6 +563,8 @@ def pagamentoPersonalizzato(username):
     return redirect("/accedi", 302)
 
 
+
+
 @app.route("/<string:username>/<string:idVolo>/conferma", methods=('GET','POST'))
 def confermaRiepilogo(username, idVolo):
     
@@ -612,6 +597,8 @@ def confermaRiepilogo(username, idVolo):
     
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
+
+
 
 
 @app.route("/<string:username>/<string:idVolo>/personalizzato", methods=('GET','POST'))
@@ -675,6 +662,8 @@ def personalizzato(username, idVolo):
 
     #Per gestire eventuali richieste di GET in cui vado a scrivere l'URL direttamente
     return redirect("/accedi", 302)
+
+
 
 
 @app.route("/<string:username>/<string:compagnia>/<string:idVolo>/suggerimento")
@@ -755,6 +744,8 @@ def visualizzaSuggerimento(username, compagnia, idVolo):
         return render_template("errore.html", errore=stringa, airline=None, username=username)
 
 
+
+
 #logout
 @app.route("/<string:username>/logout")
 def logoutUtentePrenotazione(username):
@@ -768,6 +759,8 @@ def logoutUtentePrenotazione(username):
     return redirect("/accedi")
 
 
+
+
 @app.route("/<string:airline>/<string:username>/logout")
 def logoutUtenteAirline(airline, username):
     if session.get(airline+username) is None:
@@ -778,6 +771,8 @@ def logoutUtenteAirline(airline, username):
     session.pop(airline+username)
 
     return redirect("/accedi")
+
+
 
 
 #here the airline adds a new flight
@@ -811,6 +806,8 @@ def addFlight(airline, username):
     return render_template("AddFlight.html", airline=airline, username=username)
 
 
+
+
 #here the airline modifies the price of an existing flight
 @app.route("/<string:airline>/<string:username>/modifyFlight", methods=('GET', 'POST'))
 def modifyFlight(airline, username):
@@ -830,6 +827,8 @@ def modifyFlight(airline, username):
             return render_template("errore.html", errore=response.error, airline=airline, username=username)
 
     return render_template("ModifyFlight.html", airline=airline, username=username)
+
+
 
 
 #here the airline modifies the price for seat selection
@@ -854,6 +853,8 @@ def modifySeatsPrices(airline, username):
             return render_template("errore.html", errore=response.error, airline=airline, username=username)
 
     return render_template("ModifySeatsPrices.html", airline=airline, username=username)
+
+
 
 
 #here the airline modifies the price of extra-services
@@ -881,6 +882,8 @@ def modifyServicesPrices(airline, username):
     return render_template("ModifyServicesPrices.html", airline=airline, username=username)
 
 
+
+
 #here an ok message is shown
 @app.route("/<string:airline>/<string:username>/<string:okMessage>", methods=('GET', 'POST'))
 def showOkMessage(airline, username, okMessage):
@@ -891,6 +894,8 @@ def showOkMessage(airline, username, okMessage):
         return redirect("/"+airline+"/"+username+"/airlineHome")
 
     return render_template("ManagementOk.html", airline=airline, username=username, okMessage=okMessage)
+
+
 
 
 if __name__ == "__main__":

@@ -23,13 +23,20 @@ discovery server.
 """
 all_discovery_servers = ['code_discovery_2:50060']
 # ------------------------------------------------------ DISCOVERY -----------------------------------------------------
+
 CHUNK_DIM = 1000
+numByteTrasmessiMod = 0
+numIterazioniMassimo = 0
+MAX = 1000
 
 
 class PayServicer(Payment_pb2_grpc.PayServicer):
 
 
     def getLogFilePay(self, request, context):
+        global numByteTrasmessiMod
+        global numIterazioniMassimo
+
     	# Logging.
         logger.info("[LOGGING] richiesta dati di logging...\n")
         r = -1
@@ -39,28 +46,41 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         f = open("payment.log","r")
         
         contenuto = f.read()
+
+        low = numByteTrasmessiMod + (numIterazioniMassimo*MAX)
+
+        contenutoDaTrasferire = contenuto[low:]
         
-        dim = len(contenuto)
+        dim = len(contenutoDaTrasferire)
         
         q = dim // CHUNK_DIM
         r = dim % CHUNK_DIM
         
         if(q==0):
-        	yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto.encode(), num_chunk  =0)
+        	yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenutoDaTrasferire.encode(), num_chunk  =0)
         else:
         	count = 0        
         	for i in range(0, q):
         		try:
-        			yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
+        			yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenutoDaTrasferire[i*CHUNK_DIM:i*CHUNK_DIM+CHUNK_DIM].encode(), num_chunk  =i)
         		except:
         			logger.info("[LOGGING] Dati di logging inviati senza successo.")
         		count = count + 1
         	if(r > 0):
         		lower_bound = count * CHUNK_DIM
-        		yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk  =count)
+        		yield Payment_pb2.GetLogFileReplyPay(chunk_file = contenutoDaTrasferire[lower_bound:lower_bound+r].encode(), num_chunk  =count)
         logger.info("[LOGGING] Dati di logging inviati con successo.")
         # open file 
         f.close()
+
+
+        # Gestione Overflow
+        if(numByteTrasmessiMod + dim > MAX):
+            numIterazioniMassimo = numIterazioniMassimo + ((numByteTrasmessiMod + dim) // MAX)
+            numByteTrasmessiMod = numByteTrasmessiMod + dim - (((numByteTrasmessiMod + dim) // MAX) * MAX)
+        else:
+            numByteTrasmessiMod = numByteTrasmessiMod + dim
+
 
 
 

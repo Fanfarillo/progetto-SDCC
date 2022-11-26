@@ -7,12 +7,8 @@ from proto import Discovery_pb2
 from proto import Discovery_pb2_grpc
 
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 ADDR_PORT = ''
 DISCOVERY_SERVER = 'code_discovery_1:50060'
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
-
-
 
 
 class AdditionalServices:
@@ -23,7 +19,6 @@ class AdditionalServices:
         self.bagaglioStivaGrande = bagaglioStivaGrande
         self.bagaglioSpeciale = bagaglioSpeciale
         self.neonato = neonato
-
 
 
 class SeatsFlight:
@@ -37,7 +32,6 @@ class SeatsFlight:
 
 
 
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 """
 Ha il compito di recuperare la porta su cui
 il microservizio di Management è in ascolto.
@@ -67,18 +61,17 @@ def discovery_management():
             # Problema nella connessione con il server.
             time.sleep(5)
             continue
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
+
+
 
 
 def sendIdCompanySeatsPrice(compagnia):   
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di management.
     """
     if (ADDR_PORT == ''):
         discovery_management()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     # Apertura di un gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -105,14 +98,12 @@ def sendIdCompanySeatsPrice(compagnia):
 
 
 def sendIdCompanyAdditionalService(compagnia):
- # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di management.
     """
     if (ADDR_PORT == ''):
         discovery_management()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     # Apertura di un gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -139,15 +130,14 @@ def sendIdCompanyAdditionalService(compagnia):
 
 
 
+
 def sendNewFlight(id, date, departureAirport, arrivalAirport, departureTime, arrivalTime, airline, price, seats):
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di management.
     """
     if (ADDR_PORT == ''):
         discovery_management()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -161,15 +151,14 @@ def sendNewFlight(id, date, departureAirport, arrivalAirport, departureTime, arr
 
 
 
+
 def sendNewPrice(flightId, newPrice, airline):
- # -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di management.
     """
     if (ADDR_PORT == ''):
         discovery_management()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -184,14 +173,12 @@ def sendNewPrice(flightId, newPrice, airline):
 
 
 def sendSeatsPrices(airline, price1, price2, price6, price16, price18):
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di management.
     """
     if (ADDR_PORT == ''):
         discovery_management()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num
@@ -206,14 +193,12 @@ def sendSeatsPrices(airline, price1, price2, price6, price16, price18):
 
 
 def sendServicesPrices(airline, priceBM, priceBG, priceBS, priceAD, priceAB, priceTN):
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     """
     Verifico se il fronted già è a conoscenza della porta
     su cui contattare il micorservizio di management.
     """
     if (ADDR_PORT == ''):
         discovery_management()
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     #open gRPC channel
     channel = grpc.insecure_channel(ADDR_PORT)  #server_IP_addr:port_num

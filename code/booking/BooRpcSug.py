@@ -8,12 +8,11 @@ from proto import Discovery_pb2_grpc
 
 from BooDB import *
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
+
 ADDR_PORT = ''
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
 
 
-# ----------------------------------------------------- DISCOVERY --------------------------------------------
+
 def discovery_suggestions_micro(all_discovery_servers, logger):
     global ADDR_PORT
     ok = False
@@ -46,7 +45,6 @@ def discovery_suggestions_micro(all_discovery_servers, logger):
             break
         logger.info('[GET DISCOVERY SUGGESTIONS] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
         time.sleep(5)
-# ----------------------------------------------------- DISCOVERY --------------------------------------------
 
 
 """

@@ -4,7 +4,7 @@ import grpc
 import time
 
 
-# ---------------------------------------- DISCOVERY ---------------------------------------------
+
 def put_discovery_server(discovery_servers, logger):
     new_discovery_servers = []
     """
@@ -45,4 +45,4 @@ def put_discovery_server(discovery_servers, logger):
         time.sleep(5)       
 
     return new_discovery_servers
-# ---------------------------------------- DISCOVERY ---------------------------------------------
+

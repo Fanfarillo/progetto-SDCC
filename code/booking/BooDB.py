@@ -15,9 +15,9 @@ from proto import Discovery_pb2_grpc
 from BooUtils import *
 
 
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
+
 ADDR_PORT = ''
-# -------------------------------------------------- DISCOVERY ----------------------------------------------
+
 
 DYNAMODB = 'dynamodb'
 REGIONE = 'us-east-1'
@@ -149,7 +149,7 @@ def storeUpdatedFlight(flightId, newPrice, airline):
 
 
 
-# ----------------------------------------------------- DISCOVERY --------------------------------------------
+
 def discovery_management_micro(all_discovery_servers, logger):
     global ADDR_PORT
     ok = False
@@ -183,7 +183,6 @@ def discovery_management_micro(all_discovery_servers, logger):
             break
         logger.info('[GET DISCOVERY MANAGEMENT] Richiesta di GET avvenuta con insuccesso presso tutti i discovery servers.')
         time.sleep(5)
-# ----------------------------------------------------- DISCOVERY --------------------------------------------
 
 
 
@@ -365,11 +364,9 @@ def retrieveFlights(giorno, mese, anno, partenza, arrivo, all_discovery_servers,
         orario = ''
         append = True
 
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
     if (ADDR_PORT == ''):
         # Recupero la porta su cui è in ascolto il microservizio di Management.
         discovery_management_micro(all_discovery_servers,logger)
-# -------------------------------- DISCOVERY -------------------------------------------------------------------
 
     # La porta del microservizio di Management è stata recuperata con successo.
     channel = grpc.insecure_channel(ADDR_PORT)
