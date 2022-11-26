@@ -8,7 +8,8 @@ Per poter utilizzare l'applicazione, pensata per essere eseguita in un sistema U
 - Docker Compose
 
 ## Installazione dell'applicazione
-Per installare l'applicazione all'interno del proprio PC, è sufficiente eseguire il seguente comando: git clone https://github.com/Fanfarillo/progetto-SDCC.git.
+Per installare l'applicazione all'interno del proprio PC, è sufficiente eseguire il seguente comando:<br>
+git clone https://github.com/Fanfarillo/progetto-SDCC.git.
 
 ## Configurazione dell'applicazione
 È possibile istanziare e pre-popolare le tabelle (chiave, valore) relative ai microservizi stateless su DynamoDB lanciando lo script CreateTables.sh (che si trova all'interno della directory /code/initialization). È altresì possibile eliminare tali tabelle mediante lo script RemoveTables.sh (che si trova all'interno della directory /code).<br>
