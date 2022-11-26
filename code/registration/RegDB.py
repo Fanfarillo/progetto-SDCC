@@ -49,7 +49,7 @@ def storeUser(username, password, userType_d, airline, cartaDiCredito, userType)
                 'Username': Binary(username),
                 'Password': Binary(password),
                 'Tipo': Binary(typeToStore),
-                'cartaDiCredito': Binary(cartaDiCredito)
+                'Carta di credito': Binary(cartaDiCredito)
             }
         )
     except Exception:

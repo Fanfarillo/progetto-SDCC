@@ -32,7 +32,7 @@ public class SugClient {
         ManagedChannel channel = null;
         try {     
             //open gRPC channel
-            channel = ManagedChannelBuilder.forAddress("suggestions", 50055).usePlaintext().build();      
+            channel = ManagedChannelBuilder.forAddress(Suggestions.suggestions2, 50055).usePlaintext().build();      
             //create client stub
             SugClient client = new SugClient(channel);
             //send message

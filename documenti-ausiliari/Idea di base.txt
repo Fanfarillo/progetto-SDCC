@@ -103,14 +103,14 @@ TESTING SET TIPO
   "Data": {
     "S": "25-11-2022"
   },
+  "Liberi": {
+    "N": "156"
+  },
   "Orario arrivo": {
     "S": "03:17PM"
   },
   "Orario partenza": {
     "S": "01:43PM"
-  },
-  "Posti liberi": {
-    "N": "156"
   },
   "Prezzo base": {
     "N": "120"

@@ -513,7 +513,7 @@ def pagamentoNormale(username):
             if isOk:
                 return render_template("PagamentoConcluso.html", username=username, card=cardSelezionata, numTickets=numBigliettiSelezionato, paymentDate=dataPagamento, basePrice=prezzoTotale, selectedSeats=postiPresi, seatsPrice='0', selectedServices=serviziSelezionati, servicesPrice='0', totalPrice=prezzoTotale, email=email)
             else:
-                stringa = "SI È VERIFICATO UN ERRORE NELLA FINALIZZAZIONE DEL PAGAMENTO\nRIPROVARE PIÙ TARDI."
+                stringa = "SI È VERIFICATO UN ERRORE NELLA FINALIZZAZIONE DEL PAGAMENTO.\nRIPROVARE PIÙ TARDI."
                 return render_template("errore.html", errore=stringa, airline=None, username=username)
 
         else:

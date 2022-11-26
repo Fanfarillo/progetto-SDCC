@@ -15,19 +15,19 @@ def storePayment(idVolo, postiSelezionati, username, dataPagamento, prezzoBase, 
     table.put_item(
         Item = {
             'IdVolo': idVolo,
-            'PostiSelezionati': postiSelezionati,
+            'Posti': postiSelezionati,
             'Username': username,
-            'DataPagamento': dataPagamento,
-            'PrezzoBase': prezzoBase,
-            'PrezzoSelezionePosti': prezzoSelezionePosti,
-            'PrezzoServiziAggiuntivi': prezzoServiziAggiuntivi,
-            'PrezzoTotale': prezzoTotale,
-            'NumStivaMedi': numStivaMedi,
-            'NumStivaGrandi': numStivaGrandi,
-            'NumBagagliSpeciali': numBagagliSpeciali,
-            'NumAssicurazioni': numAssicurazioni,
-            'NumAnimali': numAnimali,
-            'NumNeonati': numNeonati,
+            'Data pagamento': dataPagamento,
+            'Prezzo base': prezzoBase,
+            'Prezzo selezione posti': prezzoSelezionePosti,
+            'Prezzo servizi aggiuntivi': prezzoServiziAggiuntivi,
+            'Prezzo totale': prezzoTotale,
+            'Num stiva medi': numStivaMedi,
+            'Num stiva grandi': numStivaGrandi,
+            'Num bagagli speciali': numBagagliSpeciali,
+            'Num assicurazioni': numAssicurazioni,
+            'Num animali': numAnimali,
+            'Num neonati': numNeonati,
             'Email': email
         }
     )
@@ -41,6 +41,6 @@ def deletePayment(idVolo, postiSelezionati):
         TableName=TABELLA_PAGAMENTO,
         Key={
             'IdVolo': idVolo,
-            'PostiSelezionati': postiSelezionati
+            'Posti': postiSelezionati
         }
     )

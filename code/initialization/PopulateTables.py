@@ -19,7 +19,7 @@ def initializeVolo():
             'Orario arrivo': '10:05AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("78"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -33,7 +33,7 @@ def initializeVolo():
             'Orario arrivo': '02:26PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("82"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -47,7 +47,7 @@ def initializeVolo():
             'Orario arrivo': '01:40PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("74"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -61,7 +61,7 @@ def initializeVolo():
             'Orario arrivo': '08:18PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("69"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -75,7 +75,7 @@ def initializeVolo():
             'Orario arrivo': '02:55PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("81"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -89,7 +89,7 @@ def initializeVolo():
             'Orario arrivo': '05:23PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("77.5"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -103,7 +103,7 @@ def initializeVolo():
             'Orario arrivo': '07:52AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("88"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -117,7 +117,7 @@ def initializeVolo():
             'Orario arrivo': '12:10PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("61"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -131,7 +131,7 @@ def initializeVolo():
             'Orario arrivo': '08:00AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("118"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -145,7 +145,7 @@ def initializeVolo():
             'Orario arrivo': '03:29PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("143.5"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -159,7 +159,7 @@ def initializeVolo():
             'Orario arrivo': '10:53PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("127"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -173,7 +173,7 @@ def initializeVolo():
             'Orario arrivo': '12:39PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("156"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -187,7 +187,7 @@ def initializeVolo():
             'Orario arrivo': '07:31PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("150"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -201,7 +201,7 @@ def initializeVolo():
             'Orario arrivo': '08:58AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("122"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -215,7 +215,7 @@ def initializeVolo():
             'Orario arrivo': '02:37PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("135.2"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -229,7 +229,7 @@ def initializeVolo():
             'Orario arrivo': '11:21AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("171"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -243,7 +243,7 @@ def initializeVolo():
             'Orario arrivo': '07:02PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("130"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -257,7 +257,7 @@ def initializeVolo():
             'Orario arrivo': '04:31AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("108"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -271,7 +271,7 @@ def initializeVolo():
             'Orario arrivo': '08:57AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("109"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -285,7 +285,7 @@ def initializeVolo():
             'Orario arrivo': '11:46PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("135"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -299,7 +299,7 @@ def initializeVolo():
             'Orario arrivo': '09:21AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("111.1"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -313,7 +313,7 @@ def initializeVolo():
             'Orario arrivo': '14:46PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("99.9"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -327,7 +327,7 @@ def initializeVolo():
             'Orario arrivo': '12:15PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("115"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -341,7 +341,7 @@ def initializeVolo():
             'Orario arrivo': '03:44PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("126"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -355,7 +355,7 @@ def initializeVolo():
             'Orario arrivo': '10:20AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("112"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -369,7 +369,7 @@ def initializeVolo():
             'Orario arrivo': '09:02PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("97"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -383,7 +383,7 @@ def initializeVolo():
             'Orario arrivo': '13:41PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("68"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -397,7 +397,7 @@ def initializeVolo():
             'Orario arrivo': '03:59AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("75"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -411,7 +411,7 @@ def initializeVolo():
             'Orario arrivo': '10:10AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("88"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -425,7 +425,7 @@ def initializeVolo():
             'Orario arrivo': '08:29AM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("81.6"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -439,7 +439,7 @@ def initializeVolo():
             'Orario arrivo': '09:48AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("81"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -453,7 +453,7 @@ def initializeVolo():
             'Orario arrivo': '03:13PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("77"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -467,7 +467,7 @@ def initializeVolo():
             'Orario arrivo': '12:53PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("72"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -481,7 +481,7 @@ def initializeVolo():
             'Orario arrivo': '02:17PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("91"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -495,7 +495,7 @@ def initializeVolo():
             'Orario arrivo': '07:25PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("80.3"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -509,7 +509,7 @@ def initializeVolo():
             'Orario arrivo': '06:27AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("160"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -523,7 +523,7 @@ def initializeVolo():
             'Orario arrivo': '01:02PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("153"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -537,7 +537,7 @@ def initializeVolo():
             'Orario arrivo': '10:39AM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("135"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -551,7 +551,7 @@ def initializeVolo():
             'Orario arrivo': '05:37PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("146"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -565,7 +565,7 @@ def initializeVolo():
             'Orario arrivo': '02:56PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("171"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -579,7 +579,7 @@ def initializeVolo():
             'Orario arrivo': '09:19AM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("159.8"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -593,7 +593,7 @@ def initializeVolo():
             'Orario arrivo': '02:07PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("159"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -607,7 +607,7 @@ def initializeVolo():
             'Orario arrivo': '08:14AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("143"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -621,7 +621,7 @@ def initializeVolo():
             'Orario arrivo': '07:40PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("169"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -635,7 +635,7 @@ def initializeVolo():
             'Orario arrivo': '08:37AM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("123"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -649,7 +649,7 @@ def initializeVolo():
             'Orario arrivo': '12:05PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("131.3"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -663,7 +663,7 @@ def initializeVolo():
             'Orario arrivo': '06:53AM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("120"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -677,7 +677,7 @@ def initializeVolo():
             'Orario arrivo': '01:22PM',
             'Compagnia aerea': 'ITA',
             'Prezzo base': Decimal("134"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -691,7 +691,7 @@ def initializeVolo():
             'Orario arrivo': '12:06PM',
             'Compagnia aerea': 'EasyJet',
             'Prezzo base': Decimal("147"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -705,7 +705,7 @@ def initializeVolo():
             'Orario arrivo': '06:18PM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("122"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -719,7 +719,7 @@ def initializeVolo():
             'Orario arrivo': '04:39AM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("105"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 
@@ -733,7 +733,7 @@ def initializeVolo():
             'Orario arrivo': '10:47AM',
             'Compagnia aerea': 'Ryanair',
             'Prezzo base': Decimal("104"),
-            'Posti liberi': 156
+            'Liberi': 156
         }
     )
 

@@ -92,7 +92,7 @@ def storeFlight(flightId, date, departureAirport, arrivalAirport, departureTime,
             'Orario arrivo': arrivalTime,
             'Compagnia aerea': airline,
             'Prezzo base': Decimal(price),
-            'Posti liberi': seats
+            'Liberi': seats
         }
     )
 
@@ -124,7 +124,7 @@ def storeUpdatedFlight(flightId, newPrice, airline):
     departureTime = item['Orario partenza']
     arrivalTime = item['Orario arrivo']
     retrievedAirline = item['Compagnia aerea']
-    seats = item['Posti liberi']
+    seats = item['Liberi']
 
     if retrievedAirline == airline:
         #update selected flight by adding a new instance with same id in DynamoDB database
@@ -138,7 +138,7 @@ def storeUpdatedFlight(flightId, newPrice, airline):
                 'Orario arrivo': arrivalTime,
                 'Compagnia aerea': airline,
                 'Prezzo base': Decimal(newPrice),
-                'Posti liberi': seats
+                'Liberi': seats
 	        }
         )
 
@@ -246,7 +246,8 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
 def storeSelectedSeats(idVolo, username, selectedSeats, logger):
 
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
-    table = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
+    tablePosti = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
+    tableVolo = dynamodb.Table(TABELLA_VOLO)
 
     """
     Qui viene effettuato un controllo su se i posti in selectedSeats sono effettivamente liberi.
@@ -265,18 +266,27 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
     Qui è necessario effettuare l'update di un oggetto conservando però le informazioni pre-esistenti. Perciò, put_item non va bene.
     Piuttosto si usa update_item, che richiede due attributi: UpdateExpression (una stringa) ed ExpressionAttributeValues (un dizionario) che,
     insieme, determinano i campi della tabella da aggiungere/modificare e i relativi nuovi valori. Per ottenere questi attributi,
-    viene in aiuto la funzione getUpdateInfo, che restituisce un oggetto (UpdateInfo) contenente proprio i due attributi.
+    viene in aiuto la funzione getUpdateInfo, che restituisce un oggetto (UpdateInfo) contenente proprio i due attributi
+    sia per la modifica da effettuare nella tabella PostiOccupati, sia per la modifica da effettuare nella tabella Volo.
     """
-    updateInfo = getUpdateInfo(username, selectedSeats)
+    updateInfo = getUpdateInfo(username, selectedSeats, postiDisponibili)
 
-    #update an item in 'PostiOccupati' table in DynamoDB
+    #update an item in 'PostiOccupati' table in DynamoDB and an item in 'Volo' table in DynamoDB
     try:
-        response = table.update_item(
+        responsePosti = tablePosti.update_item(
             Key={'IdVolo': idVolo},
             UpdateExpression=updateInfo.updateExpression,
             ExpressionAttributeValues=updateInfo.expressionAttributeValues,
             ReturnValues="UPDATED_NEW"
         )
+
+        responseVolo = tableVolo.update_item(
+            Key={'Id': idVolo},
+            UpdateExpression=updateInfo.updateExpression2,
+            ExpressionAttributeValues=updateInfo.expressionAttributeValues2,
+            ReturnValues="UPDATED_NEW"
+        )
+
     except:
         logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
         return False
@@ -600,19 +610,19 @@ def getFlightHistory(idVolo):
                 idRecuperato = value
             elif key=='Prenotazione':
                 dataPrenotazione = value
-            elif key=='DataVolo':
+            elif key=='Data volo':
                 dataVolo = value
-            elif key=='AeroportoPartenza':
+            elif key=='Aeroporto partenza':
                 aeroportoPartenza = value
-            elif key=='AeroportoArrivo':
+            elif key=='Aeroporto arrivo':
                 aeroportoArrivo = value
-            elif key=='CompagniaAerea':
+            elif key=='Compagnia aerea':
                 compagniaAerea = value
-            elif key=='PrezzoBase':
+            elif key=='Prezzo base':
                 prezzoBase = value
 
         if idRecuperato==idVolo:    #chiaramente non inserisco nella stringa informazioni relative ad altri voli
-            msg = msg + dataPrenotazione + "," + dataVolo + "," + aeroportoPartenza + "," + aeroportoArrivo + "," + compagniaAerea + "," + prezzoBase + "\n"
+            msg = msg + dataPrenotazione + "," + dataVolo + "," + aeroportoPartenza + "," + aeroportoArrivo + "," + compagniaAerea + "," + str(prezzoBase) + "\n"
 
     #alla fine di tutto è opportuno togliere da msg l'ultimo '\n' che non serve a nulla
     msg = msg[:-1]
