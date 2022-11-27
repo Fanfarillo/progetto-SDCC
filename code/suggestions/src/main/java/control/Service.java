@@ -27,7 +27,7 @@ public class Service extends SuggestionsServiceImplBase {
     public void getLogFileSug(GetLogFileRequestSug req, StreamObserver<GetLogFileReplySug> responseObserver) {
 
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
-        opfile.writeLog("[LOGGING] Richiesta dati di logging...\n\n");
+        opfile.writeLog("[LOGGING] Richiesta dati di logging...\n");
 
         int r = -1;
         int q = -1;
@@ -52,7 +52,7 @@ public class Service extends SuggestionsServiceImplBase {
 
         }
         catch(Exception e) {
-            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.\n");
+            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.");
         }
 
         int low = numByteTrasmessiMod + (numIterazioniMassimo*max);
@@ -78,7 +78,7 @@ public class Service extends SuggestionsServiceImplBase {
                     responseObserver.onNext(response);
                 }
                 catch(Exception e) {
-                    opfile.writeLog("[LOGGING] Dati di logging inviati senza successo.\n");
+                    opfile.writeLog("[LOGGING] Dati di logging inviati senza successo.");
                 }
                 count++;
 
@@ -101,7 +101,7 @@ public class Service extends SuggestionsServiceImplBase {
         else
             numByteTrasmessiMod = numByteTrasmessiMod + dim;
 
-        opfile.writeLog("[LOGGING] Dati di logging inviati con successo.\n");
+        opfile.writeLog("[LOGGING] Dati di logging inviati con successo.");
         responseObserver.onCompleted();
 
     }
@@ -117,11 +117,11 @@ public class Service extends SuggestionsServiceImplBase {
         //in particolare, vengono prese in considerazione le istanze relative a una compagnia aerea;
         //tali istanze avranno come 'numero di giorni rimanenti al volo' un valore compreso tra 1 e il numero ATTUALE di giorni rimanenti al volo
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
-        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo.\n");
+        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo.");
 
         //i metodi get() applicati a req sono propri di gRPC; non c'entrano nulla con i getter di PastFlight
         int output = PopulateArff.createTestingSet(req.getBookingDate(), req.getFlightDate(), req.getAirline());
-        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo completata.\n");
+        opfile.writeLog("Richiesta di suggerimenti riguardanti un volo completata.");
 
         //output è il numero di giorni prima del volo in cui conviene effettuare l'acquisto dei biglietti
         SelectionResponse response = SelectionResponse.newBuilder().setNumDaysBeforeConvenient(output).build();
@@ -141,8 +141,8 @@ public class Service extends SuggestionsServiceImplBase {
 
         //questa funzione riceve nuovi dati da aggiungere poi al training set
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
-        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.\n\n");
-        opfile.writeLog("Messaggio ricevuto:\n" + req.getOldFlightsMsg() + "\n\n");
+        opfile.writeLog("Richiesta di aggiunta di nuovi dati al training set.\n");
+        opfile.writeLog("Messaggio ricevuto:\n" + req.getOldFlightsMsg() + "\n");
 
         boolean output = PopulateArff.storeNewData(req.getOldFlightsMsg());
 
@@ -152,7 +152,7 @@ public class Service extends SuggestionsServiceImplBase {
         //se si è la copia primaria di Suggestions, bisogna invocare la copia secondaria per mantenerla allineata con gli aggiornamenti
         if(Suggestions.ownIpAddress.equals(Suggestions.suggestions1)) {
             SugClient.sendToSecondary(req.getOldFlightsMsg());
-            opfile.writeLog("Nuovi dati per il training set inviati anche alla replica secondaria.\n");
+            opfile.writeLog("Nuovi dati per il training set inviati anche alla replica secondaria.");
         }
 
         //send data to the client

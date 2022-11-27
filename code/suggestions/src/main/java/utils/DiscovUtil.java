@@ -70,7 +70,7 @@ public class DiscovUtil {
 
                 }
                 catch(Exception e) {        //si va qui se si è verificato un problema nella connessione con il discovery server
-                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] Problema connessione con il discovery server " + discoveryServer + ".\n");
+                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] Problema connessione con il discovery server " + discoveryServer + ".");
                     e.printStackTrace();
                     Thread.sleep(2000);     //2 seconds sleep
                     continue;
@@ -82,7 +82,7 @@ public class DiscovUtil {
                 }
 
                 if(!res.getResult()) {      //si va qui se si è verificato un problema con DynamoDB
-                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] Problema DynamoDB con il discovery server " + discoveryServer + ".\n");
+                    opfile.writeLog("[PUT DISCOVERY REGISTRATION] Problema DynamoDB con il discovery server " + discoveryServer + ".");
                     Thread.sleep(2000);     //2 seconds sleep
                     continue;
 
@@ -102,7 +102,7 @@ public class DiscovUtil {
                 }
 
                 ok = true;
-                opfile.writeLog("[PUT DISCOVERY REGISTRATION] Registrazione avvenuta con successo presso il discovery server " + discoveryServer + ".\n");
+                opfile.writeLog("[PUT DISCOVERY REGISTRATION] Registrazione avvenuta con successo presso il discovery server " + discoveryServer + ".");
                 break;
 
             }
@@ -110,7 +110,7 @@ public class DiscovUtil {
             if(ok)
                 break;
 
-            opfile.writeLog("[PUT DISCOVERY REGISTRATION] Registrazione avvenuta con insuccesso presso tutti i discovery server.\n");
+            opfile.writeLog("[PUT DISCOVERY REGISTRATION] Registrazione avvenuta con insuccesso presso tutti i discovery server.");
             Thread.sleep(5000);     //5 seconds sleep
 
         }

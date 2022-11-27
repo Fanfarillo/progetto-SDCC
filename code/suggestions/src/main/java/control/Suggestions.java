@@ -48,7 +48,7 @@ public class Suggestions {
         //--------------------------------------- INIZIO CODICE CHE GESTISCE LE REPLICAZIONE DI SUGGESTIONS -------------------------------------------------
 
         if(args.length != 3) {
-            opfile.writeLog("[ERROR] È richiesto il passaggio di 3 parametri da linea di comando.\n");
+            opfile.writeLog("[ERROR] È richiesto il passaggio di 3 parametri da linea di comando.");
             System.exit(1);
         }
 
@@ -61,16 +61,16 @@ public class Suggestions {
         if(ownIpAddress.equals(suggestions1)) {
             //qui il container ha nome SUGGESTIONS_1 e dovrà quindi contattare SUGGESTIONS_2; SUGGESTIONS_1 è la copia primaria di Suggestions
             otherSuggestions = SUGGESTIONS_2;
-            opfile.writeLog("[SETUP NOME DEL CONTAINER] " + SUGGESTIONS_1 + "\t" + suggestions1 + "\n\n");
+            opfile.writeLog("[SETUP NOME DEL CONTAINER] " + SUGGESTIONS_1 + "\t" + suggestions1 + "\n");
         }
         else {
             //qui il container ha nome SUGGESTIONS_2 e dovrà quindi ricevere i dati da SUGGESTIONS_1; SUGGESTIONS_2 è la copia secondaria di Suggestions
             otherSuggestions = SUGGESTIONS_1;
-            opfile.writeLog("[SETUP NOME DEL CONTAINER] " + SUGGESTIONS_2 + "\t" + suggestions2 + "\n\n");            
+            opfile.writeLog("[SETUP NOME DEL CONTAINER] " + SUGGESTIONS_2 + "\t" + suggestions2 + "\n");            
         }
 
         if(otherSuggestions==null) {
-            opfile.writeLog("[FATAL] Errore nella risoluzione dell'indirizzo IP del discovery server.\n");
+            opfile.writeLog("[FATAL] Errore nella risoluzione dell'indirizzo IP del discovery server.");
             System.exit(1);
         }
 
@@ -78,9 +78,9 @@ public class Suggestions {
 
         //avvio del server RPC
         Suggestions server = new Suggestions();
-        opfile.writeLog("Avvio del server in ascolto sulla porta 50055...\n");
+        opfile.writeLog("Avvio del server in ascolto sulla porta 50055...");
         server.start();
-        opfile.writeLog("Server avviato con successo.\n");
+        opfile.writeLog("Server avviato con successo.");
 
         //--------------------------------------- DISCOVERY -------------------------------------------------
 
@@ -92,9 +92,9 @@ public class Suggestions {
 
             allDiscoveryServers = new ArrayList<>();
             allDiscoveryServers.add("discovery:50060");
-            opfile.writeLog("[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...\n");
+            opfile.writeLog("[DISCOVERY SERVER] Richiesta registrazione del microservizio sul discovery server...");
             List<String> discoveryServers = DiscovUtil.putDiscoveryServer(allDiscoveryServers, opfile);
-            opfile.writeLog("[DISCOVERY SERVER] Registrazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.\n");
+            opfile.writeLog("[DISCOVERY SERVER] Registrazione del microservizio sul discovery server " + allDiscoveryServers.get(0) + " avvenuta con successo.");
 
             //registro l'eventuale altro discovery server
             for(String item : discoveryServers) {
