@@ -21,7 +21,7 @@ def storePayment(idVolo, postiSelezionati, username, dataPagamento, prezzoBase, 
         }
     )
 
-    if 'Item' in response:
+    if not 'Item' in response:
         #store an item in 'Pagamento' table in DynamoDB
         table.put_item(
             Item = {
@@ -47,21 +47,38 @@ def storePayment(idVolo, postiSelezionati, username, dataPagamento, prezzoBase, 
         logger.info("Impossibile aggiungere il pagamento dell'utente " + username + " per il volo " + idVolo + ".")
 
 
+
 def deletePayment(idVolo, postiSelezionati, username, logger):
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     table = dynamodb.Table(TABELLA_PAGAMENTO)
 
-    #delete an item from 'Pagamento' table in DynamoDB
-    try:
-        table.delete_item(
-            TableName=TABELLA_PAGAMENTO,
-            Key={
-                'IdVolo': idVolo,
-                'Posti': postiSelezionati
-            },
-            ConditionExpression="Username =:u",
-            ExpressionAttributeValues={':u': username, }
-        )
-    except:
-        #do nothing
-        logger.info("Impossibile eliminare il pagamento dell'utente " + username + " per il volo " + idVolo + ".")
+    """
+    Controllo se l'elemento con i valori di idVolo e postiSelezionati dati dai parametri in input ha anche il campo Username pari allo username passato
+    in input; in tal caso si procede all'eliminazione dell'elemento dalla tabella; altrimenti, vuol dire che l'elemento è relativo al pagamento di un
+    altro utente e non va eliminato.
+    """
+    response = table.get_item(
+        Key = {
+            'IdVolo': idVolo,
+            'Posti': postiSelezionati            
+        }
+    )
+
+    if 'Item' in response:
+        item = response['Item']
+        retrievedUsername = item['Username']    
+    
+        if retrievedUsername == username:
+            #delete an item from 'Pagamento' table in DynamoDB
+            table.delete_item(
+                TableName=TABELLA_PAGAMENTO,
+                Key={
+                    'IdVolo': idVolo,
+                    'Posti': postiSelezionati
+                }
+            )
+        else:
+            logger.info("Impossibile eliminare il pagamento dell'utente " + username + " per il volo " + idVolo + " poiché non esiste.")
+
+    else:
+        logger.info("Impossibile eliminare il pagamento dell'utente " + username + " per il volo " + idVolo + " poiché non esiste.")
