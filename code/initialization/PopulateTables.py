@@ -642,20 +642,6 @@ def initializeVolo():
     table.put_item(
         Item = {
             'Id': '0000000018',
-            'Data': '22-12-2022',
-            'Aeroporto partenza': 'Fiumicino (Roma)',
-            'Aeroporto arrivo': 'Charles De Gaulle (Parigi)',
-            'Orario partenza': '09:59AM',
-            'Orario arrivo': '12:05PM',
-            'Compagnia aerea': 'EasyJet',
-            'Prezzo base': Decimal("131.3"),
-            'Liberi': 156
-        }
-    )
-
-    table.put_item(
-        Item = {
-            'Id': '0000000018',
             'Data': '23-12-2022',
             'Aeroporto partenza': 'Fiumicino (Roma)',
             'Aeroporto arrivo': 'Charles De Gaulle (Parigi)',

@@ -3,6 +3,8 @@ import time
 import logging
 
 from concurrent import futures
+from threading import Semaphore
+
 from proto import Payment_pb2
 from proto import Payment_pb2_grpc
 
@@ -23,6 +25,8 @@ discovery server.
 """
 all_discovery_servers = ['code_discovery_2:50060']
 # ------------------------------------------------------ DISCOVERY -----------------------------------------------------
+
+mutex = Semaphore(1)    #serve a evitare che più utenti differenti prenotino per gli stessi posti a sedere di un medesimo volo
 
 CHUNK_DIM = 1000
 numByteTrasmessiMod = 0
@@ -97,11 +101,14 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         """      
         selectedSeatsStr = listToString(NewPayment.selectedSeats)   #conversione della lista di posti selezionati in un'unica stringa
 
-        #store delle informazioni legate al pagamento; qui idVolo e selectedSeats insieme formano la chiave primaria, per cui dovranno essere utilizzate per l'eventuale rimozione delle informazioni dal db dovuta a un rollback
-        storePayment(NewPayment.idVolo, selectedSeatsStr, NewPayment.username, NewPayment.paymentDate, NewPayment.basePrice, NewPayment.seatsPrice, NewPayment.servicesPrice, NewPayment.totalPrice, NewPayment.numStivaMedi, NewPayment.numStivaGrandi, NewPayment.numBagagliSpeciali, NewPayment.numAssicurazioni, NewPayment.numAnimali, NewPayment.numNeonati, NewPayment.email)
+        mutex.acquire()   #INIZIO SEZIONE CRITICA
 
+        #store delle informazioni legate al pagamento; qui idVolo e selectedSeats insieme formano la chiave primaria, per cui dovranno essere utilizzate per l'eventuale rimozione delle informazioni dal db dovuta a un rollback
+        storePayment(NewPayment.idVolo, selectedSeatsStr, NewPayment.username, NewPayment.paymentDate, NewPayment.basePrice, NewPayment.seatsPrice, NewPayment.servicesPrice, NewPayment.totalPrice, NewPayment.numStivaMedi, NewPayment.numStivaGrandi, NewPayment.numBagagliSpeciali, NewPayment.numAssicurazioni, NewPayment.numAnimali, NewPayment.numNeonati, NewPayment.email, logger)
         #invio di username e lista di posti selezionati a Booking mediante una coda di messaggi
         sendMqBooking(NewPayment.idVolo, NewPayment.username, selectedSeatsStr, logger)
+
+        mutex.release()   #FINE SEZIONE CRITICA
 
         #ricezione di un messaggio da parte di Booking indicante se la transazione complessa è andata a buon fine o meno
         isFinalized = receiveMqBooking(logger)
@@ -109,7 +116,7 @@ class PayServicer(Payment_pb2_grpc.PayServicer):
         #se la transazione NON è andata a buon fine, allora si effettua il rollback della porzione di transazione già effettuata in Payment
         if not isFinalized:
             logger.info("Il microservizio Booking ha risposto False, per cui la transazione NON è andata a buon fine.")
-            deletePayment(NewPayment.idVolo, selectedSeatsStr)
+            deletePayment(NewPayment.idVolo, selectedSeatsStr, NewPayment.username, logger)
         else:
             logger.info("Il microservizio Booking ha risposto True, per cui la transazione è andata a buon fine.")
 

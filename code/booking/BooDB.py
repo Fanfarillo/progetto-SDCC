@@ -3,7 +3,6 @@ import grpc
 import time
 
 from boto3.dynamodb.conditions import Attr
-from threading import Semaphore
 from datetime import datetime, date
 from decimal import *
 
@@ -24,9 +23,6 @@ REGIONE = 'us-east-1'
 TABELLA_VOLO = 'Volo'
 TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
 TABELLA_STORICO_VOLO = 'StoricoVolo'
-
-
-mutex = Semaphore(1)    #serve a evitare che più utenti differenti prenotino per gli stessi posti a sedere di un medesimo volo
 
 
 # L'assunzione fatta sui possibili posti disponibili dell'aereo.
@@ -268,8 +264,6 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
     tablePosti = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
     tableVolo = dynamodb.Table(TABELLA_VOLO)
 
-    mutex.acquire()   #INIZIO SEZIONE CRITICA
-
     """
     Qui viene effettuato un controllo su se i posti in selectedSeats sono effettivamente liberi.
     Se non lo sono, allora ci ritroviamo nel caso in cui la transazione complessa non va a buon fine
@@ -280,7 +274,6 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
     
     for seat in selectedSeats:
         if not seat in postiDisponibili:
-            mutex.release()   #FINE SEZIONE CRITICA
             logger.info('Impossibile portare a termine la transazione a causa del fatto che un posto selezionato non è libero.')
             return False
 
@@ -302,7 +295,6 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
             ReturnValues="UPDATED_NEW"
         )
     except:
-        mutex.release()   #FINE SEZIONE CRITICA
         logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
         return False
 
@@ -315,12 +307,10 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
             ReturnValues="UPDATED_NEW"
         )
     except:
-        mutex.release()   #FINE SEZIONE CRITICA
         logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
         rollbackVolo(idVolo, len(postiDisponibili))     #se qualcosa dovesse andare storto, bisogna fare il rollback anche nella tabella Volo
         return False
 
-    mutex.release()   #FINE SEZIONE CRITICA
     logger.info('Transazione Saga portata a termine con successo.')
     return True
     

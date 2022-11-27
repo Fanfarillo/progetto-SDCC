@@ -29,6 +29,8 @@ def receiveMqBooking(logger):
         """
         if bodyStr == 'True':
             retValue = True
+        else:
+            retValue = False
         channel.stop_consuming()
         
 
