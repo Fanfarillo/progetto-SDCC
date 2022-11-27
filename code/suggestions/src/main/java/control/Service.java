@@ -18,13 +18,17 @@ import utils.LogUtil;
 
 public class Service extends SuggestionsServiceImplBase {
 
+    static final int chunkDim = 1000;       //in Python era una macro
+    static int numByteTrasmessiMod = 0;
+    static int numIterazioniMassimo = 0;
+    static final int max = 10000;           //in Python era una macro
+
     @Override
     public void getLogFileSug(GetLogFileRequestSug req, StreamObserver<GetLogFileReplySug> responseObserver) {
 
         LogUtil opfile = LogUtil.getInstance();     //ottenimento del file di log
         opfile.writeLog("[LOGGING] Richiesta dati di logging...\n\n");
 
-        final int chunkDim = 1000;      //in Python era una macro
         int r = -1;
         int q = -1;
 
@@ -41,7 +45,7 @@ public class Service extends SuggestionsServiceImplBase {
                 if(line==null)      //se line==null vuol dire che il file è finito e non è stata trovata alcuna riga col valore true
                     break;
 
-                content+=line;
+                content+=(line+"\n");
 
             }
             bReader.close();
@@ -51,13 +55,16 @@ public class Service extends SuggestionsServiceImplBase {
             opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.\n");
         }
 
-        int dim = content.length();
+        int low = numByteTrasmessiMod + (numIterazioniMassimo*max);
+        String contentToTransfer = content.substring(low);   //contentToTransfer è la sottostringa da trasferire al logging, ed è la parte nuova di content
+
+        int dim = contentToTransfer.length();
         q = (int)Math.floor(dim/chunkDim);
         r = dim % chunkDim;
 
         if(q==0) {
             //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto.encode(), num_chunk=0)
-            GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content)).setNumChunk(0).build();
+            GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(contentToTransfer)).setNumChunk(0).build();
             responseObserver.onNext(response);
 
         }
@@ -67,7 +74,7 @@ public class Service extends SuggestionsServiceImplBase {
             for(int i=0; i<q; i++) {
                 try {
                     //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[i:i+CHUNK_DIM].encode(), num_chunk=i)
-                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content.substring(i*chunkDim,i*chunkDim+chunkDim))).setNumChunk(i).build();
+                    GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(contentToTransfer.substring(i*chunkDim,i*chunkDim+chunkDim))).setNumChunk(i).build();
                     responseObserver.onNext(response);
                 }
                 catch(Exception e) {
@@ -79,22 +86,22 @@ public class Service extends SuggestionsServiceImplBase {
             if(r>0) {
                 lowerBound = count*chunkDim;
                 //EQUIVALENTE DI: yield Booking_pb2.GetLogFileReplyBoo(chunk_file = contenuto[lower_bound:lower_bound+r].encode(), num_chunk=count)
-                GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(content.substring(lowerBound,lowerBound+r))).setNumChunk(count).build();
+                GetLogFileReplySug response = GetLogFileReplySug.newBuilder().setChunkFile(ByteString.copyFromUtf8(contentToTransfer.substring(lowerBound,lowerBound+r))).setNumChunk(count).build();
                 responseObserver.onNext(response);
 
             }
 
         }
-        opfile.writeLog("[LOGGING] Dati di logging inviati con successo.\n");
 
-        //DA DECOMMENTARE
-        /*try(RandomAccessFile raf = new RandomAccessFile("suggestions.log", "rw")) {
-            raf.setLength(0);   //to erase all data
+        //gestione dell'overflow
+        if(numByteTrasmessiMod+dim > max) {
+            numIterazioniMassimo = numIterazioniMassimo + (int)Math.floor((numByteTrasmessiMod+dim)/max);
+            numByteTrasmessiMod = numByteTrasmessiMod + dim - ((int)Math.floor((numByteTrasmessiMod+dim)/max))*max;
         }
-        catch(Exception e) {
-            opfile.writeLog("[LOGGING] Un'eccezione è stata sollevata durante l'esecuzione della funzione getLogFileSug.\n");
-        }*/
+        else
+            numByteTrasmessiMod = numByteTrasmessiMod + dim;
 
+        opfile.writeLog("[LOGGING] Dati di logging inviati con successo.\n");
         responseObserver.onCompleted();
 
     }

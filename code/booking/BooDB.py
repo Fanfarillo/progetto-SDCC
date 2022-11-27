@@ -3,6 +3,7 @@ import grpc
 import time
 
 from boto3.dynamodb.conditions import Attr
+from threading import Semaphore
 from datetime import datetime, date
 from decimal import *
 
@@ -15,7 +16,6 @@ from proto import Discovery_pb2_grpc
 from BooUtils import *
 
 
-
 ADDR_PORT = ''
 
 
@@ -24,6 +24,9 @@ REGIONE = 'us-east-1'
 TABELLA_VOLO = 'Volo'
 TABELLA_POSTI_OCCUPATI = 'PostiOccupati'
 TABELLA_STORICO_VOLO = 'StoricoVolo'
+
+
+mutex = Semaphore(1)    #serve a evitare che più utenti differenti prenotino per gli stessi posti a sedere di un medesimo volo
 
 
 # L'assunzione fatta sui possibili posti disponibili dell'aereo.
@@ -242,11 +245,30 @@ def retrieveAvailableSeats(idVolo, postiDisponibili):
 
 
 
+"""
+Questa funzione aggiorna il campo 'Liberi' della tabella Volo, riportandolo al valore precedente alla chiamata di StoreSelectedSeats().
+"""
+def rollbackVolo(idVolo, numPositiDisponibili):
+
+    dynamodb = boto3.resource(DYNAMODB, REGIONE)
+    table = dynamodb.Table(TABELLA_VOLO)
+
+    response = table.update_item(
+        Key={'Id': idVolo},
+        UpdateExpression="set Liberi=:p",
+        ExpressionAttributeValues={':p': numPositiDisponibili, },
+        ReturnValues="UPDATED_NEW"
+    )
+
+
+
 def storeSelectedSeats(idVolo, username, selectedSeats, logger):
 
     dynamodb = boto3.resource(DYNAMODB, REGIONE)
     tablePosti = dynamodb.Table(TABELLA_POSTI_OCCUPATI)
     tableVolo = dynamodb.Table(TABELLA_VOLO)
+
+    mutex.acquire()   #INIZIO SEZIONE CRITICA
 
     """
     Qui viene effettuato un controllo su se i posti in selectedSeats sono effettivamente liberi.
@@ -258,6 +280,7 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
     
     for seat in selectedSeats:
         if not seat in postiDisponibili:
+            mutex.release()   #FINE SEZIONE CRITICA
             logger.info('Impossibile portare a termine la transazione a causa del fatto che un posto selezionato non è libero.')
             return False
 
@@ -270,7 +293,20 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
     """
     updateInfo = getUpdateInfo(username, selectedSeats, postiDisponibili)
 
-    #update an item in 'PostiOccupati' table in DynamoDB and an item in 'Volo' table in DynamoDB
+    #update an item in 'Volo' table in DynamoDB
+    try:
+        responseVolo = tableVolo.update_item(
+            Key={'Id': idVolo},
+            UpdateExpression=updateInfo.updateExpression2,
+            ExpressionAttributeValues=updateInfo.expressionAttributeValues2,
+            ReturnValues="UPDATED_NEW"
+        )
+    except:
+        mutex.release()   #FINE SEZIONE CRITICA
+        logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
+        return False
+
+    #update an item in 'PostiOccupati' table in DynamoDB
     try:
         responsePosti = tablePosti.update_item(
             Key={'IdVolo': idVolo},
@@ -278,18 +314,13 @@ def storeSelectedSeats(idVolo, username, selectedSeats, logger):
             ExpressionAttributeValues=updateInfo.expressionAttributeValues,
             ReturnValues="UPDATED_NEW"
         )
-
-        responseVolo = tableVolo.update_item(
-            Key={'Id': idVolo},
-            UpdateExpression=updateInfo.updateExpression2,
-            ExpressionAttributeValues=updateInfo.expressionAttributeValues2,
-            ReturnValues="UPDATED_NEW"
-        )
-
     except:
+        mutex.release()   #FINE SEZIONE CRITICA
         logger.info('Impossibile portare a termine la transazione a causa del sollevamento di una eccezione.')
+        rollbackVolo(idVolo, len(postiDisponibili))     #se qualcosa dovesse andare storto, bisogna fare il rollback anche nella tabella Volo
         return False
 
+    mutex.release()   #FINE SEZIONE CRITICA
     logger.info('Transazione Saga portata a termine con successo.')
     return True
     

@@ -1,8 +1,0 @@
-[Unit]
-Description=Simple systemd service for javapy project.
-[Service]
-Type=simple
-WorkingDirectory=/home/ec2-user/Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/javapy
-ExecStart=/bin/bash /home/ec2-user/Scrivania/'Work in progress'/progetto-SDCC/prove/ec2/javapy/Run.sh
-[Install]
-WantedBy=multi-user.target

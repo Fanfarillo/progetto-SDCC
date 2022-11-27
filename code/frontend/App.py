@@ -247,6 +247,9 @@ def booking(username):
             date = getDate(giorno, mese, anno)
 
             #non è possibile avere gli aeroporti non selezionati
+            if partenza==None or arrivo==None:
+                stringa = "È NECESSARIO SELEZIONARE GLI AEROPORTI DI PARTENZA E DI ARRIVO.\nPROVA A INSERIRE NUOVAMENTE I DATI DELLA PRENOTAZIONE."
+                return render_template("errore.html", errore=stringa, airline=None, username=username)
 
             #sanity checks are the following:
             #   1) Date should exist (e.g. it cannot be '31-04-2023')
